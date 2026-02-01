@@ -76,18 +76,28 @@
                     <!-- Title-->
                     <div class="mb-3">
                     <label for="tripTitle2" class="form-label">Título del viaje</label>
-                    <input type="text" class="form-control" id="tripTitle2" placeholder="Aventura por Italia">
+                    <input type="text" class="form-control" id="tripTitle2" placeholder="Aventura por Italia" required>
                     </div>
                     <!-- Images-->
                     <div class="mb-3">
                         <label class="form-label">Imagen de portada</label>
-                        <input type="file" class="form-control">
+                        <input type="file" class="form-control" required>
                     </div>
-
+                    <!--Dates-->
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="form-label">Fecha de inicio</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="col">
+                            <label class="form-label">Fecha de fin</label>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
                     <!-- Description-->
                     <div class="mb-3">
                         <label class="form-label">Descripción del viaje</label>
-                        <textarea class="form-control" rows="4" placeholder="Cuenta tu experiencia..."></textarea>
+                        <textarea class="form-control" rows="4" placeholder="Cuenta tu experiencia..." required></textarea>
                     </div>
                     <!-- Countries visited-->
                     <div class="mb-3">
@@ -135,8 +145,6 @@
                             Crear viaje
                         </button>
                     </div>
-
-
                 </div>
             </section>
         </main>

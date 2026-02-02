@@ -76,41 +76,54 @@
                                 viajes</p>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="First name" aria-label="First name">
-                        </div>
-                        <div class="col">
-                            <input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
-                        </div>
-                    </div>
+
+
                     <form class="row g-3">
                         <div class="col-12">
-                            <label for="inputAddress" class="form-label">Nombre de usuario</label>
-                            <input type="text" class="form-control" id="inputAddress" placeholder="1234Main_St">
+                            <label for="inputNombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="inputNombre" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="inputApellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="inputApellido" required>
                         </div>
                         <div class="col-md-6">
+                            <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+                            <input type="date" class="form-control" id="fechaNacimiento" required>
+                        </div>
+                        <div class="w-100"></div>
+
+                        <div class="col-md-6">
+                            <label for="inputAddress" class="form-label">Nombre de usuario</label>
+                            <input type="text" class="form-control" id="inputAddress" maxlength="15" required>
+                        </div>
+                        
+                        <div class="col-12">
                             <label for="inputEmail4" class="form-label">Correo</label>
-                            <input type="email" class="form-control" id="inputEmail4">
+                            <input type="email" class="form-control" id="inputEmail4" required>
                         </div>
                         <div class="col-md-6">
                             <label for="inputPassword4" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="inputPassword4" minlength="8"
+                            <input type="password" class="form-control" id="inputPassword4" minlength="8" maxlength="30"
                                 pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$"
                                 title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos" required>
                         </div>
                         <div class="col-md-6">
                             <label for="inputPassword4" class="form-label">Confirma la contraseña</label>
-                            <input type="password" class="form-control" id="inputPassword4">
+                            <input type="password" class="form-control" id="inputPassword4Confirm" required>
                         </div>
 
 
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gridCheck">
+                                <input class="form-check-input" type="checkbox" id="gridCheck" required>
                                 <label class="form-check-label" for="gridCheck">
                                     Acepto los términos y condiciones
                                 </label>
+                                <div class="invalid-feedback">
+                                    Debes aceptar los términos y condiciones
+                                </div>
                             </div>
                         </div>
                         <div class="col-12">

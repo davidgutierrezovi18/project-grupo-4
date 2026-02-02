@@ -79,12 +79,12 @@
 
 
                     <form class="row g-3">
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <label for="inputNombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="inputNombre" required>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <label for="inputApellido" class="form-label">Apellido</label>
                             <input type="text" class="form-control" id="inputApellido" required>
                         </div>
@@ -96,12 +96,19 @@
 
                         <div class="col-md-6">
                             <label for="inputAddress" class="form-label">Nombre de usuario</label>
-                            <input type="text" class="form-control" id="inputAddress" maxlength="15" required>
+                            <input type="text" class="form-control" id="inputAddress" minlength="4" maxlength="15"
+                                required>
+                            <div class="invalid-feedback">
+                                Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)
+                            </div>
                         </div>
-                        
+
                         <div class="col-12">
                             <label for="inputEmail4" class="form-label">Correo</label>
                             <input type="email" class="form-control" id="inputEmail4" required>
+                            <div class="invalid-feedback">
+                                Introduce una dirección de correo válida
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="inputPassword4" class="form-label">Contraseña</label>

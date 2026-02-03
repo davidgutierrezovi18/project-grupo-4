@@ -65,8 +65,8 @@
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-6">
                             <div class="text-center mb-5">
-                                <h1 class="fw-bolder">Añade tu nuevo viaje</h1>
-                                <p class="lead fw-normal text-muted mb-0">Para añadir un nuevo viaje rellena los siguientes campos con toda la información requerida.</p>
+                                <h1 class="fw-bolder">Edita tu viaje</h1>
+                                <p class="lead fw-normal text-muted mb-0">Para editar tu viaje modifica los datos que quieras cambiar.</p>
                             </div>
                         </div>
                     </div>
@@ -119,8 +119,24 @@
                     </div>
                     <!-- Calification-->
                     <div class="mb-3">
-                        <label for="customRange3">Califica tu viaje</label>
-                        <input type="range" class="custom-range" min="0" max="5" step="0.5" id="customRange3">
+                        <label class="form-label">Califica tu viaje</label>
+                        <div class="star-rating" role="radiogroup" aria-label="Puntuación">
+                            <input type="radio" name="rating" id="r1" value="1" autocomplete="off">
+                            <label for="r1" data-value="1" aria-label="1 estrella"><i
+                                    class="bi bi-star-fill"></i></label>
+                            <input type="radio" name="rating" id="r2" value="2" autocomplete="off">
+                            <label for="r2" data-value="2" aria-label="2 estrellas"><i
+                                    class="bi bi-star-fill"></i></label>
+                            <input type="radio" name="rating" id="r3" value="3" autocomplete="off">
+                            <label for="r3" data-value="3" aria-label="3 estrellas"><i
+                                    class="bi bi-star-fill"></i></label>
+                            <input type="radio" name="rating" id="r4" value="4" autocomplete="off">
+                            <label for="r4" data-value="4" aria-label="4 estrellas"><i
+                                    class="bi bi-star-fill"></i></label>
+                            <input type="radio" name="rating" id="r5" value="5" autocomplete="off" checked>
+                            <label for="r5" data-value="5" aria-label="5 estrellas"><i
+                                    class="bi bi-star-fill"></i></label>
+                        </div>
                     </div>
                     <!-- Comentario-->
                      <div class="mb-3">
@@ -142,7 +158,7 @@
                     <!-- Botón -->
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary px-5">
-                            Crear viaje
+                            Modificar viaje
                         </button>
                     </div>
                 </div>

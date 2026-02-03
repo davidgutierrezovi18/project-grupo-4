@@ -10849,3 +10849,37 @@ html {
 
 /* Nuestro, lo anterior es lo de la plantilla */
 
+/* Star Rating Styles */
+.star-rating {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: #ddd;
+  display: inline-flex;
+  align-items: center;
+}
+
+.star-rating label .bi {
+  font-size: 1.5rem;
+}
+
+.star-rating input:checked ~ label {
+  color: #ffc107;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ffdf7e;
+}
+

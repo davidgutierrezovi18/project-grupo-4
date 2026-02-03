@@ -1,48 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Añadir reseña — Next Journey</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <link href="css/styles.css" rel="stylesheet" />
-    <style>
-      .star-rating { display:flex; 
-                    gap:0.25rem; 
-                    align-items:center; 
-                    flex-direction:row-reverse; 
-                    justify-content:flex-end; }
-
-      .star-rating input { display:none; }
-
-      .star-rating label { cursor:pointer; 
-                        font-size:1.25rem; 
-                        color:#ddd; 
-                        display:inline-flex; 
-                        align-items:center; }
-
-      .star-rating label .bi { font-size:1.5rem; }
-
-      .star-rating input:checked ~ label { color:#ffc107; }
-      
-      .star-rating label:hover, .star-rating label:hover ~ label { color:#ffdf7e; }
-    </style>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Modern Business - Start Bootstrap Template</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
   </head>
   <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container px-5">
-          <a class="navbar-brand" href="index.html">Next Journey</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-          <div class="collapse navbar-collapse" id="nav">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li class="nav-item"><a class="nav-link" href="reviews.html">Volver a resultados</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container px-5">
+                    <a class="navbar-brand d-flex align-items-center" href="index.html">
+                        <i class="bi bi-airplane me-2"></i>
+                        Next Journey
+                    </a>
+                    <!-- Web name without icon: <a class="navbar-brand" href="index.html">Next Journey</a>-->
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#destinos-recomendados">Destinos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
+                            <li class="nav-item"><a class="nav-link" href="reviews.html">Reseñas</a></li>
+                            <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                            <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
 
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Mi perfil</a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownProfile">
+                                    <li>
+                                        <a class="dropdown-item" href="user_profile.html">Ver mi perfil</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="sign_in.html">Sign in</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="register.html">Register</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
       <header class="bg-dark py-5">
         <div class="container px-5">
           <div class="row gx-5 align-items-center">
@@ -56,7 +66,7 @@
 
       <section class="py-5">
         <div class="container px-5">
-          <div class="row gx-5">
+          <div class="row gx-5 justify-content-center">
             <div class="col-lg-8">
               <div class="card shadow-sm mb-4">
                 <div class="card-body">
@@ -69,7 +79,7 @@
                     <div class="mb-3">
                       <label class="form-label">Nombre del lugar</label>
                       <input id="place-name" name="place-name" type="text" class="form-control" placeholder="Ej. La Casa del Sabor" />
-                      <div class="form-text">(Se rellenará automáticamente si vienes desde un resultado.)</div>
+                      
                     </div>
                     <div class="mb-3">
                       <label class="form-label">Tipo</label>
@@ -113,18 +123,7 @@
 
             </div>
 
-            <div class="col-lg-4">
-              <div class="card shadow-sm mb-3">
-                <div class="card-body">
-                  <h6 class="fw-bolder">Consejos para la reseña</h6>
-                  <ul class="small mb-0">
-                    <li>Describe el servicio y la comida o la experiencia cultural.</li>
-                    <li>Añade una foto si tienes.</li>
-                    <li>Evita lenguaje ofensivo; reseñas son públicas.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+      
           </div>
         </div>
       </section>

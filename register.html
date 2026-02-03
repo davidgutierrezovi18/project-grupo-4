@@ -114,7 +114,13 @@
                             <label for="inputPassword4" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" id="inputPassword4" minlength="8" maxlength="30"
                                 pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$" placeholder="Vuelve a introducir tu contraseña"
-                                title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos" required>
+                                title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos" 
+                                required>
+                                <div class="col-auto">
+                                <span id="passwordHelpInline" class="form-text">
+                                    Must be 8-20 characters long.
+                                </span>
+                            </div>  
                         </div>
                         <div class="col-md-6">
                             <label for="inputPassword4" class="form-label">Confirma la contraseña</label>
@@ -134,7 +140,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary" style="background-color: blue;">Sign in</button>
+                            <button type="submit" class="btn btn-primary" style="background-color: blue;">Registrarse</button>
                         </div>
                     </form>
                 </div>

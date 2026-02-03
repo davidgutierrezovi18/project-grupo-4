@@ -1,1 +1,175 @@
 <!--NEREA-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Next Journey — Perfil de Usuario</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+
+<body class="d-flex flex-column h-100">
+    <main class="flex-shrink-0">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container px-5">
+                <a class="navbar-brand d-flex align-items-center" href="index.html">
+                    <i class="bi bi-airplane me-2"></i>
+                    Next Journey
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.html#destinos-recomendados">Destinos</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="reviews.html">Reseñas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
+
+                        <!-- Admin button -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin_users.html">Admin</a>
+                        </li>
+
+                        <!-- Profile dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Mi perfil
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownProfile">
+                                <li><a class="dropdown-item active" href="user_profile.html">Ver perfil</a></li>
+                                <li><a class="dropdown-item" href="sign_in.html">Sign in</a></li>
+                                <li><a class="dropdown-item" href="register.html">Register</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- User Profile Section -->
+        <section class="py-5">
+            <div class="container px-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bolder">Perfil de Usuario</h1>
+                    <p class="lead fw-normal text-muted mb-0">
+                        Edita tu información personal.
+                    </p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="text-center mb-4">
+
+                            <!-- User Avatar -->
+                            <img src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"
+                                class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
+
+                            <!-- Input para cambiar foto -->
+                            <div>
+                                <label for="profileImage" class="btn btn-outline-secondary">
+                                    Cambiar foto de perfil
+                                </label>
+                                <input type="file" id="profileImage" name="profileImage" accept="image/jpeg, image/png"
+                                    hidden />
+                            </div>
+
+                            <small class="text-muted d-block mt-2">
+                                Formatos permitidos: JPG, PNG
+                            </small>
+                        </div>
+
+
+                        <form class="row g-3">
+                            <!-- Full Name -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fullName" placeholder="Nombre completo"
+                                    value="María López">
+                                <label for="fullName">Nombre completo</label>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="inputEmail4"
+                                    placeholder="Introduce tu correo" value="maria@example.com" required>
+                                <div class="invalid-feedback">
+                                    Introduce una dirección de correo válida
+                                </div>
+                                <label for="inputEmail4" class="form-label">Correo electrónico</label>
+                            </div>
+
+
+
+                            <!-- Username -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="inputAddress" minlength="4" maxlength="15"
+                                    placeholder="Crea tu nombre de usuario" value="maria123" required>
+                                <div class="invalid-feedback">
+                                    Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)
+                                </div>
+                                <label for="username">Usuario</label>
+                            </div>
+
+                            <!-- Optional Password (hidden for view only) -->
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" placeholder="Contraseña"
+                                    value="********">
+                                <label for="password">Contraseña</label>
+                            </div>
+
+                            <!-- Edit Profile Button -->
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="d-grid btn btn-primary btn-lg mb-3">
+                                Guardar cambios
+                            </button>
+                                <a href="user_profile.html" class="btn btn-primary btn-lg">Volver al perfil</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark py-4 mt-auto">
+        <div class="container px-5">
+            <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                <div class="col-auto">
+                    <div class="small m-0 text-white">&copy; Next Journey 2026</div>
+                </div>
+                <div class="col-auto">
+                    <a class="link-light small" href="#!">Privacy</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="#!">Terms</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="contact.html">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

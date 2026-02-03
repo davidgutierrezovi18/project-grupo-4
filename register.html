@@ -81,12 +81,14 @@
                     <form class="row g-3">
                         <div class="col-md-6">
                             <label for="inputNombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="inputNombre" placeholder="Introduce tu nombre" required>
+                            <input type="text" class="form-control" id="inputNombre" placeholder="Introduce tu nombre"
+                                required>
                         </div>
 
                         <div class="col-md-6">
                             <label for="inputApellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="inputApellido" placeholder="Introduce tu apellido" required>
+                            <input type="text" class="form-control" id="inputApellido"
+                                placeholder="Introduce tu apellido" required>
                         </div>
                         <div class="col-md-6">
                             <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
@@ -96,8 +98,8 @@
 
                         <div class="col-md-6">
                             <label for="inputAddress" class="form-label">Nombre de usuario</label>
-                            <input type="text" class="form-control" id="inputAddress" minlength="4" maxlength="15" placeholder="Crea tu nombre de usuario"
-                                required>
+                            <input type="text" class="form-control" id="inputAddress" minlength="4" maxlength="15"
+                                placeholder="Crea tu nombre de usuario" required>
                             <div class="invalid-feedback">
                                 Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)
                             </div>
@@ -113,14 +115,14 @@
                         <div class="col-md-6">
                             <label for="inputPassword4" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" id="inputPassword4" minlength="8" maxlength="30"
-                                pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$" placeholder="Vuelve a introducir tu contraseña"
-                                title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos" 
-                                required>
-                                <div class="col-auto">
+                                pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$"
+                                placeholder="Vuelve a introducir tu contraseña"
+                                title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos" required>
+                            <div class="col-auto">
                                 <span id="passwordHelpInline" class="form-text">
                                     Must be 8-20 characters long.
                                 </span>
-                            </div>  
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <label for="inputPassword4" class="form-label">Confirma la contraseña</label>
@@ -140,7 +142,9 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary" style="background-color: blue;">Registrarse</button>
+                            <a href="user_profile.html" class="btn btn-primary" style="background-color: blue;">
+                                Registrarse
+                            </a>
                         </div>
                     </form>
                 </div>

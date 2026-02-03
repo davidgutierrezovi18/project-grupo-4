@@ -34,14 +34,14 @@
             <div class="col-lg-10 text-center">
               <div class="my-5 text-center text-white">
                 <h1 class="display-5 fw-bolder mb-2">Explora el mundo y deja tu reseña</h1>
-                <p class="lead fw-normal text-white-50 mb-4">Busca restaurantes, teatros, monumentos y comparte tu experiencia. Diseño estático listo para integrar con OpenStreetMap (Overpass) más adelante.</p>
+                <p class="lead fw-normal text-white-50 mb-4">Busca restaurantes, teatros, monumentos y comparte tu experiencia. </p>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <!-- Mapa estático con ejemplos -->
+      <!-- OpenStreetMap -->
       <section class="map-top py-5">
         <div class="container px-5">
           <div class="mb-4">
@@ -51,17 +51,24 @@
             </div>
           </div>
           
+          <!-- Search bar-->
           <div class="mt-4">
             <h5 class="fw-bolder mb-3 text-center">Buscar lugares</h5>
-            <div class="d-flex justify-content-center align-items-center gap-2">
-              <input class="form-control me-2" type="search" placeholder="Buscar lugares (ej. Restaurante, Museo)" aria-label="Buscar" style="max-width: 400px;" />
-              <select class="form-select me-2" style="max-width: 150px;">
-                <option value="1000">Radio: 1 km</option>
-                <option value="2500">Radio: 2.5 km</option>
-                <option value="5000" selected>Radio: 5 km</option>
-                <option value="10000">Radio: 10 km</option>
-              </select>
-              <button class="btn btn-primary">Buscar</button>
+            <div class="row g-3 justify-content-center">
+              <div class="col-md-5">
+                <input id="searchInput" class="form-control" type="search" placeholder="Buscar lugares (ej. Restaurante, Museo)" aria-label="Buscar" />
+              </div>
+              <div class="col-md-3">
+                <select id="radiusSelect" class="form-select">
+                  <option value="1000">Radio: 1 km</option>
+                  <option value="2500">Radio: 2.5 km</option>
+                  <option value="5000" selected>Radio: 5 km</option>
+                  <option value="10000">Radio: 10 km</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button id="searchBtn" class="btn btn-primary w-100">Buscar</button>
+              </div>
             </div>
           </div>
         </div>
@@ -77,10 +84,10 @@
             <div class="col-lg-8 mx-auto">
               <div class="mb-4">
                 <h4 class="fw-bolder">Resultados</h4>
-                <p class="text-muted small mb-2">Ejemplos de lugares cerca de tu búsqueda</p>
+                
 
                 <div class="list-group">
-                  <!-- Ejemplos de lugares -->
+                  <!-- Place Examples -->
                   <a href="place_reviews.html" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1"><i class="bi bi-shop"></i> Sagrada Familia</h5>
@@ -92,7 +99,7 @@
                   <a href="#" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1"><i class="bi bi-cup-hot"></i> Café La Esquina</h5>
-                      <small class="text-warning"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> 4.8</small>
+                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.8</small>
                     </div>
                     <p class="mb-1 text-muted small">Café especializado en café de origen único</p>
                     <small>📍 Avenida Libertad 456, Barrio Antiguo</small>
@@ -100,7 +107,7 @@
                   <a href="#" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1"><i class="bi bi-museum"></i> Museo de Arte Moderno</h5>
-                      <small class="text-warning"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> 4.6</small>
+                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.6</small>
                     </div>
                     <p class="mb-1 text-muted small">Galería de arte contemporáneo, entrada: $15</p>
                     <small>📍 Carrera 7 #100-50, Zona Cultural</small>
@@ -108,7 +115,7 @@
                   <a href="#" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1"><i class="bi bi-fork-knife"></i> Restaurante "El Típico"</h5>
-                      <small class="text-warning"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> 4.5</small>
+                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.5</small>
                     </div>
                     <p class="mb-1 text-muted small">Comida tradicional, especialidad en platos típicos</p>
                     <small>📍 Calle 5 #12-34, Centro Histórico</small>
@@ -116,7 +123,7 @@
                   <a href="#" class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1"><i class="bi bi-tree"></i> Parque Central</h5>
-                      <small class="text-warning"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i> 4.3</small>
+                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.3</small>
                     </div>
                     <p class="mb-1 text-muted small">Área verde con juegos y zonas de descanso</p>
                     <small>📍 Paseo de la Naturaleza, Sector Oriente</small>
@@ -126,7 +133,6 @@
 
 
 
-              <p class="mt-3 small text-muted">Ahora puedes buscar lugares con OpenStreetMap (Overpass). Haz click en un resultado o marcador para ver sus reseñas y añadir la tuya.</p>
             </div>
           </div>
         </div>

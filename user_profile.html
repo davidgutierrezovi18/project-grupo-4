@@ -19,7 +19,7 @@
 <body class="d-flex flex-column h-100">
 <main class="flex-shrink-0">
 
-    <!-- Navigation -->
+<!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container px-5">
             <a class="navbar-brand d-flex align-items-center" href="index.html">
@@ -42,14 +42,14 @@
                     <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
                     <li class="nav-item"><a class="nav-link" href="reviews.html">Reseñas</a></li>
                     <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contacto</a></li>
 
-                    <!-- Admin button -->
+                    <!-- Admin -->
                     <li class="nav-item">
                         <a class="nav-link" href="admin_users.html">Admin</a>
                     </li>
 
-                    <!-- Profile dropdown -->
+                    <!-- Perfil -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownProfile"
                            href="#" role="button" data-bs-toggle="dropdown"
@@ -58,15 +58,22 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end"
                             aria-labelledby="navbarDropdownProfile">
-                            <li><a class="dropdown-item active" href="user_profile.html">Ver perfil</a></li>
-                            <li><a class="dropdown-item" href="sign_in.html">Sign in</a></li>
-                            <li><a class="dropdown-item" href="register.html">Register</a></li>
+                            <li>
+                                <a class="dropdown-item" href="user_profile.html">Ver mi perfil</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="sign_in.html">Iniciar sesión</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="register.html">Registrarse</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
 
     <!-- User Profile Section -->
     <section class="py-5">
@@ -113,9 +120,10 @@
                             <label for="password">Contraseña</label>
                         </div>
 
-                        <!-- Edit Profile Button -->
-                        <div class="d-grid">
+                        <!-- Edit / Delete Profile Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                             <a href="edit_profile.html" class="btn btn-primary btn-lg">Editar perfil</a>
+                            <button type="button" class="btn btn-danger btn-lg">Borrar perfil</button>
                         </div>
                     </form>
                 </div>

@@ -2843,21 +2843,34 @@ textarea.form-control-lg {
   opacity: var(--bs-btn-disabled-opacity);
 }
 
+/* Modificado por nosotros: */
 .btn-primary {
+  /* color del texto */
   --bs-btn-color: #fff;
-  --bs-btn-bg: #0d6efd;
-  --bs-btn-border-color: #0d6efd;
+  
+  /* Fondo normal */
+  --bs-btn-bg: #6ba8c6;
+  
+  /* Borde normal */
+  --bs-btn-border-color: #6ba8c6;
+  
+  /* Al pasar el ratón encima (color, fondo, borde) */
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #0b5ed7;
-  --bs-btn-hover-border-color: #0a58ca;
-  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-hover-bg: #9bd1ec;
+  --bs-btn-hover-border-color: #9bd1ec;
+  
+  /* Al hacer clic (color fondo borde) */
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #0a58ca;
-  --bs-btn-active-border-color: #0a53be;
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-active-bg: #9bd1ec;
+  --bs-btn-active-border-color: #9bd1ec;
+  
+  /* Efceto foco */
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  
+  /* Cuando está desabilitado (color, fondo, borde) */
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #0d6efd;
-  --bs-btn-disabled-border-color: #0d6efd;
+  --bs-btn-disabled-bg: #9bd1ec;
+  --bs-btn-disabled-border-color: #9bd1ec;
 }
 
 .btn-secondary {
@@ -3460,9 +3473,9 @@ textarea.form-control-lg {
   background-color: var(--bs-dropdown-link-hover-bg);
 }
 .dropdown-item.active, .dropdown-item:active {
-  color: var(--bs-dropdown-link-active-color);
+  color: var(--bs-list-group-action-active-color);
   text-decoration: none;
-  background-color: var(--bs-dropdown-link-active-bg);
+  background-color: #e8e8e8;
 }
 .dropdown-item.disabled, .dropdown-item:disabled {
   color: var(--bs-dropdown-link-disabled-color);
@@ -10848,38 +10861,4 @@ html {
 }
 
 /* Nuestro, lo anterior es lo de la plantilla */
-
-/* Star Rating Styles */
-.star-rating {
-  display: flex;
-  gap: 0.25rem;
-  align-items: center;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-}
-
-.star-rating input {
-  display: none;
-}
-
-.star-rating label {
-  cursor: pointer;
-  font-size: 1.25rem;
-  color: #ddd;
-  display: inline-flex;
-  align-items: center;
-}
-
-.star-rating label .bi {
-  font-size: 1.5rem;
-}
-
-.star-rating input:checked ~ label {
-  color: #ffc107;
-}
-
-.star-rating label:hover,
-.star-rating label:hover ~ label {
-  color: #ffdf7e;
-}
 

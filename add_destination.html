@@ -71,6 +71,23 @@
                             <label for="destinationDescription">Descripción</label>
                         </div>
 
+                        <div class="text-center mb-4">
+                            <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Destination+Image"
+                                alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+
+                            <div>
+                                <label for="destinationImage" class="btn btn-outline-secondary">
+                                Select destination image
+                                </label>
+                                <input type="file" id="destinationImage" name="destinationImage" accept="image/jpeg, image/png" hidden
+                                    onchange="previewSelectedImage(event)">
+                            </div>
+
+                            <small class="text-muted d-block mt-2">
+                                Allowed formats: JPG, PNG
+                            </small>
+                            </div>
+
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                             <a href="destinations.html" class="btn btn-outline-secondary btn-lg">
                                 Cancelar

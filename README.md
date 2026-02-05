@@ -102,7 +102,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 >Formulario para añadir un nuevo destino; requiere los campos: nombre, descripción e imagen. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
 
 #### **5. Página de añadir lugar a visitar (add_place.html)**
-![Añadir lugar](images/add-place.png)
+![Añadir lugar](images/add-place-html.png)
 
 >Formulario para añadir un nuevo lugar a visitar; requiere los campos: nombre, descripción y categoría. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
 

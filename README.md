@@ -77,7 +77,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 ![Diagrama de Navegación](images/navigation-diagram.png)
 
-> Usuarios registrados (Amarillo), Usuarios sin registrar (Azul), Administrador (Rojo)
+>Diagrma con las principales paginas de la web, Usuarios registrados (Amarillo), Usuarios sin registrar (Azul), Administrador (Rojo)
 
 ### **Capturas de Pantalla y Descripción de Páginas**
 

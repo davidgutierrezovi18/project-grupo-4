@@ -32,9 +32,9 @@ Nuestra idea es una aplicación web de gestión de viajes personales. Permite a 
 
 Usuario - Viaje: Un usuario puede tener múltiples viajes (1:N).
 
-Viaje - Destino: Un viaje pertenece a un destino específico (N:1).
+Viaje - Destino: Un viaje puede tener múltiples destinos (1:N).
 
-Usuario - Valoración: Un usuario puede valorar múltiples destinos (1:N).
+Usuario - Valoración: Un usuario puede valorar múltiples lugares (1:N).
 
 Destino - Valoración: Un destino puede tener múltiples valoraciones (1:N).
 
@@ -54,14 +54,14 @@ Usuario Registrado:
 
 Administrador:
 
-   Permisos: Gestión completa de usuarios, destinos, viajes y valoraciones; moderación de contenido.
+   Permisos: Gestión completa de usuarios, destinos, valoraciones y viajes; moderación de contenido.
    Es dueño de: Todos los viajes, valoraciones, destinos y usuarios.
 
 Imágenes
 
-   Usuario: Avatar o foto de perfil.
-   
+   Usuario: Avatar o foto de perfil. 
    Destino: Imagen representativa del destino.
+   Viaje: Imagen representativa del viaje.
 
 Viaje: Múltiples fotos asociadas al viaje.
 ---
@@ -105,7 +105,7 @@ Creación de las paginas relacionadas con las reviews
 
 ---
 
-#### **Alumno 2 - [Nombre Completo]**
+#### **Alumno 2 - Mari Luz Charfolé Maestro**
 
 [Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
 
@@ -133,7 +133,7 @@ Creación de las paginas relacionadas con las reviews
 
 ---
 
-#### **Alumno 4 - [Nombre Completo]**
+#### **Alumno 4 - Nerea Sanz Sobrados**
 
 [Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
 

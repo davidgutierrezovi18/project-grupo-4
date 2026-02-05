@@ -3,6 +3,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -17,130 +18,126 @@
 </head>
 
 <body class="d-flex flex-column h-100">
-<main class="flex-shrink-0">
+    <main class="flex-shrink-0">
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container px-5">
-            <a class="navbar-brand d-flex align-items-center" href="index.html">
-                <i class="bi bi-airplane me-2"></i>
-                Next Journey
-            </a>
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container px-5">
+                <a class="navbar-brand d-flex align-items-center" href="index.html">
+                    <i class="bi bi-airplane me-2"></i>
+                    Next Journey
+                </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.html#destinos-recomendados">Destinos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="reviews.html">Reseñas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contacto</a></li>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.html#destinos-recomendados">Destinos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="reviews.html">Reseñas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="contact.html">Contacto</a></li>
 
-                    <!-- Admin -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin_users.html">Admin</a>
-                    </li>
+                        <!-- Admin -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin_users.html">Admin</a>
+                        </li>
 
-                    <!-- Perfil -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownProfile"
-                           href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Mi perfil
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end"
-                            aria-labelledby="navbarDropdownProfile">
-                            <li>
-                                <a class="dropdown-item" href="user_profile.html">Ver mi perfil</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="sign_in.html">Iniciar sesión</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="register.html">Registrarse</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                        <!-- Perfil -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Mi perfil
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownProfile">
+                                <li>
+                                    <a class="dropdown-item" href="user_profile.html">Ver mi perfil</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="sign_in.html">Iniciar sesión</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="register.html">Registrarse</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- Contact Section -->
-    <section class="py-5">
-        <div class="container px-5">
-            <div class="text-center mb-5">
-                <h1 class="fw-bolder">Contáctanos</h1>
-                <p class="lead fw-normal text-muted mb-0">
-                    Rellena el formulario y nos pondremos en contacto contigo.
-                </p>
+        <!-- Contact Section -->
+        <section class="py-5">
+            <div class="container px-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bolder">Contáctanos</h1>
+                    <p class="lead fw-normal text-muted mb-0">
+                        Rellena el formulario y nos pondremos en contacto contigo.
+                    </p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <form>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="name" placeholder="Full name" required>
+                                <label for="name">Nombre completo</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" placeholder="Email" required>
+                                <label for="email">Correo electrónico</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                                <label for="subject">Asunto</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" id="message" placeholder="Message" style="height: 150px"
+                                    required></textarea>
+                                <label for="message">Mensaje</label>
+                            </div>
+
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-lg" type="submit">
+                                    Enviar mensaje
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <form>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="Full name" required>
-                            <label for="name">Nombre completo</label>
-                        </div>
+    </main>
 
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="Email" required>
-                            <label for="email">Correo electrónico</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="subject" placeholder="Subject" required>
-                            <label for="subject">Asunto</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <textarea class="form-control" id="message"
-                                      placeholder="Message"
-                                      style="height: 150px" required></textarea>
-                            <label for="message">Mensaje</label>
-                        </div>
-
-                        <div class="d-grid">
-                            <button class="btn btn-primary btn-lg" type="submit">
-                                Enviar mensaje
-                            </button>
-                        </div>
-                    </form>
+    <!-- Footer -->
+    <footer class="bg-dark py-4 mt-auto">
+        <div class="container px-5">
+            <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                <div class="col-auto">
+                    <div class="small m-0 text-white">&copy; Next Journey 2026</div>
+                </div>
+                <div class="col-auto">
+                    <a class="link-light small" href="#!">Privacy</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="#!">Terms</a>
+                    <span class="text-white mx-1">&middot;</span>
+                    <a class="link-light small" href="contact.html">Contacto</a>
                 </div>
             </div>
         </div>
-    </section>
+    </footer>
 
-</main>
-
-<!-- Footer -->
-<footer class="bg-dark py-4 mt-auto">
-    <div class="container px-5">
-        <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-            <div class="col-auto">
-                <div class="small m-0 text-white">&copy; Next Journey 2026</div>
-            </div>
-            <div class="col-auto">
-                <a class="link-light small" href="#!">Privacy</a>
-                <span class="text-white mx-1">&middot;</span>
-                <a class="link-light small" href="#!">Terms</a>
-                <span class="text-white mx-1">&middot;</span>
-                <a class="link-light small" href="contact.html">Contacto</a>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

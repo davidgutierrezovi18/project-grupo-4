@@ -136,7 +136,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 >Página desde la que se pueden ver todas las reseñas realizadas por el usuario registrado. Además, se pueden editar y borrar las reseñas. Incluye barra de navegación, y botón para volver a la página “reseñas”.
 
-#### **12. Página de crear (add-review.html)**
+#### **12. Página de crear reseñas (add-review.html)**
 ![Añadir reseña](images/add-review-htm.png)
 
 >Formulario para añadir una nueva reseña; requiere los campos: nombre, tipo, puntuación, y foto. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
@@ -166,7 +166,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 >Formulario para poder acceder a tu cuenta, contiene los campos nombre de usuario y contraseña . Incluye barra de navegación, botón para iniciar sesión y link para poder registrarse por si el usuario todavía no estaba registrado
 
-#### **18.⁠ ⁠Pagina Registrarse (register.html)**
+#### **18.⁠ ⁠Página Registrarse (register.html)**
 ![Registrarse](images/register-html.png)
 
 >Formulario para poder crear una cuenta, contiene los campos, nombre, apellido, fecha de nacimiento, correo, contraseña,  confirmar contraseña y botón para aceptar los términos y condiciones. Incluye barra de navegación y link para poder iniciar sesión por si el usuario ya esta registrado.

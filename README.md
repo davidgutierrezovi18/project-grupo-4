@@ -96,26 +96,26 @@ Creación de las paginas relacionadas con las reviews
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Review Pages](https://github.com/DWS-2026/dws-2026-project-base/commit/ece5804d1c80ef8b10fa41a13de77ea1697cef54)  | https://reviews.html place_reviews.html  |
+|1| [Review Pages](https://github.com/DWS-2026/dws-2026-project-base/commit/ece5804d1c80ef8b10fa41a13de77ea1697cef54)  | reviews.html place_reviews.html  |
 |2| [add-review](https://github.com/DWS-2026/dws-2026-project-base/commit/15b2ebabe82ddb41e5185e83b4f51172ea739112)  | add-review.hmtl   |
 |3| [Update admin page and footer](https://github.com/DWS-2026/dws-2026-project-base/commit/0d42f29a39b8f9430fdbeb08432a1a4cb82b0fdc)  | admin_user.html   |
 |4| [Creation of index](https://github.com/DWS-2026/dws-2026-project-base/commit/f4e680038ea6ae6114a50e8370fcdf42ccf890a4)  | index.html   |
-|5| [Ad option view my reviews](https://github.com/DWS-2026/dws-2026-project-base/commit/665c0d8186aa747ea0b7727c9a31544552021eaa)  | my_reviews.html   |
+|5| [Add option view my reviews](https://github.com/DWS-2026/dws-2026-project-base/commit/665c0d8186aa747ea0b7727c9a31544552021eaa)  | my_reviews.html   |
 
 
 ---
 
 #### **Alumno 2 - Mari Luz Charfolé Maestro**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+Creación y desarrollo de las páginas relacionadas con los viajes, además de la base para la barra de navegación. También algunas modificaciones en el css base.
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+|1| [Creation new travel](https://github.com/DWS-2026/project-grupo-4/commit/1d88d6c6eb6394f73e8503940d4f424f5cba0070)  | [create_new_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/create_new_travel.html)   |
+|2| [Creation of edition page of one published travel](https://github.com/DWS-2026/dws-2026-project-base/commit/530a8bf5e1299feafb811344898672371bbfa5ea)  | [edit_travel.html]([URL_archivo_2](https://github.com/DWS-2026/project-grupo-4/blob/main/edit_travel.html))   |
+|3| [Creation of my travels page ](https://github.com/DWS-2026/dws-2026-project-base/commit/eff9e7d7f782d7adfe459ce825d6ceb3c69dc548)  | [mytravels.html](https://github.com/DWS-2026/project-grupo-4/blob/main/mytravels.html)   |
+|4| [Creation of one travel page](https://github.com/DWS-2026/dws-2026-project-base/commit/0d4e704e3c84a8c87f28324716aa8ba2e0a2f169)  | [one_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/one_travel.html)   |
+|5| [Creation of the base of the navigation bar](https://github.com/DWS-2026/dws-2026-project-base/commit/c31855d188c1b2208719bf3fedb4d120f9dceab8)  | todos los archivos   |
 
 ---
 

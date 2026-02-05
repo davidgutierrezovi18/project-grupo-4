@@ -118,7 +118,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 ---
 
-#### **Alumno 3 - [Nombre Completo]**
+#### **Alumno 3 - Hugo Rus González**
 
 [Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
 

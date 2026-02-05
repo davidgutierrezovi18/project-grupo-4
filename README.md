@@ -81,10 +81,105 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 ### **Capturas de Pantalla y Descripción de Páginas**
 
-#### **1. Página Principal / Home**
+#### **1. Página principal - Inicio (índex.html)**
 ![Página Principal](images/home-page.png)
 
-> [Descripción breve: Ej: "Página de inicio que muestra los productos destacados, categorías principales y un banner promocional. Incluye barra de navegación y acceso a registro/login para usuarios no autenticados."]
+>Página de inicio que muestra destinos recomendados y reseñas recientes. Incluye barra de navegación y botones para explorar destinos y ver las preguntas frecuentes.
+
+#### **2. Página de destinos (destinations.html)**
+![Título imagen](ruta imagen)
+
+>Página en la que se muestran diferentes destinos añadidos, permitiendo ir a la página de un destino concreto. Incluye barra de navegación y botón para crear un nuevo destino.
+
+#### **3. Página de un destino (one_destination.html)**
+![Título imagen](ruta imagen)
+
+>Página que muestra un destino al completo, con lugares que se pueden visitar. Incluye barra de navegación, botón para añadir lugares a visitar, y para volver a la página de destinos.
+
+#### **4. Página de añadir destino (add_destination.html)**
+![Título imagen](ruta imagen)
+
+>Formulario para añadir un nuevo destino; requiere los campos: nombre, descripción e imagen. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **5. Página de añadir lugar a visitar (add_place.html)**
+![Título imagen](ruta imagen)
+
+>Formulario para añadir un nuevo lugar a visitar; requiere los campos: nombre, descripción y categoría. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **6. Página mis viajes (mytravels.html)**
+![Título imagen](ruta imagen)
+
+>Página en la que se muestran los viajes del usuario registrado, permitiendo ir a la página de un viaje concreto. Incluye barra de navegación y botón para crear un nuevo viaje.
+
+#### **7. Página de un viaje (one_travel.html)**
+![Título imagen](ruta imagen)
+
+>Página que muestra un viaje al completo (título, descripción, imágenes, colaboradores…). Incluye barra de navegación, botón para editar el viaje, eliminar el viaje y volver a la página “mis viajes”.
+
+#### **8. Página de añadir viaje (create_new_travel.html)**
+![Título imagen](ruta imagen)
+
+>Formulario para añadir un nuevo viaje; con los campos: nombre, descripción, imagen, fechas, países visitados, ciudades visitadas, lugares visitados, calificación, comentario, imágenes, pdf del itinerario, y miembros del viaje (algunos campos son obligatorios). Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **9. Página de editar viaje (edit_travel.html)**
+![Título imagen](ruta imagen)
+
+>Página que permite editar los distintos campos rellenados al crear un viaje. Incluye barra de navegación, botón de cancelar, y de guardar cambios. 
+
+#### **10. Página de reseñas (reviews.html)**
+![Título imagen](ruta imagen)
+
+>Página que muestra un mapa y algunos lugares ya reseñados en los que si haces click te lleva a ellos. Ademas, también permite buscar otros lugares. Incluye barra de navegación, y botón para ver tus propias reseñas.
+
+#### **11. Página mis reseñas (my_reviews.html)**
+![Título imagen](ruta imagen)
+
+>Página desde la que se pueden ver todas las reseñas realizadas por el usuario registrado. Además, se pueden editar y borrar las reseñas. Incluye barra de navegación, y botón para volver a la página “reseñas”.
+
+#### **12. Página de crear (add-review.html)**
+![Título imagen](ruta imagen)
+
+>Formulario para añadir una nueva reseña; requiere los campos: nombre, tipo, puntuación, y foto. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **13. Página para dejar una reseña (place_reviews.html)**
+![Título imagen](ruta imagen)
+
+>Página para ver las reseñas de un lugar determinado y su ubicación en un mapa. Incluye barra de navegación, y botón para añadir una reseña.
+
+#### **14. Página de preguntas frecuentes (faq.html)**
+![Título imagen](ruta imagen)
+
+>Página en la que se pueden consultar las respuestas a preguntas frecuentes realizadas por los usuarios. Incluye barra de navegación, y botón para ir a la página de contacto.
+
+#### **15. Página de contacto (contact.html)**
+![Título imagen](ruta imagen)
+
+>Página que permite rellenar un formulario para contactar con los propietarios de la web. Incluye barra de navegación y botón para enviar el formulario.
+
+#### **16.⁠ ⁠Página de ver perfil (user_profile.html)**
+![Título imagen](ruta imagen)
+
+>Página en la que se muestra el perfil del usuario, nombre, correo y nombre de usuario. Incluye barra de navegación, botón para editar perfil, botón para borrar perfil, botón para volver a mis viajes y botón para ver las reseñas de usuario. 
+
+#### **17.  Página de iniciar sesión (sign_in.html)**
+![Título imagen](ruta imagen)
+
+>Formulario para poder acceder a tu cuenta, contiene los campos nombre de usuario y contraseña . Incluye barra de navegación, botón para iniciar sesión y link para poder registrarse por si el usuario todavía no estaba registrado
+
+#### **18.⁠ ⁠Pagina Registrarse (register.html)**
+![Título imagen](ruta imagen)
+
+>Formulario para poder crear una cuenta, contiene los campos, nombre, apellido, fecha de nacimiento, correo, contraseña,  confirmar contraseña y botón para aceptar los términos y condiciones. Incluye barra de navegación y link para poder iniciar sesión por si el usuario ya esta registrado.
+
+#### **19.⁠ ⁠Página de admin  (admin_users.html)**
+![Título imagen](ruta imagen)
+
+>Página en la cual el admin puede gestionar a los demás usuarios, editarlos, ver su perfil, eliminarlos y añadir nuevos usuarios. Contiene barras de búsqueda por nombre, email o Id, por roles y por estados. En la pagina también se puede ver el total de Usuarios, los activos los inactivos y los bloqueados. Incluye barra de navegación para poder volver al inicio y cerrar sesión admin.
+
+#### **20. Página de editar perfil de usuario (edit_profile.html)**
+![Título imagen](ruta imagen)
+
+>Página que permite editar los distintos campos asociados a un perfil de usuario. Incluye barra de navegación, botón de cancelar, y de guardar cambios.
 
 #### **AQUÍ AÑADIR EL RESTO DE PÁGINAS**
 

@@ -20,7 +20,7 @@ Nuestra idea es una aplicación web de gestión de viajes personales. Permite a 
 ### **Entidades**
 -Usuario: Representa a los usuarios de la web (registrados y administrador).
 
--Destino: Lugares o ciudades a los que los usuarios pueden viajar y valorar.
+-Destino: Lugares o ciudades a los que los usuarios pueden viajar.
 
 -Viaje: Registro de un viaje realizado o planificado por un usuario a un destino, cada viaje tendrá un fichero pdf con el intinerario del viaje.
 

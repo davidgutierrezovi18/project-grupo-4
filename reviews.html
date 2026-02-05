@@ -1,199 +1,216 @@
 <!DOCTYPE html>
 <html lang="es">
-   <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Modern Business - Start Bootstrap Template</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-  <body class="d-flex flex-column h-100">
-    <main class="flex-shrink-0">
-      <!-- Navigation-->
-      <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div class="container px-5">
-                    <a class="navbar-brand d-flex align-items-center" href="index.html">
-                        <i class="bi bi-airplane me-2"></i>
-                        Next Journey
-                    </a>
-                    <!-- Web name without icon: <a class="navbar-brand" href="index.html">Next Journey</a>-->
-                    
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                            <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#destinos-recomendados">Destinos</a></li>
-                            <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
-                            <li class="nav-item"><a class="nav-link active" href="reviews.html">Reseñas</a></li>
-                            <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
-                            <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
 
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Mi perfil</a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownProfile">
-                                    <li>
-                                        <a class="dropdown-item" href="user_profile.html">Ver mi perfil</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="sign_in.html">Sign in</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="register.html">Register</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-      <!-- Header -->
-      <header class="bg-dark py-5">
-        <div class="container px-5">
-          <div class="row gx-5 align-items-center justify-content-center">
-            <div class="col-lg-10 text-center">
-              <div class="my-5 text-center text-white">
-                <h1 class="display-5 fw-bolder mb-2">Explora el mundo y deja tu reseña</h1>
-                <p class="lead fw-normal text-white-50 mb-4">Busca restaurantes, teatros, monumentos y comparte tu experiencia. </p>
-              </div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>Modern Business - Start Bootstrap Template</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="css/styles.css" rel="stylesheet" />
+</head>
+
+<body class="d-flex flex-column h-100">
+  <main class="flex-shrink-0">
+
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container px-5">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+          <i class="bi bi-airplane me-2"></i>
+          Next Journey
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+            class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
+            <li class="nav-item"><a class="nav-link active" href="reviews.html">Reseñas</a></li>
+            <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
+
+            <!-- Admin -->
+            <li class="nav-item">
+              <a class="nav-link" href="admin_users.html">Admin</a>
+            </li>
+
+            <!--Perfil-->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false"> Mi perfil</a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownProfile">
+                <li>
+                  <a class="dropdown-item" href="user_profile.html">Ver mi perfil</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="sign_in.html">Sign in</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="register.html">Register</a>
+                </li>
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-dark py-5">
+      <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+          <div class="col-lg-10 text-center">
+            <div class="my-5 text-center text-white">
+              <h1 class="display-5 fw-bolder mb-2">Explora el mundo y deja tu reseña</h1>
+              <p class="lead fw-normal text-white-50 mb-4">Busca restaurantes, teatros, monumentos y comparte tu
+                experiencia. </p>
             </div>
           </div>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <!-- OpenStreetMap -->
-      <section class="map-top py-5">
-        <div class="container px-5">
-          <div class="mb-4">
-            <h3 class="text-center mb-4">Mapa de lugares y reseñas</h3>
-            <div class="ratio ratio-16x9">
-              <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-0.5,51.4,0.5,51.8&layer=mapnik" style="border:none; border-radius:0.5rem;"></iframe>
-            </div>
+    <!-- OpenStreetMap -->
+    <section class="map-top py-5">
+      <div class="container px-5">
+        <div class="mb-4">
+          <h3 class="text-center mb-4">Mapa de lugares y reseñas</h3>
+          <div class="ratio ratio-16x9">
+            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-0.5,51.4,0.5,51.8&layer=mapnik"
+              style="border:none; border-radius:0.5rem;"></iframe>
           </div>
-          
-          <!-- Search bar-->
-          <div class="mt-4">
-            <h5 class="fw-bolder mb-3 text-center">Buscar lugares</h5>
-            <div class="row g-3 justify-content-center">
-              <div class="col-md-5">
-                <input id="searchInput" class="form-control" type="search" placeholder="Buscar lugares (ej. Restaurante, Museo)" aria-label="Buscar" />
-              </div>
-              <div class="col-md-3">
-                <select id="radiusSelect" class="form-select">
-                  <option value="1000">Radio: 1 km</option>
-                  <option value="2500">Radio: 2.5 km</option>
-                  <option value="5000" selected>Radio: 5 km</option>
-                  <option value="10000">Radio: 10 km</option>
-                </select>
-              </div>
-              <div class="col-md-2">
-                <button id="searchBtn" class="btn btn-primary w-100">Buscar</button>
-              </div>
+        </div>
+
+        <!-- Search bar-->
+        <div class="mt-4">
+          <h5 class="fw-bolder mb-3 text-center">Buscar lugares</h5>
+          <div class="row g-3 justify-content-center">
+            <div class="col-md-5">
+              <input id="searchInput" class="form-control" type="search"
+                placeholder="Buscar lugares (ej. Restaurante, Museo)" aria-label="Buscar" />
+            </div>
+            <div class="col-md-3">
+              <select id="radiusSelect" class="form-select">
+                <option value="1000">Radio: 1 km</option>
+                <option value="2500">Radio: 2.5 km</option>
+                <option value="5000" selected>Radio: 5 km</option>
+                <option value="10000">Radio: 10 km</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <button id="searchBtn" class="btn btn-primary w-100">Buscar</button>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Main layout: map + sidebar -->
-      <section class="py-5">
-        <div class="container px-5">
-          <div class="row gx-5">
+    <!-- Main layout: map + sidebar -->
+    <section class="py-5">
+      <div class="container px-5">
+        <div class="row gx-5">
 
 
-            <!-- Sidebar: results + add review -->
-            <div class="col-lg-8 mx-auto">
-              <div class="mb-4">
-                <h4 class="fw-bolder">Resultados</h4>
-                
+          <!-- Sidebar: results + add review -->
+          <div class="col-lg-8 mx-auto">
+            <div class="mb-4">
+              <h4 class="fw-bolder">Resultados</h4>
 
-                <div class="list-group">
-                  <!-- Place Examples -->
-                  <a href="place_reviews.html" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1"><i class="bi bi-shop"></i> Sagrada Familia</h5>
-                      <small class="text-warning"><i class="bi bi-star-fill"></i> 4.2</small>
-                    </div>
-                    <p class="mb-1 text-muted small">catedral, abierto 24h</p>
-                    <small>📍 Calle Principal 123, Centro</small>
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1"><i class="bi bi-cup-hot"></i> Café La Esquina</h5>
-                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.8</small>
-                    </div>
-                    <p class="mb-1 text-muted small">Café especializado en café de origen único</p>
-                    <small>📍 Avenida Libertad 456, Barrio Antiguo</small>
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1"><i class="bi bi-museum"></i> Museo de Arte Moderno</h5>
-                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.6</small>
-                    </div>
-                    <p class="mb-1 text-muted small">Galería de arte contemporáneo, entrada: $15</p>
-                    <small>📍 Carrera 7 #100-50, Zona Cultural</small>
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1"><i class="bi bi-fork-knife"></i> Restaurante "El Típico"</h5>
-                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.5</small>
-                    </div>
-                    <p class="mb-1 text-muted small">Comida tradicional, especialidad en platos típicos</p>
-                    <small>📍 Calle 5 #12-34, Centro Histórico</small>
-                  </a>
-                  <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1"><i class="bi bi-tree"></i> Parque Central</h5>
-                      <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.3</small>
-                    </div>
-                    <p class="mb-1 text-muted small">Área verde con juegos y zonas de descanso</p>
-                    <small>📍 Paseo de la Naturaleza, Sector Oriente</small>
-                  </a>
-                </div>
+
+              <div class="list-group">
+                <!-- Place Examples -->
+                <a href="place_reviews.html" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><i class="bi bi-shop"></i> Sagrada Familia</h5>
+                    <small class="text-warning"><i class="bi bi-star-fill"></i> 4.2</small>
+                  </div>
+                  <p class="mb-1 text-muted small">catedral, abierto 24h</p>
+                  <small>📍 Calle Principal 123, Centro</small>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><i class="bi bi-cup-hot"></i> Café La Esquina</h5>
+                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.8</small>
+                  </div>
+                  <p class="mb-1 text-muted small">Café especializado en café de origen único</p>
+                  <small>📍 Avenida Libertad 456, Barrio Antiguo</small>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><i class="bi bi-museum"></i> Museo de Arte Moderno</h5>
+                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.6</small>
+                  </div>
+                  <p class="mb-1 text-muted small">Galería de arte contemporáneo, entrada: $15</p>
+                  <small>📍 Carrera 7 #100-50, Zona Cultural</small>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><i class="bi bi-fork-knife"></i> Restaurante "El Típico"</h5>
+                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.5</small>
+                  </div>
+                  <p class="mb-1 text-muted small">Comida tradicional, especialidad en platos típicos</p>
+                  <small>📍 Calle 5 #12-34, Centro Histórico</small>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><i class="bi bi-tree"></i> Parque Central</h5>
+                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.3</small>
+                  </div>
+                  <p class="mb-1 text-muted small">Área verde con juegos y zonas de descanso</p>
+                  <small>📍 Paseo de la Naturaleza, Sector Oriente</small>
+                </a>
               </div>
-
-
-
             </div>
+
+
+
           </div>
         </div>
-      </section>
-      <section class="py-4">
-        <div class="container px-5">
-          <div class="text-center">
-            <a class="btn btn-primary btn-lg px-4" href="my_reviews.html">Ver mis reseñas</a>
-          </div>
+      </div>
+    </section>
+    <section class="py-4">
+      <div class="container px-5">
+        <div class="text-center">
+          <a class="btn btn-primary btn-lg px-4" href="my_reviews.html">Ver mis reseñas</a>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+  </main>
 
 
-        <!-- Footer -->
-        <footer class="bg-dark py-4 mt-auto">
-            <div class="container px-5">
-                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto">
-                        <div class="small m-0 text-white">&copy; Next Journey 2026</div>
-                    </div>
-                    <div class="col-auto">
-                        <a class="link-light small" href="#!">Privacidad</a>
-                        <span class="text-white mx-1">&middot;</span>
-                        <a class="link-light small" href="#!">Términos</a>
-                        <span class="text-white mx-1">&middot;</span>
-                        <a class="link-light small" href="contact.html">Contacto</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
+  <!-- Footer -->
+  <footer class="bg-dark py-4 mt-auto">
+    <div class="container px-5">
+      <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+        <div class="col-auto">
+          <div class="small m-0 text-white">&copy; Next Journey 2026</div>
+        </div>
+        <div class="col-auto">
+          <a class="link-light small" href="#!">Privacidad</a>
+          <span class="text-white mx-1">&middot;</span>
+          <a class="link-light small" href="#!">Términos</a>
+          <span class="text-white mx-1">&middot;</span>
+          <a class="link-light small" href="contact.html">Contacto</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
 
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+  <!-- Bootstrap core JS-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>

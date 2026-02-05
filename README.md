@@ -181,7 +181,6 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 >Página que permite editar los distintos campos asociados a un perfil de usuario. Incluye barra de navegación, botón de cancelar, y de guardar cambios.
 
-#### **AQUÍ AÑADIR EL RESTO DE PÁGINAS**
 
 ### **Participación de Miembros en la Práctica 1**
 

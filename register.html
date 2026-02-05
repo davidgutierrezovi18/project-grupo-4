@@ -79,6 +79,25 @@
 
 
                     <form class="row g-3">
+                        <div class="text-center mb-4">
+
+                            <!--User Avatar-->
+                            <img src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"
+                                class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
+
+                            <!--Profile Picture-->
+                            <div>
+                                <label for="profileImage" class="btn btn-outline-secondary">
+                                    Selecciona tu foto de perfil
+                                </label>
+                                <input type="file" id="profileImage" name="profileImage" accept="image/jpeg, image/png"
+                                    hidden />
+                            </div>
+
+                            <small class="text-muted d-block mt-2">
+                                Formatos permitidos: JPG, PNG
+                            </small>
+                        </div>
                         <div class="col-md-6">
                             <label for="inputNombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="inputNombre" placeholder="Introduce tu nombre"
@@ -141,7 +160,7 @@
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">
-                                <a class=" nav-link" href="sign_in.html">Registrarse</a>
+                                Registrarse
                             </button>
                         </div>
                     </form>

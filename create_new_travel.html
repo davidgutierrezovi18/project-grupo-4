@@ -30,21 +30,26 @@
                     <i class="bi bi-airplane me-2"></i>
                     Next Journey
                 </a>
-                <!-- Web name without icon: <a class="navbar-brand" href="index.html">Next Journey</a>-->
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation"><span
-                        class="navbar-toggler-icon"></span></button>
+                    aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+                </button>
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#destinos-recomendados">Destinos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
                         <li class="nav-item"><a class="nav-link" href="mytravels.html">Mis viajes</a></li>
                         <li class="nav-item"><a class="nav-link" href="reviews.html">Reseñas</a></li>
                         <li class="nav-item"><a class="nav-link" href="faq.html">FAQ</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
 
+                        <!-- Admin -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin_users.html">Admin</a>
+                        </li>
+
+                        <!--Perfil-->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false"> Mi perfil</a>
@@ -60,6 +65,7 @@
                                 </li>
                             </ul>
                         </li>
+
                     </ul>
                 </div>
             </div>
@@ -105,7 +111,8 @@
                     <!-- Description-->
                     <div class="mb-3">
                         <label class="form-label">Descripción del viaje</label>
-                        <textarea class="form-control" rows="4" placeholder="Cuenta tu experiencia..." required></textarea>
+                        <textarea class="form-control" rows="4" placeholder="Cuenta tu experiencia..."
+                            required></textarea>
                     </div>
                     <!-- Countries visited-->
                     <div class="mb-3">
@@ -167,10 +174,7 @@
                     </div>
                     <!-- Buttom -->
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary px-5">
-                            <a class="nav-link" href="mytravels.html">Crear viaje</a>
-                            
-                        </button>
+                        <button type="submit" class="btn btn-primary px-5"></button>
                     </div>
             </div>
         </section>

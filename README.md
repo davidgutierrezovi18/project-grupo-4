@@ -81,12 +81,106 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 ### **Capturas de Pantalla y Descripción de Páginas**
 
-#### **1. Página Principal / Home**
-![Página Principal](images/home-page.png)
+#### **1. Página principal - Inicio (índex.html)**
+![Página Principal](images/index-html.png)
 
-> [Descripción breve: Ej: "Página de inicio que muestra los productos destacados, categorías principales y un banner promocional. Incluye barra de navegación y acceso a registro/login para usuarios no autenticados."]
+>Página de inicio que muestra destinos recomendados y reseñas recientes. Incluye barra de navegación y botones para explorar destinos y ver las preguntas frecuentes.
 
-#### **AQUÍ AÑADIR EL RESTO DE PÁGINAS**
+#### **2. Página de destinos (destinations.html)**
+![Destinos](images/destinations-html.png)
+
+>Página en la que se muestran diferentes destinos añadidos, permitiendo ir a la página de un destino concreto. Incluye barra de navegación y botón para crear un nuevo destino.
+
+#### **3. Página de un destino (one_destination.html)**
+![Un destino](images/one-destination-html.png)
+
+>Página que muestra un destino al completo, con lugares que se pueden visitar. Incluye barra de navegación, botón para añadir lugares a visitar, y para volver a la página de destinos.
+
+#### **4. Página de añadir destino (add_destination.html)**
+![Añadir destino](images/add-destination-html.png)
+
+>Formulario para añadir un nuevo destino; requiere los campos: nombre, descripción e imagen. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **5. Página de añadir lugar a visitar (add_place.html)**
+![Añadir lugar](images/add-place-html.png)
+
+>Formulario para añadir un nuevo lugar a visitar; requiere los campos: nombre, descripción y categoría. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **6. Página mis viajes (mytravels.html)**
+![Mis viajes](images/mytravels-html.png)
+
+>Página en la que se muestran los viajes del usuario registrado, permitiendo ir a la página de un viaje concreto. Incluye barra de navegación y botón para crear un nuevo viaje.
+
+#### **7. Página de un viaje (one_travel.html)**
+![Un viaje](images/one-travel-html.png)
+
+>Página que muestra un viaje al completo (título, descripción, imágenes, colaboradores…). Incluye barra de navegación, botón para editar el viaje, eliminar el viaje y volver a la página “mis viajes”.
+
+#### **8. Página de añadir viaje (create_new_travel.html)**
+![Nuevo viaje](images/create-new-travel-html.png)
+
+>Formulario para añadir un nuevo viaje; con los campos: nombre, descripción, imagen, fechas, países visitados, ciudades visitadas, lugares visitados, calificación, comentario, imágenes, pdf del itinerario, y miembros del viaje (algunos campos son obligatorios). Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **9. Página de editar viaje (edit_travel.html)**
+![Editar viaje](images/edit-travel-html.png)
+
+>Página que permite editar los distintos campos rellenados al crear un viaje. Incluye barra de navegación, botón de cancelar, y de guardar cambios. 
+
+#### **10. Página de reseñas (reviews.html)**
+![Reseñas](images/reviews-html.png)
+
+>Página que muestra un mapa y algunos lugares ya reseñados en los que si haces click te lleva a ellos. Ademas, también permite buscar otros lugares. Incluye barra de navegación, y botón para ver tus propias reseñas.
+
+#### **11. Página mis reseñas (my_reviews.html)**
+![Mis reseñas](images/my-reviews-html.png)
+
+>Página desde la que se pueden ver todas las reseñas realizadas por el usuario registrado. Además, se pueden editar y borrar las reseñas. Incluye barra de navegación, y botón para volver a la página “reseñas”.
+
+#### **12. Página de crear (add-review.html)**
+![Añadir reseña](images/add-review-htm.png)
+
+>Formulario para añadir una nueva reseña; requiere los campos: nombre, tipo, puntuación, y foto. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
+
+#### **13. Página para dejar una reseña (place_reviews.html)**
+![Reseñas](images/place-reviews-html.png)
+
+>Página para ver las reseñas de un lugar determinado y su ubicación en un mapa. Incluye barra de navegación, y botón para añadir una reseña.
+
+#### **14. Página de preguntas frecuentes (faq.html)**
+![FAQ](images/faq-html.png)
+
+>Página en la que se pueden consultar las respuestas a preguntas frecuentes realizadas por los usuarios. Incluye barra de navegación, y botón para ir a la página de contacto.
+
+#### **15. Página de contacto (contact.html)**
+![Contacto](images/contact-html.png)
+
+>Página que permite rellenar un formulario para contactar con los propietarios de la web. Incluye barra de navegación y botón para enviar el formulario.
+
+#### **16.⁠ ⁠Página de ver perfil (user_profile.html)**
+![Perfil del usuario](images/user-profile-html.png)
+
+>Página en la que se muestra el perfil del usuario, nombre, correo y nombre de usuario. Incluye barra de navegación, botón para editar perfil, botón para borrar perfil, botón para volver a mis viajes y botón para ver las reseñas de usuario. 
+
+#### **17.  Página de iniciar sesión (sign_in.html)**
+![Iniciar sesión](images/sign-in-html.png)
+
+>Formulario para poder acceder a tu cuenta, contiene los campos nombre de usuario y contraseña . Incluye barra de navegación, botón para iniciar sesión y link para poder registrarse por si el usuario todavía no estaba registrado
+
+#### **18.⁠ ⁠Pagina Registrarse (register.html)**
+![Registrarse](images/register-html.png)
+
+>Formulario para poder crear una cuenta, contiene los campos, nombre, apellido, fecha de nacimiento, correo, contraseña,  confirmar contraseña y botón para aceptar los términos y condiciones. Incluye barra de navegación y link para poder iniciar sesión por si el usuario ya esta registrado.
+
+#### **19.⁠ ⁠Página de admin  (admin_users.html)**
+![Panel del Admin](images/admin-users-html.png)
+
+>Página en la cual el admin puede gestionar a los demás usuarios, editarlos, ver su perfil, eliminarlos y añadir nuevos usuarios. Contiene barras de búsqueda por nombre, email o Id, por roles y por estados. En la pagina también se puede ver el total de Usuarios, los activos los inactivos y los bloqueados. Incluye barra de navegación para poder volver al inicio y cerrar sesión admin.
+
+#### **20. Página de editar perfil de usuario (edit_profile.html)**
+![Editar perfil](images/edit-profile-html.png)
+
+>Página que permite editar los distintos campos asociados a un perfil de usuario. Incluye barra de navegación, botón de cancelar, y de guardar cambios.
+
 
 ### **Participación de Miembros en la Práctica 1**
 
@@ -96,11 +190,11 @@ Creación de las paginas relacionadas con las reviews
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Review Pages](https://github.com/DWS-2026/dws-2026-project-base/commit/ece5804d1c80ef8b10fa41a13de77ea1697cef54)  | reviews.html place_reviews.html  |
-|2| [add-review](https://github.com/DWS-2026/dws-2026-project-base/commit/15b2ebabe82ddb41e5185e83b4f51172ea739112)  | add-review.hmtl   |
-|3| [Update admin page and footer](https://github.com/DWS-2026/dws-2026-project-base/commit/0d42f29a39b8f9430fdbeb08432a1a4cb82b0fdc)  | admin_user.html   |
-|4| [Creation of index](https://github.com/DWS-2026/dws-2026-project-base/commit/f4e680038ea6ae6114a50e8370fcdf42ccf890a4)  | index.html   |
-|5| [Add option view my reviews](https://github.com/DWS-2026/dws-2026-project-base/commit/665c0d8186aa747ea0b7727c9a31544552021eaa)  | my_reviews.html   |
+|1| [Review Pages](https://github.com/DWS-2026/dws-2026-project-base/commit/ece5804d1c80ef8b10fa41a13de77ea1697cef54)  | [reviews.html](https://github.com/DWS-2026/project-grupo-4/blob/main/reviews.html) [place_reviews.html](https://github.com/DWS-2026/project-grupo-4/blob/main/place_reviews.html)  |
+|2| [add-review](https://github.com/DWS-2026/dws-2026-project-base/commit/15b2ebabe82ddb41e5185e83b4f51172ea739112)  | [add-review.hmtl](https://github.com/DWS-2026/project-grupo-4/blob/main/add-review.html)   |
+|3| [Update admin page and footer](https://github.com/DWS-2026/dws-2026-project-base/commit/0d42f29a39b8f9430fdbeb08432a1a4cb82b0fdc)  | [admin_user.html](https://github.com/DWS-2026/project-grupo-4/blob/main/admin_users.html)   |
+|4| [Creation of index](https://github.com/DWS-2026/dws-2026-project-base/commit/f4e680038ea6ae6114a50e8370fcdf42ccf890a4)  | [index.html](https://github.com/DWS-2026/project-grupo-4/blob/main/index.html)   |
+|5| [Add option view my reviews](https://github.com/DWS-2026/dws-2026-project-base/commit/665c0d8186aa747ea0b7727c9a31544552021eaa)  | [my_reviews.html](https://github.com/DWS-2026/project-grupo-4/blob/main/my_reviews.html)   |
 
 
 ---
@@ -121,15 +215,15 @@ Creación y desarrollo de las páginas relacionadas con los viajes, además de l
 
 #### **Alumno 3 - Hugo Rus González**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+Desarrollo de algunas de las principales páginas de la aplicación (incluyendo perfil de usuario, páginas de soporte y la mayoría de páginas de destino) y grabación del vídeo demostrativo.
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+|1| [Creation user profile](https://github.com/DWS-2026/dws-2026-project-base/commit/421068b3f1fd8f9a37c0f252feb2bcb2b3d62c13)  | [user_profile.html](https://github.com/DWS-2026/project-grupo-4/blob/main/user_profile.html)   |
+|2| [Creation of contact page](https://github.com/DWS-2026/dws-2026-project-base/commit/2673041eabdda67e2b1ce241c2b85a7de401be1e)  | [contact.html](https://github.com/DWS-2026/project-grupo-4/blob/main/contact.html)   |
+|3| [Creation of add destination and add place](https://github.com/DWS-2026/dws-2026-project-base/commit/1cdabb3a89703cf71dd783de0558688a3cce3174)  | [add_destination.html](https://github.com/DWS-2026/project-grupo-4/blob/main/add_destination.html) [add_place.html](https://github.com/DWS-2026/project-grupo-4/blob/main/add_place.html)  |
+|4| [Creation of one_destination](https://github.com/DWS-2026/dws-2026-project-base/commit/848b195104fe9c07cf2406be5cd3315bf8015d88)  | [one_destination.html](https://github.com/DWS-2026/project-grupo-4/blob/main/one_destination.html)   |
+|5| [Creation of faq page](https://github.com/DWS-2026/dws-2026-project-base/commit/befd32f94db86368d31d249e3770194412dbccea)  | [faq.html](https://github.com/DWS-2026/project-grupo-4/blob/main/faq.html)  |
 
 ---
 

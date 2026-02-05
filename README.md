@@ -102,7 +102,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 >Formulario para añadir un nuevo destino; requiere los campos: nombre, descripción e imagen. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
 
 #### **5. Página de añadir lugar a visitar (add_place.html)**
-![Añadir lugar]()
+![Añadir lugar](images/add-place.png)
 
 >Formulario para añadir un nuevo lugar a visitar; requiere los campos: nombre, descripción y categoría. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
 
@@ -117,12 +117,12 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 >Página que muestra un viaje al completo (título, descripción, imágenes, colaboradores…). Incluye barra de navegación, botón para editar el viaje, eliminar el viaje y volver a la página “mis viajes”.
 
 #### **8. Página de añadir viaje (create_new_travel.html)**
-![Nuevo viaje](images/createnew-travel-html.png)
+![Nuevo viaje](images/create-new-travel-html.png)
 
 >Formulario para añadir un nuevo viaje; con los campos: nombre, descripción, imagen, fechas, países visitados, ciudades visitadas, lugares visitados, calificación, comentario, imágenes, pdf del itinerario, y miembros del viaje (algunos campos son obligatorios). Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
 
 #### **9. Página de editar viaje (edit_travel.html)**
-![Editar viaje]()
+![Editar viaje](images/edit-travel-html.png)
 
 >Página que permite editar los distintos campos rellenados al crear un viaje. Incluye barra de navegación, botón de cancelar, y de guardar cambios. 
 
@@ -137,7 +137,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 >Página desde la que se pueden ver todas las reseñas realizadas por el usuario registrado. Además, se pueden editar y borrar las reseñas. Incluye barra de navegación, y botón para volver a la página “reseñas”.
 
 #### **12. Página de crear (add-review.html)**
-![Añadir reseña](images/add-review-html.png)
+![Añadir reseña](images/add-review-htm.png)
 
 >Formulario para añadir una nueva reseña; requiere los campos: nombre, tipo, puntuación, y foto. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.
 

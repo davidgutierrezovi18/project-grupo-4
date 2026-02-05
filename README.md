@@ -112,7 +112,7 @@ Creación y desarrollo de las páginas relacionadas con los viajes, además de l
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
 |1| [Creation new travel](https://github.com/DWS-2026/project-grupo-4/commit/1d88d6c6eb6394f73e8503940d4f424f5cba0070)  | [create_new_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/create_new_travel.html)   |
-|2| [Creation of edition page of one published travel](https://github.com/DWS-2026/dws-2026-project-base/commit/530a8bf5e1299feafb811344898672371bbfa5ea)  | [edit_travel.html]([URL_archivo_2](https://github.com/DWS-2026/project-grupo-4/blob/main/edit_travel.html))   |
+|2| [Creation of edition page of one published travel](https://github.com/DWS-2026/dws-2026-project-base/commit/530a8bf5e1299feafb811344898672371bbfa5ea)  | [edit_travel.html]([https://github.com/DWS-2026/project-grupo-4/blob/main/edit_travel.html])   |
 |3| [Creation of my travels page ](https://github.com/DWS-2026/dws-2026-project-base/commit/eff9e7d7f782d7adfe459ce825d6ceb3c69dc548)  | [mytravels.html](https://github.com/DWS-2026/project-grupo-4/blob/main/mytravels.html)   |
 |4| [Creation of one travel page](https://github.com/DWS-2026/dws-2026-project-base/commit/0d4e704e3c84a8c87f28324716aa8ba2e0a2f169)  | [one_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/one_travel.html)   |
 |5| [Creation of the base of the navigation bar](https://github.com/DWS-2026/dws-2026-project-base/commit/c31855d188c1b2208719bf3fedb4d120f9dceab8)  | todos los archivos   |

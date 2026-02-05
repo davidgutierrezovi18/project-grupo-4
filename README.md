@@ -121,15 +121,15 @@ Creación y desarrollo de las páginas relacionadas con los viajes, además de l
 
 #### **Alumno 3 - Hugo Rus González**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+Desarrollo de algunas de las principales páginas de la aplicación (incluyendo perfil de usuario, páginas de soporte y la mayoría de páginas de destino) y grabación del vídeo demostrativo.
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+|1| [Creation user profile](https://github.com/DWS-2026/dws-2026-project-base/commit/421068b3f1fd8f9a37c0f252feb2bcb2b3d62c13)  | [user_profile.html](https://github.com/DWS-2026/project-grupo-4/blob/main/user_profile.html)   |
+|2| [Creation of contact page](https://github.com/DWS-2026/dws-2026-project-base/commit/2673041eabdda67e2b1ce241c2b85a7de401be1e)  | [contact.html](https://github.com/DWS-2026/project-grupo-4/blob/main/contact.html)   |
+|3| [Creation of add destination and add place](https://github.com/DWS-2026/dws-2026-project-base/commit/1cdabb3a89703cf71dd783de0558688a3cce3174)  | [add_destination.html](https://github.com/DWS-2026/project-grupo-4/blob/main/add_destination.html) [add_place.html](https://github.com/DWS-2026/project-grupo-4/blob/main/add_place.html)  |
+|4| [Creation of one_destination](https://github.com/DWS-2026/dws-2026-project-base/commit/848b195104fe9c07cf2406be5cd3315bf8015d88)  | [one_destination.html](https://github.com/DWS-2026/project-grupo-4/blob/main/one_destination.html)   |
+|5| [Creation of faq page](https://github.com/DWS-2026/dws-2026-projectbase/commit/befd32f94db86368d31d249e3770194412dbccea#diff-4fb239f7021e7cf9cd99740317a93da01961344921a609ec61bcb62e75b623f7)  | [faq.html](https://github.com/DWS-2026/project-grupo-4/blob/main/faq.html)  |
 
 ---
 

@@ -141,8 +141,8 @@ Creación y desarrollo de las paginas de iniciar sesión y registrarse, de desti
 |:------------: |:------------:| :------------:|
 |1| [Create register](https://github.com/DWS-2026/dws-2026-project-base/commit/92d7b42753c861f77a7726fa51ae385825891dd3) | [register.html](https://github.com/DWS-2026/project-grupo-4/blob/main/register.html) |
 |2| [Create sign_in and modify register](https://github.com/DWS-2026/dws-2026-project-base/commit/32a38188872fbd7317fd4f3d2b6b6e5fa4945ee7)  | [sign_in.html](https://github.com/DWS-2026/project-grupo-4/blob/main/sign_in.html)   |
-|3| [Create edit_profile and modify register](https://github.com/DWS-2026/dws-2026-project-base/commit/25f786b6bbc872f92068d8d2313fb7d0dfc5dc2e) | [edit_profile.html]([URL_archivo_3](https://github.com/DWS-2026/project-grupo-4/blob/main/edit_profile.html)   |
-|4| [Create destinations](https://github.com/DWS-2026/dws-2026-project-base/commit/e1b30a39dc97d0d24e125dc63eee9203c82c3e9f) | [destinations.html]([URL_archivo_4](https://github.com/DWS-2026/project-grupo-4/blob/main/destinations.html)   |
+|3| [Create edit_profile and modify register](https://github.com/DWS-2026/dws-2026-project-base/commit/25f786b6bbc872f92068d8d2313fb7d0dfc5dc2e) | [edit_profile.html](https://github.com/DWS-2026/project-grupo-4/blob/main/edit_profile.html)   |
+|4| [Create destinations](https://github.com/DWS-2026/dws-2026-project-base/commit/e1b30a39dc97d0d24e125dc63eee9203c82c3e9f) | [destinations.html](https://github.com/DWS-2026/project-grupo-4/blob/main/destinations.html)   |
 |5| [Modify sign_in](https://github.com/DWS-2026/dws-2026-project-base/commit/32a38188872fbd7317fd4f3d2b6b6e5fa4945ee7))  | [sign_in.html](https://github.com/DWS-2026/project-grupo-4/blob/main/sign_in.html))   |
 
 ---

@@ -136,7 +136,7 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 
 >Página desde la que se pueden ver todas las reseñas realizadas por el usuario registrado. Además, se pueden editar y borrar las reseñas. Incluye barra de navegación, y botón para volver a la página “reseñas”.
 
-#### **12. Página de crear (add-review.html)**
+#### **12. Página de crear reseñas (add-review.html)**
 ![Añadir reseña](images/add-review-htm.png)
 
 >Formulario para añadir una nueva reseña; requiere los campos: nombre, tipo, puntuación, y foto. Incluye barra de navegación, botón de cancelar, y de enviar el formulario.

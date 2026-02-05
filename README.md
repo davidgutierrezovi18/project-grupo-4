@@ -32,9 +32,9 @@ Nuestra idea es una aplicación web de gestión de viajes personales. Permite a 
 
 Usuario - Viaje: Un usuario puede tener múltiples viajes (1:N).
 
-Viaje - Destino: Un viaje pertenece a un destino específico (N:1).
+Viaje - Destino: Un viaje puede tener múltiples destinos (1:N).
 
-Usuario - Valoración: Un usuario puede valorar múltiples destinos (1:N).
+Usuario - Valoración: Un usuario puede valorar múltiples lugares (1:N).
 
 Destino - Valoración: Un destino puede tener múltiples valoraciones (1:N).
 
@@ -54,14 +54,14 @@ Usuario Registrado:
 
 Administrador:
 
-   Permisos: Gestión completa de usuarios, destinos, viajes y valoraciones; moderación de contenido.
+   Permisos: Gestión completa de usuarios, destinos, valoraciones y viajes; moderación de contenido.
    Es dueño de: Todos los viajes, valoraciones, destinos y usuarios.
 
 Imágenes
 
-   Usuario: Avatar o foto de perfil.
-   
+   Usuario: Avatar o foto de perfil. 
    Destino: Imagen representativa del destino.
+   Viaje: Imagen representativa del viaje.
 
 Viaje: Múltiples fotos asociadas al viaje.
 ---
@@ -100,22 +100,22 @@ Creación de las paginas relacionadas con las reviews
 |2| [add-review](https://github.com/DWS-2026/dws-2026-project-base/commit/15b2ebabe82ddb41e5185e83b4f51172ea739112)  | add-review.hmtl   |
 |3| [Update admin page and footer](https://github.com/DWS-2026/dws-2026-project-base/commit/0d42f29a39b8f9430fdbeb08432a1a4cb82b0fdc)  | admin_user.html   |
 |4| [Creation of index](https://github.com/DWS-2026/dws-2026-project-base/commit/f4e680038ea6ae6114a50e8370fcdf42ccf890a4)  | index.html   |
-|5| [Ad option view my reviews](https://github.com/DWS-2026/dws-2026-project-base/commit/665c0d8186aa747ea0b7727c9a31544552021eaa)  | my_reviews.html   |
+|5| [Add option view my reviews](https://github.com/DWS-2026/dws-2026-project-base/commit/665c0d8186aa747ea0b7727c9a31544552021eaa)  | my_reviews.html   |
 
 
 ---
 
-#### **Alumno 2 - [Nombre Completo]**
+#### **Alumno 2 - Mari Luz Charfolé Maestro**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+Creación y desarrollo de las páginas relacionadas con los viajes, además de la base para la barra de navegación. También algunas modificaciones en el css base.
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+|1| [Creation new travel](https://github.com/DWS-2026/project-grupo-4/commit/1d88d6c6eb6394f73e8503940d4f424f5cba0070)  | [create_new_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/create_new_travel.html)   |
+|2| [Creation of edition page of one published travel](https://github.com/DWS-2026/dws-2026-project-base/commit/530a8bf5e1299feafb811344898672371bbfa5ea)  | [edit_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/edit_travel.html)   |
+|3| [Creation of my travels page ](https://github.com/DWS-2026/dws-2026-project-base/commit/eff9e7d7f782d7adfe459ce825d6ceb3c69dc548)  | [mytravels.html](https://github.com/DWS-2026/project-grupo-4/blob/main/mytravels.html)   |
+|4| [Creation of one travel page](https://github.com/DWS-2026/dws-2026-project-base/commit/0d4e704e3c84a8c87f28324716aa8ba2e0a2f169)  | [one_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/one_travel.html)   |
+|5| [Creation of the base of the navigation bar](https://github.com/DWS-2026/dws-2026-project-base/commit/c31855d188c1b2208719bf3fedb4d120f9dceab8)  | todos los archivos   |
 
 ---
 
@@ -133,17 +133,17 @@ Creación de las paginas relacionadas con las reviews
 
 ---
 
-#### **Alumno 4 - [Nombre Completo]**
+#### **Alumno 4 - Nerea Sanz Sobrados**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+Creación y desarrollo de las paginas de iniciar sesión y registrarse, de destinos y de editar perfil. Aparte también he modificado cosas puntuales de otras.
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+|1| [Create register](https://github.com/DWS-2026/dws-2026-project-base/commit/92d7b42753c861f77a7726fa51ae385825891dd3) | [register.html](https://github.com/DWS-2026/project-grupo-4/blob/main/register.html) |
+|2| [Create sign_in and modify register](https://github.com/DWS-2026/dws-2026-project-base/commit/32a38188872fbd7317fd4f3d2b6b6e5fa4945ee7)  | [sign_in.html](https://github.com/DWS-2026/project-grupo-4/blob/main/sign_in.html)   |
+|3| [Create edit_profile and modify register](https://github.com/DWS-2026/dws-2026-project-base/commit/25f786b6bbc872f92068d8d2313fb7d0dfc5dc2e) | [edit_profile.html](https://github.com/DWS-2026/project-grupo-4/blob/main/edit_profile.html)   |
+|4| [Create destinations](https://github.com/DWS-2026/dws-2026-project-base/commit/e1b30a39dc97d0d24e125dc63eee9203c82c3e9f) | [destinations.html](https://github.com/DWS-2026/project-grupo-4/blob/main/destinations.html)   |
+|5| [Modify sign_in](https://github.com/DWS-2026/dws-2026-project-base/commit/32a38188872fbd7317fd4f3d2b6b6e5fa4945ee7)  | [sign_in.html](https://github.com/DWS-2026/project-grupo-4/blob/main/sign_in.html)   |
 
 ---
 

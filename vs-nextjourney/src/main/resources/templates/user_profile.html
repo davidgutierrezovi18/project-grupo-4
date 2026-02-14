@@ -4,73 +4,79 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- Header-->
 {{> header}}
 
 <body class="d-flex flex-column h-100">
-<main class="flex-shrink-0">
+    <main class="flex-shrink-0">
 
-<!-- Navigation-->
+        <!-- Navigation-->
         {{> nav_bar}}
 
 
-    <!-- User Profile Section -->
-    <section class="py-5">
-        <div class="container px-5">
-            <div class="text-center mb-5">
-                <h1 class="fw-bolder">Perfil de Usuario</h1>
-                <p class="lead fw-normal text-muted mb-0">
-                    Visualiza tu información personal.
-                </p>
-            </div>
+        <!-- User Profile Section -->
+        <section class="py-5">
+            <div class="container px-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bolder">Perfil de Usuario</h1>
+                    <p class="lead fw-normal text-muted mb-0">
+                        Visualiza tu información personal.
+                    </p>
+                </div>
 
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
 
-                    <!-- User Avatar -->
-                    <div class="text-center mb-4">
-                        <img src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"
-                             class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
+                        <!-- User Avatar -->
+                        <div class="text-center mb-4">
+                            <img src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"
+                                class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
+                        </div>
+
+                        <!-- Profile Form (Read-only) -->
+                        <form>
+                            <!-- Full Name -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fullName" placeholder="Nombre completo"
+                                    value="María López" readonly>
+                                <label for="fullName">Nombre completo</label>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" placeholder="Correo electrónico"
+                                    value="maria@example.com" readonly>
+                                <label for="email">Correo electrónico</label>
+                            </div>
+
+                            <!-- Username -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="username" placeholder="Usuario"
+                                    value="maria123" readonly>
+                                <label for="username">Usuario</label>
+                            </div>
+
+                            <!-- Edit / Delete Profile + My Travels / My Reviews Buttons -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                <a href="/edit_profile" class="btn btn-primary btn-lg">Editar perfil</a>
+                                <button type="button" class="btn btn-danger btn-lg">Borrar perfil</button>
+                                <a href="/mytravels" class="btn btn-primary btn-lg">Mis viajes</a>
+                                <a href="/my_reviews" class="btn btn-primary btn-lg">Mis reseñas</a>
+                            </div>
+
+                        </form>
                     </div>
-
-                    <!-- Profile Form (Read-only) -->
-                    <form>
-                        <!-- Full Name -->
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="fullName" placeholder="Nombre completo" value="María López" readonly>
-                            <label for="fullName">Nombre completo</label>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="Correo electrónico" value="maria@example.com" readonly>
-                            <label for="email">Correo electrónico</label>
-                        </div>
-
-                        <!-- Username -->
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="username" placeholder="Usuario" value="maria123" readonly>
-                            <label for="username">Usuario</label>
-                        </div>
-
-                        <!-- Edit / Delete Profile + My Travels / My Reviews Buttons -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                            <a href="/edit_profile" class="btn btn-primary btn-lg">Editar perfil</a>
-                            <button type="button" class="btn btn-danger btn-lg">Borrar perfil</button>
-                            <a href="/mytravels" class="btn btn-primary btn-lg">Mis viajes</a>
-                            <a href="/my_reviews" class="btn btn-primary btn-lg">Mis reseñas</a>
-                        </div>
-
-                    </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-</main>
+    </main>
 
-{{> footer}}
+    <!-- Footer-->
+    {{> footer}}
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

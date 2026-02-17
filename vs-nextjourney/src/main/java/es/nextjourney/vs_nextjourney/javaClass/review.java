@@ -75,5 +75,18 @@ public class review {
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Override
+public String toString() {
+    return "Review{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", placeId=" + placeId +
+            ", rating=" + rating +
+            ", createdAt=" + createdAt +
+            '}';
+}
+
+
 }
 

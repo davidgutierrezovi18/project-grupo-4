@@ -1,14 +1,24 @@
 package es.nextjourney.vs_nextjourney.javaClass;
 
-public class Destination {
+public class Place {
+
+    public enum Category {
+            HISTORIA,
+            MUSEO,
+            PARQUE,
+            MIRADOR,
+            PLAZA,
+            OTRO
+        }
+
     private String name;
     private String description;
-    private String image;
+    private Category category;
 
-    public Destination(String name, String description, String image){
+    public Place(String name, String description, Category category){
         this.name = name;
         this.description = description;
-        this.image = image;
+        this.category = category;
     }
 
     //Name getter
@@ -31,21 +41,20 @@ public class Destination {
         this.description = description;
     }
 
-    //Image getter
-    public String getImage() {
-        return image;
+    //Category getter
+    public Category getCategory() {
+        return category;
     }
 
-    //Image setter
-    public void setImage(String image) {
-        this.image = image;
+    //Category setter
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
+    //toString
     @Override
     public String toString() {
-        return "Destination [name=" + name + ", description=" + description + ", image=" + image + "]";
+        return "Place [name=" + name + ", description=" + description + ", category=" + category + "]";
     }
-
-    
 
 }

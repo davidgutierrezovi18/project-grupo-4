@@ -2,7 +2,7 @@ package es.nextjourney.vs_nextjourney.javaClass;
 
 import java.time.LocalDate;
 
-public class review {
+public class Review {
 
     private Long id;
     private Long userId;
@@ -12,7 +12,7 @@ public class review {
     private String photoUrl;
     private LocalDate createdAt;
 
-    public review() {}
+    public Review() {}
 
     // ===== GETTERS =====
 
@@ -78,7 +78,7 @@ public class review {
 
     @Override
 public String toString() {
-    return "review{" +
+    return "Review{" +
             "id=" + id +
             ", userId=" + userId +
             ", placeId=" + placeId +

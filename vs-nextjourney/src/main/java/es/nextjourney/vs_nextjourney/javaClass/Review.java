@@ -14,8 +14,6 @@ public class Review {
 
     public Review() {}
 
-    // ===== GETTERS =====
-
     public Long getId() {
         return id;
     }
@@ -44,7 +42,6 @@ public class Review {
         return createdAt;
     }
 
-    // ===== SETTERS =====
 
     public void setId(Long id) {
         this.id = id;

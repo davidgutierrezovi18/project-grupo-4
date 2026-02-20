@@ -9,20 +9,56 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "travels")
 public class Travel {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "owner_id", nullable = false)
+    private String ownerName;
+
+    @Column(name = "name", nullable = false)
     private String title;
+
+    @Column(name = "imageURL", nullable = false)
     private String imageUrl;
+
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
+
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
+
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "countries", nullable = false)
     private String countries;
+
+    @Column(name = "cities", nullable = false)
     private String cities;
+
+    @Column(name = "places_visited", nullable = false)
     private String placesVisited;
+
+    @Column(name = "rating", nullable = false)
     private int rating;
+
+    @Column(name = "comment", nullable = false)
     private String comment;
+
+    @Column(name = "carousel_images_urls", nullable = false)
     private String carouselImagesUrls;
+
+    @Column(name = "itinerary_url", nullable = false)
     private String itineraryUrl;
+
+    @Column(name = "emails_colaborators", nullable = false)
     private String emailsColaborators;
 
     // Constructors
@@ -43,6 +79,10 @@ public class Travel {
         this.carouselImagesUrls = carouselImagesUrls;
         this.itineraryUrl = itineraryUrl;
         this.emailsColaborators = emailsColaborators;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
     }
 
     public String getTitle() {
@@ -95,6 +135,10 @@ public class Travel {
 
     public String getEmailsColaborators() {
         return emailsColaborators;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.title = ownerName;
     }
 
     public void setTitle(String title) {

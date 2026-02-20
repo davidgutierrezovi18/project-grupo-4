@@ -7,7 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "places")
 public class Place {
 
     public enum Category {
@@ -19,8 +22,14 @@ public class Place {
             OTRO
         }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    @Column(name = "category", nullable = false)
     private Category category;
 
     public Place(String name, String description, Category category){

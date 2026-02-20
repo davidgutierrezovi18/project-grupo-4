@@ -32,6 +32,8 @@ public class Place {
     @Column(name = "category", nullable = false)
     private Category category;
 
+    public Place() {}
+
     public Place(String name, String description, Category category){
         this.name = name;
         this.description = description;

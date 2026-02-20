@@ -25,10 +25,13 @@ public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @Column(name = "name", nullable = false)
     private String name;
+    
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    
     @Column(name = "category", nullable = false)
     private Category category;
 

@@ -19,17 +19,23 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @Column(name = "user_id", nullable = false)
     private Long userId;
+    
     @Column(name = "place_id", nullable = false)
     private Long placeId;
+    
     @Column(name = "rating", nullable = false)
     @Size(min = 0, max = 5, message = "La puntuación debe estar entre 0 y 5")
     private int rating;
+   
     @Column(name = "review_text", columnDefinition = "TEXT")
     private String reviewText;
+    
     @Column(name = "photo_url")
     private String photoUrl;
+    
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
 

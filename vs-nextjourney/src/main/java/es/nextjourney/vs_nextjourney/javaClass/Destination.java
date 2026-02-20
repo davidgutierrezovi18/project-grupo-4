@@ -17,10 +17,13 @@ public class Destination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @Column(name = "name", nullable = false)
     private String name;
+    
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    
     @Column(name = "image_url")
     private String image;
 

@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "travels")
@@ -32,31 +33,32 @@ public class Travel {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "countries", nullable = false)
     private String countries;
 
-    @Column(name = "cities", nullable = false)
+    @Column(name = "cities")
     private String cities;
 
-    @Column(name = "places_visited", nullable = false)
+    @Column(name = "places_visited")
     private String placesVisited;
 
     @Column(name = "rating", nullable = false)
+    @Size(min = 0, max = 5, message = "La puntuación debe estar entre 0 y 5")
     private int rating;
 
-    @Column(name = "comment", nullable = false)
+    @Column(name = "comment")
     private String comment;
 
-    @Column(name = "carousel_images_urls", nullable = false)
+    @Column(name = "carousel_images_urls")
     private String carouselImagesUrls;
 
-    @Column(name = "itinerary_url", nullable = false)
+    @Column(name = "itinerary_url")
     private String itineraryUrl;
 
-    @Column(name = "emails_colaborators", nullable = false)
+    @Column(name = "emails_colaborators")
     private String emailsColaborators;
 
     //CONSTRUCTORS

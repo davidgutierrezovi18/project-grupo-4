@@ -2,29 +2,26 @@ package es.nextjourney.vs_nextjourney.javaClass;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 
 public class Travel {
-    
-    
     private Long id;
-    
     private String title;
-    
     private String description;
-    
     private LocalDate startDate;
-    
     private LocalDate endDate;
-    
     private String destination;
-
     private String imageUrl;
-
     private Boolean isPublic = true;
-
     private LocalDate createdAt;
     
-    // Constructores
+    // Constructors
     public Travel() {
         this.createdAt = LocalDate.now();
     }

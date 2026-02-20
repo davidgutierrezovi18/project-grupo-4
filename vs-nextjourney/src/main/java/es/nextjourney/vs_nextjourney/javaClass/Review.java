@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "reviews")
 public class Review {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,6 +33,15 @@ public class Review {
     private LocalDate createdAt;
 
     public Review() {}
+
+    public Review(Long userId, Long placeId, int rating, String reviewText, String photoUrl, LocalDate createdAt) {
+        this.userId = userId;
+        this.placeId = placeId;
+        setRating(rating);
+        this.reviewText = reviewText;
+        this.photoUrl = photoUrl;
+        this.createdAt = createdAt;
+    }
 
     public Long getId() {
         return id;

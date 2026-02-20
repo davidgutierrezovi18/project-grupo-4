@@ -24,6 +24,7 @@ public class Destination {
     @Column(name = "image_url")
     private String image;
 
+    public Destination() {}
     public Destination(String name, String description, String image){
         this.name = name;
         this.description = description;

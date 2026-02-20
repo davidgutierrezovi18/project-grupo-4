@@ -1,4 +1,5 @@
 package es.nextjourney.vs_nextjourney.javaClass;
+import java.util.List;
 import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +32,7 @@ public class User {
     @Size(min = 4 ,max = 15, message = "Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)")
     private String username;
 
-    @Column(name = "dateOfBirth" )
+    @Column(name = "dateOfBirth", nullable = false)
     private LocalDate dateOfBirth;
 
     @Column(name = "email", length = 50, nullable = false, unique = true)
@@ -46,8 +47,11 @@ public class User {
     message = "La contraseña debe tener al menos una mayúscula, una minúscula, un número y un símbolo especial")
     private String password;
 
-    @Column(name = "image", nullable = true )
+    @Column(name = "image", nullable = true)
     private String image;
+
+    @Column(name = "travels")
+    private List<Travel> travel;
 
     public User(String name, String lastName, String username, LocalDate dateOfBirth, String email, String password, String image) {
         this.name = name;
@@ -86,6 +90,9 @@ public class User {
     public String getImage() {
         return image;
     }
+    public List<Travel> getTravel() {
+        return travel;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -114,6 +121,9 @@ public class User {
     public void setImage(String image) {
         this.image = image;
     }
+    public void setTravel(List<Travel> travel) {
+        this.travel = travel;
+    }
 
     @Override
     public String toString() {
@@ -125,6 +135,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", image='" + image + '\'' +
+                ", travel=" + travel +
                 '}';
     }
 

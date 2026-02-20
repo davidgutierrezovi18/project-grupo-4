@@ -2,19 +2,37 @@ package es.nextjourney.vs_nextjourney.javaClass;
 
 import java.time.LocalDate;
 
-public class Review {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+
+@Entity
+@Table(name = "reviews")
+public class Review {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+    @Column(name = "place_id", nullable = false)
     private Long placeId;
+    @Column(nullable = false)
     private int rating;
+    @Column(name = "review_text", columnDefinition = "TEXT")
     private String reviewText;
+    @Column(name = "photo_url")
     private String photoUrl;
+    @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
 
     public Review() {}
-
-    // ===== GETTERS =====
 
     public Long getId() {
         return id;
@@ -44,7 +62,6 @@ public class Review {
         return createdAt;
     }
 
-    // ===== SETTERS =====
 
     public void setId(Long id) {
         this.id = id;

@@ -2,126 +2,159 @@ package es.nextjourney.vs_nextjourney.javaClass;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 
 public class Travel {
-    
-    
-    private Long id;
-    
     private String title;
-    
-    private String description;
-    
-    private LocalDate startDate;
-    
-    private LocalDate endDate;
-    
-    private String destination;
-
     private String imageUrl;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String description;
+    private String countries;
+    private String cities;
+    private String placesVisited;
+    private int rating;
+    private String comment;
+    private String carouselImagesUrls;
+    private String itineraryUrl;
+    private String emailsColaborators;
 
-    private Boolean isPublic = true;
-
-    private LocalDate createdAt;
-    
-    // Constructores
-    public Travel() {
-        this.createdAt = LocalDate.now();
-    }
-    
-    public Travel(String title, String description, LocalDate startDate, LocalDate endDate, String destination) {
+    // Constructors
+    public Travel(String title, String imageUrl, LocalDate startDate, LocalDate endDate, String description,
+            String countries, String cities,
+            String placesVisited, int rating, String comment, String carouselImagesUrls, String itineraryUrl,
+            String emailsColaborators) {
         this.title = title;
-        this.description = description;
+        this.imageUrl = imageUrl;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.destination = destination;
-        this.createdAt = LocalDate.now();
+        this.description = description;
+        this.countries = countries;
+        this.cities = cities;
+        this.placesVisited = placesVisited;
+        this.rating = rating;
+        this.comment = comment;
+        this.carouselImagesUrls = carouselImagesUrls;
+        this.itineraryUrl = itineraryUrl;
+        this.emailsColaborators = emailsColaborators;
     }
-    
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
+
     public String getTitle() {
         return title;
     }
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-    
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-    
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-    
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-    
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-    
-    public String getDestination() {
-        return destination;
-    }
-    
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-    
+
     public String getImageUrl() {
         return imageUrl;
     }
-    
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCountries() {
+        return countries;
+    }
+
+    public String getCities() {
+        return cities;
+    }
+
+    public String getPlacesVisited() {
+        return placesVisited;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public String getCarouselImagesUrls() {
+        return carouselImagesUrls;
+    }
+
+    public String getItineraryUrl() {
+        return itineraryUrl;
+    }
+
+    public String getEmailsColaborators() {
+        return emailsColaborators;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    
-    public Boolean getIsPublic() {
-        return isPublic;
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
-    
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
-    
-    public LocalDate getCreatedAt() {
-        return createdAt;
+
+    public void setDescription(String description) {
+        this.description = description;
     }
-    
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
+
+    public void setCountries(String countries) {
+        this.countries = countries;
     }
-    
+
+    public void setCities(String cities) {
+        this.cities = cities;
+    }
+
+    public void setPlacesVisited(String placesVisited) {
+        this.placesVisited = placesVisited;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setCarouselImagesUrls(String carouselImagesUrls) {
+        this.carouselImagesUrls = carouselImagesUrls;
+    }
+
+    public void setItineraryUrl(String itineraryUrl) {
+        this.itineraryUrl = itineraryUrl;
+    }
+
+    public void setEmailsColaborators(String emailsColaborators) {
+        this.emailsColaborators = emailsColaborators;
+    }
+
     @Override
     public String toString() {
-        return "Travel{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", destination='" + destination + '\'' +
-                ", isPublic=" + isPublic +
-                ", createdAt=" + createdAt +
-                '}';
+        return "Travel [title=" + title + ", imageUrl=" + imageUrl + ", startDate=" + startDate + ", endDate=" + endDate
+                + ", description=" + description + ", countries=" + countries + ", cities=" + cities
+                + ", placesVisited=" + placesVisited + ", rating=" + rating + ", comment=" + comment
+                + ", carouselImagesUrls=" + carouselImagesUrls + ", itineraryUrl=" + itineraryUrl
+                + ", emailsColaborators=" + emailsColaborators + "]";
     }
 }

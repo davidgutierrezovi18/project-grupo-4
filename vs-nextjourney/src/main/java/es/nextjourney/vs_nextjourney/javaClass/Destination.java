@@ -7,11 +7,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
 
 @Entity
+@Table(name = "destinations")
 public class Destination {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    @Column(name = "image_url")
     private String image;
 
     public Destination(String name, String description, String image){

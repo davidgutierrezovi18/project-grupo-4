@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -61,7 +59,9 @@ public class Travel {
     @Column(name = "emails_colaborators", nullable = false)
     private String emailsColaborators;
 
-    // Constructors
+    //CONSTRUCTORS
+    public Travel() {}
+
     public Travel(String title, String imageUrl, LocalDate startDate, LocalDate endDate, String description,
             String countries, String cities,
             String placesVisited, int rating, String comment, String carouselImagesUrls, String itineraryUrl,
@@ -81,6 +81,7 @@ public class Travel {
         this.emailsColaborators = emailsColaborators;
     }
 
+    //GETTERS Y SETTERS
     public String getOwnerName() {
         return ownerName;
     }
@@ -193,6 +194,7 @@ public class Travel {
         this.emailsColaborators = emailsColaborators;
     }
 
+    //TO STRING
     @Override
     public String toString() {
         return "Travel [title=" + title + ", imageUrl=" + imageUrl + ", startDate=" + startDate + ", endDate=" + endDate

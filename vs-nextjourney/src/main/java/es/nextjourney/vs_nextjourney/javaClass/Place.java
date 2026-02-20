@@ -32,6 +32,7 @@ public class Place {
     @Column(name = "category", nullable = false)
     private Category category;
 
+    //CONSTRUCTORS
     public Place() {}
 
     public Place(String name, String description, Category category){
@@ -40,6 +41,7 @@ public class Place {
         this.category = category;
     }
 
+    //GETTERS Y SETTERS
     //Name getter
     public String getName() {
         return name;
@@ -70,7 +72,7 @@ public class Place {
         this.category = category;
     }
 
-    //toString
+    //TO STRING
     @Override
     public String toString() {
         return "Place [name=" + name + ", description=" + description + ", category=" + category + "]";

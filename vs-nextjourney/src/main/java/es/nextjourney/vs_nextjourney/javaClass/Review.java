@@ -33,6 +33,8 @@ public class Review {
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
 
+
+    //CONSTRUCTORS
     public Review() {}
 
     public Review(Long userId, Long placeId, int rating, String reviewText, String photoUrl, LocalDate createdAt) {
@@ -44,6 +46,7 @@ public class Review {
         this.createdAt = createdAt;
     }
 
+    //GETTERS Y SETTERS
     public Long getId() {
         return id;
     }
@@ -103,8 +106,9 @@ public class Review {
         this.createdAt = createdAt;
     }
 
+    //TO STRING
     @Override
-public String toString() {
+    public String toString() {
     return "Review{" +
             "id=" + id +
             ", userId=" + userId +

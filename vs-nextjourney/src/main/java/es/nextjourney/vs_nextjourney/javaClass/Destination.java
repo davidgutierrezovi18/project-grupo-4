@@ -24,6 +24,7 @@ public class Destination {
     @Column(name = "image_url")
     private String image;
 
+    //CONSTRUCTORS
     public Destination() {}
     public Destination(String name, String description, String image){
         this.name = name;
@@ -31,6 +32,7 @@ public class Destination {
         this.image = image;
     }
 
+    //GETTERS Y SETTERS
     //Name getter
     public String getName() {
         return name;
@@ -61,6 +63,7 @@ public class Destination {
         this.image = image;
     }
 
+    //TO STRING
     @Override
     public String toString() {
         return "Destination [name=" + name + ", description=" + description + ", image=" + image + "]";

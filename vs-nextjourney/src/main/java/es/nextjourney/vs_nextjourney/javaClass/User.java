@@ -53,6 +53,9 @@ public class User {
     @Column(name = "travels")
     private List<Travel> travel;
 
+    //CONSTRUCTORS
+    public User() {}
+
     public User(String name, String lastName, String username, LocalDate dateOfBirth, String email, String password, String image) {
         this.name = name;
         this.lastName = lastName;
@@ -63,6 +66,7 @@ public class User {
         this.image = image;
     }
 
+    //GETTERS Y SETTERS
     public String getName() {
         return name;
     }
@@ -125,6 +129,7 @@ public class User {
         this.travel = travel;
     }
 
+    //TO STRING
     @Override
     public String toString() {
         return "User{" +

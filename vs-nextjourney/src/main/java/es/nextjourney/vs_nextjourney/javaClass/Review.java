@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "reviews")
@@ -23,7 +23,8 @@ public class Review {
     private Long userId;
     @Column(name = "place_id", nullable = false)
     private Long placeId;
-    @Column(nullable = false)
+    @Column(name = "rating", nullable = false)
+    @Size(min = 0, max = 5, message = "La puntuación debe estar entre 0 y 5")
     private int rating;
     @Column(name = "review_text", columnDefinition = "TEXT")
     private String reviewText;

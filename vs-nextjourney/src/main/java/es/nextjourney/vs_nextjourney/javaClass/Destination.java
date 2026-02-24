@@ -9,6 +9,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Table(name = "destinations")
@@ -25,11 +28,14 @@ public class Destination {
     private String description;
     
     @Column(name = "image_url")
-    private String image;
+    private Image image;
+
+    @Column (name = "places")
+    private List<Place> places;
 
     //CONSTRUCTORS
     public Destination() {}
-    public Destination(String name, String description, String image){
+    public Destination(String name, String description, Image image){
         this.name = name;
         this.description = description;
         this.image = image;
@@ -57,12 +63,12 @@ public class Destination {
     }
 
     //Image getter
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
     //Image setter
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 

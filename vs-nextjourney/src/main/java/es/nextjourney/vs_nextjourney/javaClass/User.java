@@ -57,7 +57,7 @@ public class User {
     //CONSTRUCTORS
     public User() {}
 
-    public User(String name, String lastName, String username, LocalDate dateOfBirth, String email, String password, Image image) {
+    public User(String name, String lastName, String username, LocalDate dateOfBirth, String email, String password, Image image, List<Travel> travel, List<Review> review) {
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -65,6 +65,8 @@ public class User {
         this.email = email;
         this.password = password;
         this.image = image;
+        this.travel = travel;
+        this.review = review;
     }
 
     //GETTERS Y SETTERS
@@ -95,8 +97,13 @@ public class User {
     public Image getImage() {
         return image;
     }
+
     public List<Travel> getTravel() {
         return travel;
+    }
+
+    public List<Review> getReview() {
+        return review;
     }
 
     public void setName(String name) {
@@ -130,6 +137,10 @@ public class User {
         this.travel = travel;
     }
 
+    public void setReview(List<Review> review) {
+        this.review = review;
+    }
+
     //TO STRING
     @Override
     public String toString() {
@@ -142,6 +153,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", image='" + image + '\'' +
                 ", travel=" + travel +
+                ", review=" + review +
                 '}';
     }
 

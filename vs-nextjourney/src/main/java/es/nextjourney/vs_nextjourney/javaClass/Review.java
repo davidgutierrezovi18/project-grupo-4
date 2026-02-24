@@ -82,11 +82,7 @@ public class Review {
     public LocalDate getCreatedAt() {
         return createdAt;
     }
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    
 
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -113,6 +109,7 @@ public class Review {
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
+
 
     //TO STRING
     @Override

@@ -33,6 +33,9 @@ public class Destination {
     @Column (name = "places")
     private List<Place> places;
 
+    @Column (name="reviews")
+    private List<Review> reviews;
+
     //CONSTRUCTORS
     public Destination() {}
     public Destination(String name, String description, Image image){
@@ -43,6 +46,10 @@ public class Destination {
 
     //GETTERS Y SETTERS
     //Name getter
+    public Long getId(){
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -70,6 +77,16 @@ public class Destination {
     //Image setter
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    //Reviews getter
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    //Reviews setter
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     //TO STRING

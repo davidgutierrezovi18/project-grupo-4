@@ -1,5 +1,7 @@
 package es.nextjourney.vs_nextjourney.javaClass;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,9 @@ public class Place {
     @Column(name = "category", nullable = false)
     private Category category;
 
+    @Column (name="reviews")
+    private List<Review> reviews;
+
     //CONSTRUCTORS
     public Place() {}
 
@@ -45,6 +50,12 @@ public class Place {
     }
 
     //GETTERS Y SETTERS
+
+    //Id getter
+    public Long getId(){
+        return id;
+    }
+
     //Name getter
     public String getName() {
         return name;
@@ -73,6 +84,16 @@ public class Place {
     //Category setter
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    //Reviews getter
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    //Reviews setter
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     //TO STRING

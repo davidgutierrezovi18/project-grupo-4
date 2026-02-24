@@ -45,7 +45,7 @@ public class Review {
     //CONSTRUCTORS
     public Review() {}
 
-    public Review(Long userId, Long placeId, int rating, String reviewText, String photoUrl, LocalDate createdAt) {
+    public Review(Long userId, Long placeId, int rating, String reviewText, Image photoUrl, LocalDate createdAt) {
         this.userId = userId;
         this.placeId = placeId;
         setRating(rating);

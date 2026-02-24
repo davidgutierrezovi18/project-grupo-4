@@ -89,6 +89,15 @@ public class Travel {
     }
 
     //GETTERS Y SETTERS
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getOwnerName() {
         return ownerName;
     }

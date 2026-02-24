@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
@@ -40,6 +42,18 @@ public class Review {
     
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
+
+    @ManyToOne
+    private User user;
+
+    @ManyToOne
+    private Destination destination;
+
+    @ManyToOne
+    private Place place;
+
+   @OneToMany
+    private Image image;
 
 
     //CONSTRUCTORS

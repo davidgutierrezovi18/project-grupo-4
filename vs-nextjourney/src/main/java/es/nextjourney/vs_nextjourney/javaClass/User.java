@@ -5,9 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Column;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Email;
@@ -50,7 +49,7 @@ public class User {
     @Column(name = "image", nullable = true)
     private String image;
 
-    @Column(name = "travels")
+    @Transient
     private List<Travel> travel;
 
     //CONSTRUCTORS

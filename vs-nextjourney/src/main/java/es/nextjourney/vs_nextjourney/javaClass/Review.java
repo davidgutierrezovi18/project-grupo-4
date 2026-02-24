@@ -75,7 +75,7 @@ public class Review {
         return reviewText;
     }
 
-    public String getPhotoUrl() {
+    public Image getPhotoUrl() {
         return photoUrl;
     }
 
@@ -106,7 +106,7 @@ public class Review {
         this.reviewText = reviewText;
     }
 
-    public void setPhotoUrl(String photoUrl) {
+    public void setPhotoUrl(Image photoUrl) {
         this.photoUrl = photoUrl;
     }
 

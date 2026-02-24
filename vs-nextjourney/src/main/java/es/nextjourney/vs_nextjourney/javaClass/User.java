@@ -51,6 +51,8 @@ public class User {
 
     @Transient
     private List<Travel> travel;
+    @Transient
+    private List<Review> review;
 
     //CONSTRUCTORS
     public User() {}

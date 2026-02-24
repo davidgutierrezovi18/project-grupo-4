@@ -36,7 +36,7 @@ public class Review {
     private String reviewText;
     
     @Column(name = "photo_url")
-    private String photoUrl;
+    private Image photoUrl;
     
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;

@@ -36,7 +36,7 @@ public class Review {
     private String reviewText;
     
     @Column(name = "photo_url")
-    private String photoUrl;
+    private Image photoUrl;
     
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
@@ -45,7 +45,7 @@ public class Review {
     //CONSTRUCTORS
     public Review() {}
 
-    public Review(Long userId, Long placeId, int rating, String reviewText, String photoUrl, LocalDate createdAt) {
+    public Review(Long userId, Long placeId, int rating, String reviewText, Image photoUrl, LocalDate createdAt) {
         this.userId = userId;
         this.placeId = placeId;
         setRating(rating);

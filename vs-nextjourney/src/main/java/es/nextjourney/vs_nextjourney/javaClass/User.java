@@ -47,15 +47,17 @@ public class User {
     private String password;
 
     @Column(name = "image", nullable = true)
-    private String image;
+    private Image image;
 
     @Transient
     private List<Travel> travel;
+    @Transient
+    private List<Review> review;
 
     //CONSTRUCTORS
     public User() {}
 
-    public User(String name, String lastName, String username, LocalDate dateOfBirth, String email, String password, String image) {
+    public User(String name, String lastName, String username, LocalDate dateOfBirth, String email, String password, Image image) {
         this.name = name;
         this.lastName = lastName;
         this.username = username;
@@ -90,7 +92,7 @@ public class User {
         return password;
     }
 
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
     public List<Travel> getTravel() {
@@ -121,7 +123,7 @@ public class User {
         this.password = password;
     }
 
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
     }
     public void setTravel(List<Travel> travel) {

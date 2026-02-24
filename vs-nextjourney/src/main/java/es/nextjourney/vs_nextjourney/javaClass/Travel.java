@@ -11,6 +11,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
+import java.util.List;
+import java.util.ArrayList;
+
 @Entity
 @Table(name = "travels")
 public class Travel {
@@ -25,8 +28,8 @@ public class Travel {
     @Column(name = "name", nullable = false)
     private String title;
 
-    @Column(name = "imageURL", nullable = false)
-    private String imageUrl;
+    @Column(name = "image", nullable = false)
+    private Image image;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -54,8 +57,8 @@ public class Travel {
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "carousel_images_urls")
-    private String carouselImagesUrls;
+    @Column(name = "carousel_images")
+    private List<Image> carouselImages;
 
     @Column(name = "itinerary_url")
     private String itineraryUrl;
@@ -66,12 +69,12 @@ public class Travel {
     //CONSTRUCTORS
     public Travel() {}
 
-    public Travel(String title, String imageUrl, LocalDate startDate, LocalDate endDate, String description,
+    public Travel(String title, Image image, LocalDate startDate, LocalDate endDate, String description,
             String countries, String cities,
-            String placesVisited, int rating, String comment, String carouselImagesUrls, String itineraryUrl,
+            String placesVisited, int rating, String comment, List<Image> carouselImages, String itineraryUrl,
             String emailsColaborators) {
         this.title = title;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
@@ -80,7 +83,7 @@ public class Travel {
         this.placesVisited = placesVisited;
         this.rating = rating;
         this.comment = comment;
-        this.carouselImagesUrls = carouselImagesUrls;
+        this.carouselImages = carouselImages;
         this.itineraryUrl = itineraryUrl;
         this.emailsColaborators = emailsColaborators;
     }
@@ -94,8 +97,8 @@ public class Travel {
         return title;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Image getImage() {
+        return image;
     }
 
     public LocalDate getStartDate() {
@@ -130,8 +133,8 @@ public class Travel {
         return comment;
     }
 
-    public String getCarouselImagesUrls() {
-        return carouselImagesUrls;
+    public List<Image> getCarouselImages() {
+        return carouselImages;
     }
 
     public String getItineraryUrl() {
@@ -150,8 +153,8 @@ public class Travel {
         this.title = title;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrl(Image image) {
+        this.image = image;
     }
 
     public void setStartDate(LocalDate startDate) {
@@ -186,8 +189,8 @@ public class Travel {
         this.comment = comment;
     }
 
-    public void setCarouselImagesUrls(String carouselImagesUrls) {
-        this.carouselImagesUrls = carouselImagesUrls;
+    public void setCarouselImagesUrls(List<Image> carouselImages) {
+        this.carouselImages = carouselImages;
     }
 
     public void setItineraryUrl(String itineraryUrl) {
@@ -201,10 +204,10 @@ public class Travel {
     //TO STRING
     @Override
     public String toString() {
-        return "Travel [title=" + title + ", imageUrl=" + imageUrl + ", startDate=" + startDate + ", endDate=" + endDate
+        return "Travel [title=" + title + ", imageUrl=" + image + ", startDate=" + startDate + ", endDate=" + endDate
                 + ", description=" + description + ", countries=" + countries + ", cities=" + cities
                 + ", placesVisited=" + placesVisited + ", rating=" + rating + ", comment=" + comment
-                + ", carouselImagesUrls=" + carouselImagesUrls + ", itineraryUrl=" + itineraryUrl
+                + ", carouselImagesUrls=" + carouselImages + ", itineraryUrl=" + itineraryUrl
                 + ", emailsColaborators=" + emailsColaborators + "]";
     }
 }

@@ -12,48 +12,50 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Email;
 
 
-@Entity(name="UserTable")
+@Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", length = 15, nullable = false)
-    @Size(min = 1 ,max = 15, message = "Debes introducir un nombre de usuario válido")
+    //@Column(name = "name", length = 15, nullable = false)
+    //@Size(min = 1 ,max = 15, message = "Debes introducir un nombre de usuario válido")
     private String name;
 
-    @Column(name = "lastName", length = 15, nullable = false)
-    @Size(min = 1 ,max = 15, message = "Debes introducir un apellido válido")
+    //@Column(name = "lastName", length = 15, nullable = false)
+    //@Size(min = 1 ,max = 15, message = "Debes introducir un apellido válido")
     private String lastName;
 
-    @Column(name = "username", length = 15, unique = true, nullable = false)
-    @Size(min = 4 ,max = 15, message = "Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)")
+    //@Column(name = "username", length = 15, unique = true, nullable = false)
+    //@Size(min = 4 ,max = 15, message = "Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)")
     private String username;
 
-    @Column(name = "dateOfBirth", nullable = false)
+    //@Column(name = "dateOfBirth", nullable = false)
     private LocalDate dateOfBirth;
 
-    @Column(name = "email", length = 50, nullable = false, unique = true)
-    @Email(message = "Debes introducir un correo electrónico válido")
-    @Size(max = 50, message = "El correo electrónico no puede tener más de 50 caracteres")
+    //@Column(name = "email", length = 50, nullable = false, unique = true)
+    //@Email(message = "Debes introducir un correo electrónico válido")
+    //@Size(max = 50, message = "El correo electrónico no puede tener más de 50 caracteres")
     private String email;
 
-    @Column(name = "password", length = 30, nullable = false)
-    @Size(min = 8 ,max = 30, message = "La contraseña debe tener entre 8 y 30 caracteres")
-    @Pattern(
-    regexp = "^(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*[@$!%*?&]){1,}).+$",
-    message = "La contraseña debe tener al menos una mayúscula, una minúscula, un número y un símbolo especial")
+    //@Column(name = "password", length = 30, nullable = false)
+    //@Size(min = 8 ,max = 30, message = "La contraseña debe tener entre 8 y 30 caracteres")
+    //@Pattern(
+    //regexp = "^(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*[@$!%*?&]){1,}).+$",
+    //message = "La contraseña debe tener al menos una mayúscula, una minúscula, un número y un símbolo especial")
     private String password;
 
-    @Column(name = "image", nullable = true)
-    private Image image;
+    //@Column(name = "image", nullable = true)
+    //private Image image;
 
-    @Transient
-    private List<Travel> travel;
-    @Transient
-    private List<Review> review;
+    //@Transient
+    //private List<Travel> travel;
 
+    //@Transient
+    //private List<Review> review;
+
+    /* 
     //CONSTRUCTORS
     public User() {}
 
@@ -156,6 +158,6 @@ public class User {
                 ", review=" + review +
                 '}';
     }
-
+*/
 }
 

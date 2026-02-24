@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Image {
@@ -17,6 +18,9 @@ public class Image {
 
     @Lob
     private Blob imageFile;
+
+    @ManyToOne
+    private Travel travelImage;
 
     public Image() {
     }

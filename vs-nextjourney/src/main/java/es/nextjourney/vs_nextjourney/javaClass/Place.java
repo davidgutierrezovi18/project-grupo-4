@@ -12,7 +12,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "places")
 public class Place {
 
     public enum Category {
@@ -28,18 +27,19 @@ public class Place {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "name", nullable = false)
+    //@Column(name = "name", nullable = false)
     private String name;
     
-    @Column(name = "description", columnDefinition = "TEXT")
+    //@Column(name = "description", columnDefinition = "TEXT")
     private String description;
     
-    @Column(name = "category", nullable = false)
+    //@Column(name = "category", nullable = false)
     private Category category;
 
-    @Column (name="reviews")
-    private List<Review> reviews;
+    //@Column (name="reviews")
+    //private List<Review> reviews;
 
+    /*
     //CONSTRUCTORS
     public Place() {}
 
@@ -101,5 +101,5 @@ public class Place {
     public String toString() {
         return "Place [name=" + name + ", description=" + description + ", category=" + category + "]";
     }
-
+ */
 }

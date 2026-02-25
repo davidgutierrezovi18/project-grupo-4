@@ -8,7 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -28,9 +30,13 @@ public class Travel {
 
     //@Column(name = "name", nullable = false)
     private String title;
-
-    //@Column(name = "image", nullable = false)
-    //private Image image;
+/* 
+    @Column(name = "image", nullable = false)
+    private Image image;
+*/
+    //COVER IMAGE
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private Image coverImage;
 
     //@Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -48,7 +54,7 @@ public class Travel {
     private String cities;
 
     //@Column(name = "places_visited")
-    private String placesVisited;
+    //private List<Place> places;
 
     //@Column(name = "rating", nullable = false)
     //@Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
@@ -58,6 +64,7 @@ public class Travel {
     //@Column(name = "comment")
     private String comment;
 
+    //CAROUSEL IMAGE
     //@Column(name = "carousel_images")
     @OneToMany(mappedBy="travelImage", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Image> carouselImages;
@@ -74,8 +81,8 @@ public class Travel {
     //public Travel(String title, Image image, LocalDate startDate, LocalDate endDate, String description,
     public Travel(String title,LocalDate startDate, LocalDate endDate, String description,
             String countries, String cities,
-            //String placesVisited, int rating, String comment, List<Image> carouselImages, String itineraryUrl,
-            String placesVisited, int rating, String comment, String itineraryUrl,
+            //Places placesVisited, int rating, String comment, List<Image> carouselImages, String itineraryUrl,
+            int rating, String comment, String itineraryUrl,
             String emailsColaborators) {
         this.title = title;
         //this.image = image;
@@ -84,7 +91,7 @@ public class Travel {
         this.description = description;
         this.countries = countries;
         this.cities = cities;
-        this.placesVisited = placesVisited;
+        //this.placesVisited = placesVisited;
         this.rating = rating;
         this.comment = comment;
         //this.carouselImages = carouselImages;
@@ -136,9 +143,11 @@ public class Travel {
         return cities;
     }
 
-    public String getPlacesVisited() {
+    /* 
+    public Place getPlacesVisited() {
         return placesVisited;
     }
+        */
 
     public int getRating() {
         return rating;
@@ -161,7 +170,7 @@ public class Travel {
     }
 
     public void setOwnerName(String ownerName) {
-        this.title = ownerName;
+        this.ownerName = ownerName;
     }
 
     public void setTitle(String title) {
@@ -193,9 +202,11 @@ public class Travel {
         this.cities = cities;
     }
 
-    public void setPlacesVisited(String placesVisited) {
+    /* 
+    public void setPlacesVisited(Place placesVisited) {
         this.placesVisited = placesVisited;
     }
+    */
 
     public void setRating(int rating) {
         this.rating = rating;

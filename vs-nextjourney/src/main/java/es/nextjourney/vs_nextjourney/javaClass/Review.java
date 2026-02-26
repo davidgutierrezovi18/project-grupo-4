@@ -8,40 +8,54 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @Entity
-@Table(name = "reviews")
 public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "user_id", nullable = false)
+    //@Column(name = "user_id", nullable = false)
     private Long userId;
     
-    @Column(name = "place_id", nullable = false)
+    //@Column(name = "place_id", nullable = false)
     private Long placeId;
     
-    @Column(name = "rating", nullable = false)
-    @Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
-    @Max(value = 5, message = "La puntuación debe estar entre 0 y 5")
+    //@Column(name = "rating", nullable = false)
+    //@Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
+    //@Max(value = 5, message = "La puntuación debe estar entre 0 y 5")
     private int rating;
    
-    @Column(name = "review_text", columnDefinition = "TEXT")
+    //@Column(name = "review_text", columnDefinition = "TEXT")
     private String reviewText;
     
-    @Column(name = "photo_url")
-    private Image photoUrl;
+    //@Column(name = "photo_url")
+    //private Image photoUrl;
     
-    @Column(name = "created_at", nullable = false)
+    //@Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
 
+    //ESTÁ MAL
+    //@ManyToOne
+    //private User user;
 
+    //@ManyToOne
+    //private Destination destination;
+
+    //@ManyToOne
+    //private Place place;
+
+    //@OneToMany
+    //private Image image;
+
+/*
     //CONSTRUCTORS
     public Review() {}
 
@@ -123,6 +137,6 @@ public class Review {
             '}';
 }
 
-
+ */
 }
 

@@ -14,26 +14,29 @@ import java.util.ArrayList;
 
 
 @Entity
-@Table(name = "destinations")
 public class Destination {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "name", nullable = false)
+    //@Column(name = "name", nullable = false)
     private String name;
     
-    @Column(name = "description", columnDefinition = "TEXT")
+    //@Column(name = "description", columnDefinition = "TEXT")
     private String description;
     
-    @Column(name = "image_url")
-    private Image image;
+    //@Column(name = "image_url")
+    //private Image image;
 
-    @Column (name = "places")
-    private List<Place> places;
+    //@Column (name = "places")
+    //private List<Place> places;
+
+    //@Column (name="reviews")
+    //private List<Review> reviews;
 
     //CONSTRUCTORS
+    /* 
     public Destination() {}
     public Destination(String name, String description, Image image){
         this.name = name;
@@ -43,6 +46,10 @@ public class Destination {
 
     //GETTERS Y SETTERS
     //Name getter
+    public Long getId(){
+        return id;
+    }
+
     public String getName() {
         return name;
     }
@@ -72,9 +79,20 @@ public class Destination {
         this.image = image;
     }
 
+    //Reviews getter
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    //Reviews setter
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     //TO STRING
     @Override
     public String toString() {
         return "Destination [name=" + name + ", description=" + description + ", image=" + image + "]";
     }
+        */
 }

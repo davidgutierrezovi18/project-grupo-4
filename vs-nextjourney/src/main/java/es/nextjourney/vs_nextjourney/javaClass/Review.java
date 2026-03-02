@@ -9,134 +9,116 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
 public class Review {
 
+    // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @Column(name = "place_id", nullable = false)
-    private Long placeId;
-
     // @Column(name = "rating", nullable = false)
     // @Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
     // @Max(value = 5, message = "La puntuación debe estar entre 0 y 5")
+    // Review stars
     private int rating;
 
     // @Column(name = "review_text", columnDefinition = "TEXT")
+    // Review content
     private String reviewText;
 
-    // @Column(name = "photo_url")
-    // private Image photoUrl;
+    // REVIEW IMAGES
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
 
     // @Column(name = "created_at", nullable = false)
+    // Creation date
     private LocalDate createdAt;
 
     // User relationship
     @ManyToOne(optional = false)
     private User user;
 
-    // @ManyToOne
-    // private Destination destination;
+    // TODO: destinations
 
-    // @ManyToOne
-    // private Place place;
+    // TODO: places
 
-    // REVIEW IMAGES
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
 
-    /*
-     * //CONSTRUCTORS
-     * public Review() {}
-     * 
-     * public Review(Long userId, Long placeId, int rating, String reviewText, Image
-     * photoUrl, LocalDate createdAt) {
-     * this.userId = userId;
-     * this.placeId = placeId;
-     * setRating(rating);
-     * this.reviewText = reviewText;
-     * this.photoUrl = photoUrl;
-     * this.createdAt = createdAt;
-     * }
-     * 
-     * //GETTERS Y SETTERS
-     * public Long getId() {
-     * return id;
-     * }
-     * 
-     * public Long getUserId() {
-     * return userId;
-     * }
-     * 
-     * public Long getPlaceId() {
-     * return placeId;
-     * }
-     * 
-     * public int getRating() {
-     * return rating;
-     * }
-     * 
-     * public String getReviewText() {
-     * return reviewText;
-     * }
-     * 
-     * public Image getPhotoUrl() {
-     * return photoUrl;
-     * }
-     * 
-     * public LocalDate getCreatedAt() {
-     * return createdAt;
-     * }
-     * 
-     * 
-     * public void setId(Long id) {
-     * this.id = id;
-     * }
-     * 
-     * public void setUserId(Long userId) {
-     * this.userId = userId;
-     * }
-     * 
-     * public void setPlaceId(Long placeId) {
-     * this.placeId = placeId;
-     * }
-     * 
-     * public void setRating(int rating) {
-     * if (rating >= 1 && rating <= 5) {
-     * this.rating = rating;
-     * }
-     * }
-     * 
-     * public void setReviewText(String reviewText) {
-     * this.reviewText = reviewText;
-     * }
-     * 
-     * public void setPhotoUrl(Image photoUrl) {
-     * this.photoUrl = photoUrl;
-     * }
-     * 
-     * public void setCreatedAt(LocalDate createdAt) {
-     * this.createdAt = createdAt;
-     * }
-     * 
-     * //TO STRING
-     * 
-     * @Override
-     * public String toString() {
-     * return "Review{" +
-     * "id=" + id +
-     * ", userId=" + userId +
-     * ", placeId=" + placeId +
-     * ", rating=" + rating +
-     * ", createdAt=" + createdAt +
-     * '}';
-     * }
-     * 
-     */
+    //CONSTRUCTORS
+    public Review() {}
+    
+    public Review(User user, int rating, String reviewText, LocalDate createdAt, List<Image> images) {
+        this.user = user;
+        setRating(rating);
+        this.reviewText = reviewText;
+        this.createdAt = createdAt;
+        this.images = new ArrayList<>();
+        if (images != null){
+            this.images = images;
+        }
+    }
+      
+    //GETTERS Y SETTERS
+    public Long getId() {
+        return id;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        if (rating >= 1 && rating <= 5) {
+            this.rating = rating;
+        }
+    }
+
+    public String getReviewText() {
+        return reviewText;
+    }
+
+    public void setReviewText(String reviewText) {
+        this.reviewText = reviewText;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    // TO STRING
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Review [id=").append(id)
+          .append(", rating=").append(rating)
+          .append(", reviewText=").append(reviewText)
+          .append(", createdAt=").append(createdAt)
+          .append(", username=").append(user.getName())
+          .append("]");
+        return sb.toString();
+    }
+
 }

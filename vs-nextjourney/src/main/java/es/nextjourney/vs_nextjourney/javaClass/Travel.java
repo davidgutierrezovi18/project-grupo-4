@@ -11,50 +11,52 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Travel {
 
+    // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     //@Column(name = "owner_id", nullable = false)
+    // ownerName
     private String ownerName;
 
     //@Column(name = "name", nullable = false)
+    // Travel title
     private String title;
 
     //COVER IMAGE
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     private Image coverImage;
 
-    //@Column(name = "start_date", nullable = false)
+    //Dates
     private LocalDate startDate;
-
-    //@Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
     //@Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    // Travel description
     private String description;
 
-    //@Column(name = "countries", nullable = false)
+    // Travel countries, cities and places
+    //TODO: decide if String places or  List<Place> places
     private String countries;
-
-    //@Column(name = "cities")
     private String cities;
-
     //@Column(name = "places_visited")
     //private List<Place> places;
 
     //@Column(name = "rating", nullable = false)
     //@Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
     //@Max(value = 5, message = "La puntuación debe estar entre 0 y 5")
+    // Star rating
     private int rating;
 
     //@Column(name = "comment")
+    // Travel comment
     private String comment;
 
     //CAROUSEL IMAGE
@@ -62,47 +64,52 @@ public class Travel {
     private List<Image> carouselImages;
 
     //@Column(name = "itinerary_url")
+    // Travel itinerary
     private String itineraryUrl;
 
     //@Column(name = "emails_colaborators")
+    // Travel colaborators (emails)
     private String emailsColaborators;
 
     // USERS
     @ManyToMany
-    private List<User> user;
+    private List<User> users;
+
 
     //CONSTRUCTORS
     public Travel() {}
 
-    //public Travel(String title, Image image, LocalDate startDate, LocalDate endDate, String description,
-    public Travel(String title,LocalDate startDate, LocalDate endDate, String description,
-            String countries, String cities,
-            //Places placesVisited, int rating, String comment, List<Image> carouselImages, String itineraryUrl,
-            int rating, String comment, String itineraryUrl,
-            String emailsColaborators) {
+    //TODO: add places
+    public Travel(String ownerName, String title, Image coverImage, LocalDate startDate, LocalDate endDate,
+              String description, String countries, String cities, int rating, String comment,
+              List<Image> carouselImages, String itineraryUrl, String emailsColaborators, List<User> user) {
+        this.ownerName = ownerName;
         this.title = title;
-        //this.image = image;
+        this.coverImage = coverImage;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
         this.countries = countries;
         this.cities = cities;
-        //this.placesVisited = placesVisited;
         this.rating = rating;
         this.comment = comment;
-        //this.carouselImages = carouselImages;
+        this.carouselImages = new ArrayList<>();
+        if(carouselImages != null){
+            this.carouselImages = carouselImages;
+        }
         this.itineraryUrl = itineraryUrl;
         this.emailsColaborators = emailsColaborators;
+        this.users = new ArrayList<>();
+        if (user != null){
+            this.users = user;
+        }
     }
+
 
     //GETTERS Y SETTERS
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getOwnerName() {
@@ -113,11 +120,9 @@ public class Travel {
         return title;
     }
 
-    /* 
-    public Image getImage() {
-        return image;
+    public Image getCoverImage() {
+        return coverImage;
     }
-        */
 
     public LocalDate getStartDate() {
         return startDate;
@@ -139,6 +144,7 @@ public class Travel {
         return cities;
     }
 
+    //TODO: places getter
     /* 
     public Place getPlacesVisited() {
         return placesVisited;
@@ -169,14 +175,17 @@ public class Travel {
         this.ownerName = ownerName;
     }
 
+    public List<User> getUser() {
+        return users;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
-/*
-    public void setImageUrl(Image image) {
-        this.image = image;
+
+    public void setCoverImage(Image coverImage) {
+        this.coverImage = coverImage;
     }
-*/
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
@@ -198,6 +207,7 @@ public class Travel {
         this.cities = cities;
     }
 
+    //TODO: places setter
     /* 
     public void setPlacesVisited(Place placesVisited) {
         this.placesVisited = placesVisited;
@@ -224,15 +234,37 @@ public class Travel {
         this.emailsColaborators = emailsColaborators;
     }
 
+    public void setUser(List<User> user) {
+        this.users = user;
+    }
+
     //TO STRING
-    /*
+    //TODO: add places
     @Override
     public String toString() {
-        return "Travel [title=" + title + ", imageUrl=" + image + ", startDate=" + startDate + ", endDate=" + endDate
-                + ", description=" + description + ", countries=" + countries + ", cities=" + cities
-                + ", placesVisited=" + placesVisited + ", rating=" + rating + ", comment=" + comment
-                + ", carouselImagesUrls=" + carouselImages + ", itineraryUrl=" + itineraryUrl
-                + ", emailsColaborators=" + emailsColaborators + "]";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Travel [id=").append(id)
+            .append(", ownerName=").append(ownerName)
+            .append(", title=").append(title)
+            .append(", startDate=").append(startDate)
+            .append(", endDate=").append(endDate)
+            .append(", description=").append(description)
+            .append(", countries=").append(countries)
+            .append(", cities=").append(cities)
+            .append(", rating=").append(rating)
+            .append(", comment=").append(comment)
+            .append(", itineraryUrl=").append(itineraryUrl)
+            .append(", emailsColaborators=").append(emailsColaborators);
+            
+            sb.append(", users= [");
+            for (int i = 0; i < users.size(); i++) {
+                sb.append(users.get(i).getName());
+                if (i < users.size() - 1)
+                    sb.append(", ");
+            }
+            
+            sb.append("]]");
+        return sb.toString();
     }
-                */
+
 }

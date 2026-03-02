@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Image {
 
+    // ID
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -26,6 +27,7 @@ public class Image {
     // Relationship for review images (review class)
     @ManyToOne
     private Review review;
+
 
     // CONSTRUCTORS
     public Image() {
@@ -52,8 +54,4 @@ public class Image {
         this.imageFile = imageFile;
     }
 
-    @Override
-    public String toString() {
-        return "Image [id=" + id + "]";
-    }
 }

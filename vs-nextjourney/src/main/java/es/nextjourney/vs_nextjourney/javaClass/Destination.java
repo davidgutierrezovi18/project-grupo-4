@@ -1,98 +1,99 @@
 package es.nextjourney.vs_nextjourney.javaClass;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
-import java.util.List;
-import java.util.ArrayList;
-
+//import java.util.List;
+//import java.util.ArrayList;
 
 @Entity
 public class Destination {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    //@Column(name = "name", nullable = false)
+
+    // @Column(name = "name", nullable = false)
     private String name;
-    
-    //@Column(name = "description", columnDefinition = "TEXT")
+
+    // @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    
-    //@Column(name = "image_url")
-    //private Image image;
 
-    //@Column (name = "places")
-    //private List<Place> places;
+    //COVER IMAGE
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    private Image coverImage;
 
-    //@Column (name="reviews")
-    //private List<Review> reviews;
 
-    //CONSTRUCTORS
-    /* 
-    public Destination() {}
-    public Destination(String name, String description, Image image){
-        this.name = name;
-        this.description = description;
-        this.image = image;
-    }
+    // @Column (name = "places")
+    // private List<Place> places;
 
-    //GETTERS Y SETTERS
-    //Name getter
-    public Long getId(){
-        return id;
-    }
+    // @Column (name="reviews")
+    // private List<Review> reviews;
 
-    public String getName() {
-        return name;
-    }
-
-    //Name setter
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    //Description getter
-    public String getDescription() {
-        return description;
-    }
-
-    //Description setter
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    //Image getter
-    public Image getImage() {
-        return image;
-    }
-
-    //Image setter
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    //Reviews getter
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    //Reviews setter
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    //TO STRING
-    @Override
-    public String toString() {
-        return "Destination [name=" + name + ", description=" + description + ", image=" + image + "]";
-    }
-        */
+    // CONSTRUCTORS
+    /*
+     * public Destination() {}
+     * public Destination(String name, String description, Image image){
+     * this.name = name;
+     * this.description = description;
+     * this.image = image;
+     * }
+     * 
+     * //GETTERS Y SETTERS
+     * //Name getter
+     * public Long getId(){
+     * return id;
+     * }
+     * 
+     * public String getName() {
+     * return name;
+     * }
+     * 
+     * //Name setter
+     * public void setName(String name) {
+     * this.name = name;
+     * }
+     * 
+     * //Description getter
+     * public String getDescription() {
+     * return description;
+     * }
+     * 
+     * //Description setter
+     * public void setDescription(String description) {
+     * this.description = description;
+     * }
+     * 
+     * //Image getter
+     * public Image getImage() {
+     * return image;
+     * }
+     * 
+     * //Image setter
+     * public void setImage(Image image) {
+     * this.image = image;
+     * }
+     * 
+     * //Reviews getter
+     * public List<Review> getReviews() {
+     * return reviews;
+     * }
+     * 
+     * //Reviews setter
+     * public void setReviews(List<Review> reviews) {
+     * this.reviews = reviews;
+     * }
+     * 
+     * //TO STRING
+     * 
+     * @Override
+     * public String toString() {
+     * return "Destination [name=" + name + ", description=" + description +
+     * ", image=" + image + "]";
+     * }
+     */
 }

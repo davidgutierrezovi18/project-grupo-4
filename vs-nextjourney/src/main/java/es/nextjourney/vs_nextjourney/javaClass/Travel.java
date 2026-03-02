@@ -3,20 +3,15 @@ package es.nextjourney.vs_nextjourney.javaClass;
 import java.time.LocalDate;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+
 
 import java.util.List;
-import java.util.ArrayList;
 
 @Entity
 public class Travel {
@@ -30,10 +25,7 @@ public class Travel {
 
     //@Column(name = "name", nullable = false)
     private String title;
-/* 
-    @Column(name = "image", nullable = false)
-    private Image image;
-*/
+
     //COVER IMAGE
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     private Image coverImage;

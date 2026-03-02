@@ -1,10 +1,14 @@
 package es.nextjourney.vs_nextjourney.javaClass;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 //import java.util.List;
@@ -23,13 +27,13 @@ public class Destination {
     // @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    //COVER IMAGE
+    // COVER IMAGE
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     private Image coverImage;
 
-
-    // @Column (name = "places")
-    // private List<Place> places;
+    // PLACES
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Place> places = new ArrayList<>();
 
     // @Column (name="reviews")
     // private List<Review> reviews;

@@ -1,13 +1,16 @@
 package es.nextjourney.vs_nextjourney.javaClass;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
-
 
 @Entity
 public class User {
@@ -52,11 +55,13 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
 
-    // @Transient
-    // private List<Travel> travel;
+    // TRAVELS
+    @ManyToMany(mappedBy = "users")
+    private List<Travel> travels;
 
-    // @Transient
-    // private List<Review> review;
+    // REVIEWS
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     /*
      * //CONSTRUCTORS

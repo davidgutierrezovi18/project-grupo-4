@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -57,7 +58,6 @@ public class Travel {
     private String comment;
 
     //CAROUSEL IMAGE
-    //@Column(name = "carousel_images")
     @OneToMany(mappedBy="travelImage", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Image> carouselImages;
 
@@ -66,6 +66,10 @@ public class Travel {
 
     //@Column(name = "emails_colaborators")
     private String emailsColaborators;
+
+    // USERS
+    @ManyToMany
+    private List<User> user;
 
     //CONSTRUCTORS
     public Travel() {}

@@ -6,7 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Image {
@@ -18,6 +20,11 @@ public class Image {
     @Lob
     private Blob imageFile;
 
+    //Relationship for carousel images
+    @ManyToOne
+    private Travel travelImage;
+
+    //CONSTRUCTORS
     public Image() {
     }
 
@@ -25,6 +32,7 @@ public class Image {
         this.imageFile = imageFile;
     }
 
+    //GETTERS Y SETTERS
     public Long getId() {
         return id;
     }

@@ -73,7 +73,7 @@ public class Travel {
 
     // USERS
     @ManyToMany
-    private List<User> users;
+    private List<User> userTravels;
 
 
     //CONSTRUCTORS
@@ -99,9 +99,9 @@ public class Travel {
         }
         this.itineraryUrl = itineraryUrl;
         this.emailsColaborators = emailsColaborators;
-        this.users = new ArrayList<>();
+        this.userTravels = new ArrayList<>();
         if (user != null){
-            this.users = user;
+            this.userTravels = user;
         }
     }
 
@@ -176,7 +176,7 @@ public class Travel {
     }
 
     public List<User> getUser() {
-        return users;
+        return userTravels;
     }
 
     public void setTitle(String title) {
@@ -235,7 +235,7 @@ public class Travel {
     }
 
     public void setUser(List<User> user) {
-        this.users = user;
+        this.userTravels = user;
     }
 
     //TO STRING
@@ -257,9 +257,9 @@ public class Travel {
             .append(", emailsColaborators=").append(emailsColaborators);
             
             sb.append(", users= [");
-            for (int i = 0; i < users.size(); i++) {
-                sb.append(users.get(i).getName());
-                if (i < users.size() - 1)
+            for (int i = 0; i < userTravels.size(); i++) {
+                sb.append(userTravels.get(i).getName());
+                if (i < userTravels.size() - 1)
                     sb.append(", ");
             }
             

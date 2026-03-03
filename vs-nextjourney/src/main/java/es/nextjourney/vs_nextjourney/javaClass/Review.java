@@ -40,7 +40,7 @@ public class Review {
 
     // User relationship
     @ManyToOne(optional = false)
-    private User user;
+    private User userReviews;
 
     // TODO: destinations
 
@@ -51,7 +51,7 @@ public class Review {
     public Review() {}
     
     public Review(User user, int rating, String reviewText, LocalDate createdAt, List<Image> images) {
-        this.user = user;
+        this.userReviews = user;
         setRating(rating);
         this.reviewText = reviewText;
         this.createdAt = createdAt;
@@ -93,11 +93,11 @@ public class Review {
     }
 
     public User getUser() {
-        return user;
+        return userReviews;
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.userReviews = user;
     }
 
     public List<Image> getImages() {
@@ -116,7 +116,7 @@ public class Review {
           .append(", rating=").append(rating)
           .append(", reviewText=").append(reviewText)
           .append(", createdAt=").append(createdAt)
-          .append(", username=").append(user.getName())
+          .append(", username=").append(userReviews.getName())
           .append("]");
         return sb.toString();
     }

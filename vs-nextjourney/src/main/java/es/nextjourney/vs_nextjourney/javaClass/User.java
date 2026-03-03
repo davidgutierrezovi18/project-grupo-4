@@ -13,7 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
 
-@Entity
+@Entity(name = "UsersTable")
 public class User {
 
     // ID
@@ -64,11 +64,11 @@ public class User {
     private Image image;
 
     // TRAVELS
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "userTravels")//
     private List<Travel> travels;
 
     // REVIEWS
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "userReviews", cascade = CascadeType.ALL, orphanRemoval = true)//
     private List<Review> reviews;
 
     

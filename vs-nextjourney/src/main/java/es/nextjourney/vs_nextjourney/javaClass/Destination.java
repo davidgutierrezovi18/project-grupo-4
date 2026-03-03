@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,11 +23,10 @@ public class Destination {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @Column(name = "name", nullable = false)
     // Destination name
+    @Column(name = "name", nullable = false)
     private String name;
 
-    // @Column(name = "description", columnDefinition = "TEXT")
     // Destination description
     private String description;
 
@@ -38,7 +38,6 @@ public class Destination {
     @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Place> places = new ArrayList<>();
 
-    // @Column (name="reviews")
     // REVIEWS
     @OneToMany(mappedBy="destination", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Review> reviews;

@@ -1,5 +1,9 @@
 package es.nextjourney.vs_nextjourney.javaClass;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+
 //import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -7,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Place {
@@ -39,7 +44,8 @@ public class Place {
 
     // @Column (name="reviews")
     // REVIEWS
-    // private List<Review> reviews;
+    @OneToMany(mappedBy="place", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Review> reviews;
 
     // Destination relationship
     @ManyToOne(optional = false)
@@ -53,6 +59,15 @@ public class Place {
         this.name = name;
         this.description = description;
         this.category = category;
+    }
+
+    public Place(String name, String description, Category category, Review review) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        if (reviews != null){
+            this.reviews = reviews;
+        }
     }
 
     // GETTERS Y SETTERS
@@ -85,7 +100,7 @@ public class Place {
         this.category = category;
     }
 
-    /*
+    
     public List<Review> getReviews() {
         return reviews;
     }
@@ -93,7 +108,7 @@ public class Place {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-    */
+    
 
     // TO STRING
     @Override
@@ -103,8 +118,17 @@ public class Place {
             .append(", name=").append(name)
             .append(", description=").append(description)
             .append(", category=").append(category)
-            .append(", destinationName=").append(destination.getName())
-            .append("]");
+            .append(", destinationName=").append(destination.getName());
+
+            sb.append(", reviews=[");
+            // Reviews
+            for (int i = 0; i < reviews.size(); i++) {
+                sb.append(reviews.get(i).getReviewText());
+                if (i < reviews.size() - 1){
+                    sb.append(", ");
+                }
+            }
+            sb.append("]]");
         return sb.toString();
     }
 

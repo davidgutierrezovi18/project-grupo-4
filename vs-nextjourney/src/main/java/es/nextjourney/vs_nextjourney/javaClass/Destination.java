@@ -40,7 +40,8 @@ public class Destination {
 
     // @Column (name="reviews")
     // REVIEWS
-    // private List<Review> reviews;
+    @OneToMany(mappedBy="destination", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Review> reviews;
 
     // CONSTRUCTORS
     public Destination() {
@@ -53,6 +54,19 @@ public class Destination {
         this.places = new ArrayList<>();
         if (places != null){
             this.places = places;
+        }
+    }
+
+    public Destination(String name, String description, Image coverImage, List<Place> places, List<Review> reviews) {
+        this.name = name;
+        this.description = description;
+        this.coverImage = coverImage;
+        this.places = new ArrayList<>();
+        if (places != null){
+            this.places = places;
+        }
+        if (reviews != null){
+            this.reviews = reviews;
         }
     }
 
@@ -86,7 +100,7 @@ public class Destination {
         this.coverImage = coverImage;
     }
 
-    /*
+    
     public List<Review> getReviews() {
         return reviews;
     }
@@ -94,7 +108,7 @@ public class Destination {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-     */
+    
 
     // TO STRING
     @Override
@@ -109,11 +123,20 @@ public class Destination {
         // Places names
         for (int i = 0; i < places.size(); i++) {
             sb.append(places.get(i).getName());
-            if (i < places.size() - 1)
+            if (i < places.size() - 1){
                 sb.append(", ");
+            }
+        }
+
+        sb.append(", reviews=[");
+        // Reviews
+        for (int i = 0; i < reviews.size(); i++) {
+            sb.append(reviews.get(i).getReviewText());
+            if (i < reviews.size() - 1){
+                sb.append(", ");
+            }
         }
         sb.append("]]");
-
         return sb.toString();
     }
 

@@ -42,15 +42,19 @@ public class Review {
     @ManyToOne(optional = false)
     private User userReviews;
 
-    // TODO: destinations
+    // Destination relationship
+    @ManyToOne()
+    private Destination destination;
 
-    // TODO: places
+    // Places relationship
+    @ManyToOne()
+    private Place place;
 
 
     //CONSTRUCTORS
     public Review() {}
     
-    public Review(User user, int rating, String reviewText, LocalDate createdAt, List<Image> images) {
+    public Review(User user, int rating, String reviewText, LocalDate createdAt, List<Image> images, Place place, Destination destination) {
         this.userReviews = user;
         setRating(rating);
         this.reviewText = reviewText;
@@ -59,6 +63,8 @@ public class Review {
         if (images != null){
             this.images = images;
         }
+        this.place = place;
+        this.destination = destination;
     }
       
     //GETTERS Y SETTERS
@@ -108,6 +114,22 @@ public class Review {
         this.images = images;
     }
 
+    public Place getPlace(){
+        return place;
+    }
+
+    public void setPlace(Place place){
+        this.place = place;
+    }
+
+    public Destination getDestination(){
+        return destination;
+    }
+
+    public void setDescription(Destination destination){
+        this.destination = destination;
+    }
+
     // TO STRING
     @Override
     public String toString() {
@@ -116,8 +138,14 @@ public class Review {
           .append(", rating=").append(rating)
           .append(", reviewText=").append(reviewText)
           .append(", createdAt=").append(createdAt)
-          .append(", username=").append(userReviews.getName())
-          .append("]");
+          .append(", username=").append(userReviews.getName());
+          if (destination != null){
+            sb.append(", destination=").append(destination);
+          }
+          if (place!=null){
+            sb.append(", place=").append(place);
+          }
+        sb.append("]");
         return sb.toString();
     }
 

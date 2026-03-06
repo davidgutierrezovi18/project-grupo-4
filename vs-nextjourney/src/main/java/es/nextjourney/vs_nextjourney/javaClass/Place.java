@@ -66,12 +66,12 @@ public class Place {
         this.description = description;
         this.category = category;
         if (reviews != null){
-            this.reviews = reviews;
+            this.reviews.add(review);
         }
     }
 
     // GETTERS Y SETTERS
-
+;
     public Long getId() {
         return id;
     }

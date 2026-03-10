@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.nextjourney.vs_nextjourney.javaClass.Destination;
+import es.nextjourney.vs_nextjourney.model.Destination;
 import es.nextjourney.vs_nextjourney.repository.DestinationRepository;
 
 @Service

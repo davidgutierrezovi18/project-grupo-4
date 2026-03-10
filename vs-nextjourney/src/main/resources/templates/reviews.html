@@ -4,6 +4,9 @@
 <!-- Header-->
 {{> header}}
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
 <body class="d-flex flex-column h-100">
   <main class="flex-shrink-0">
 
@@ -30,22 +33,27 @@
       <div class="container px-5">
         <div class="mb-4">
           <h3 class="text-center mb-4">Mapa de lugares y reseñas</h3>
-          <div class="ratio ratio-16x9">
-            <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-0.5,51.4,0.5,51.8&layer=mapnik"
-              style="border:none; border-radius:0.5rem;"></iframe>
-          </div>
+          <div id="reviewsMap" class="reviews-map-canvas" aria-label="Mapa interactivo de lugares"></div>
+          <p id="searchStatus" class="text-muted small mt-3 mb-0 text-center">
+            Busca un lugar y una zona, por ejemplo: McDonalds Leganés.
+          </p>
+          <p class="text-muted small mt-2 mb-0 text-center">
+            El buscador intenta corregir pequeñas erratas para seguir encontrando coincidencias.
+          </p>
         </div>
-
-        <!-- Search bar-->
-        <div class="mt-4">
-          <h5 class="fw-bolder mb-3 text-center">Buscar lugares</h5>
-          <div class="row g-3 justify-content-center">
-            <div class="col-md-5">
-              <input id="searchInput" class="form-control" type="search"
-                placeholder="Buscar lugares (ej. Restaurante, Museo)" aria-label="Buscar" />
-            </div>
-            <div class="col-md-2">
-              <button id="searchBtn" class="btn btn-primary w-100">Buscar</button>
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="bg-light border rounded-4 p-4 p-lg-5 shadow-sm">
+              <div class="row g-3 justify-content-center align-items-end">
+                <div class="col-md-8">
+                  <label for="searchInput" class="form-label fw-semibold">Buscar lugares</label>
+                  <input id="searchInput" class="form-control form-control-lg" type="search"
+                    placeholder="Ej. McDonalds Leganés" aria-label="Buscar lugares en el mapa" />
+                </div>
+                <div class="col-md-3">
+                  <button id="searchBtn" class="btn btn-primary btn-lg w-100">Buscar</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -62,50 +70,23 @@
           <div class="col-lg-8 mx-auto">
             <div class="mb-4">
               <h4 class="fw-bolder">Resultados</h4>
+              <div id="resultsSummary" class="text-muted small mb-3">
+                Aún no hay resultados. Lanza una búsqueda para ver los lugares en el mapa.
+              </div>
 
-
-              <div class="list-group">
-                <!-- Place Examples -->
-                <a href="/place_reviews" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><i class="bi bi-shop"></i> Sagrada Familia</h5>
-                    <small class="text-warning"><i class="bi bi-star-fill"></i> 4.2</small>
+              <div id="resultsList" class="list-group">
+                <div class="list-group-item reviews-placeholder-item">
+                  <div class="d-flex align-items-start gap-3">
+                    <span class="reviews-placeholder-icon"><i class="bi bi-search"></i></span>
+                    <div>
+                      <h5 class="mb-1">Busca un sitio para empezar</h5>
+                      <p class="mb-1 text-muted small">
+                        Prueba con búsquedas como “mcdonalds leganes”, “museo madrid” o “catedral sevilla”.
+                      </p>
+                      <small class="text-muted">Si fallas en una letra, el filtro difuso intentará seguir encontrando el lugar.</small>
+                    </div>
                   </div>
-                  <p class="mb-1 text-muted small">catedral, abierto 24h</p>
-                  <small>📍 Calle Principal 123, Centro</small>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><i class="bi bi-cup-hot"></i> Café La Esquina</h5>
-                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.8</small>
-                  </div>
-                  <p class="mb-1 text-muted small">Café especializado en café de origen único</p>
-                  <small>📍 Avenida Libertad 456, Barrio Antiguo</small>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><i class="bi bi-museum"></i> Museo de Arte Moderno</h5>
-                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.6</small>
-                  </div>
-                  <p class="mb-1 text-muted small">Galería de arte contemporáneo, entrada: $15</p>
-                  <small>📍 Carrera 7 #100-50, Zona Cultural</small>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><i class="bi bi-fork-knife"></i> Restaurante "El Típico"</h5>
-                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.5</small>
-                  </div>
-                  <p class="mb-1 text-muted small">Comida tradicional, especialidad en platos típicos</p>
-                  <small>📍 Calle 5 #12-34, Centro Histórico</small>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><i class="bi bi-tree"></i> Parque Central</h5>
-                    <small class="text-warning"></i><i class="bi bi-star-fill"></i> 4.3</small>
-                  </div>
-                  <p class="mb-1 text-muted small">Área verde con juegos y zonas de descanso</p>
-                  <small>📍 Paseo de la Naturaleza, Sector Oriente</small>
-                </a>
+                </div>
               </div>
             </div>
 
@@ -130,6 +111,9 @@
 
   <!-- Bootstrap core JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/reviews-map.js"></script>
 </body>
 
 </html>

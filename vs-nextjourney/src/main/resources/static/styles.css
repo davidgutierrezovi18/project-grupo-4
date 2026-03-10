@@ -265,6 +265,42 @@ samp {
   font-size: 1em;
 }
 
+.reviews-map-canvas {
+  width: 100%;
+  min-height: 460px;
+  border-radius: 1rem;
+  border: 1px solid rgba(13, 110, 253, 0.15);
+  box-shadow: 0 1rem 2rem rgba(33, 37, 41, 0.08);
+}
+
+.reviews-placeholder-item {
+  border-style: dashed;
+  background: linear-gradient(180deg, rgba(13, 110, 253, 0.04), rgba(13, 110, 253, 0.01));
+}
+
+.reviews-placeholder-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background-color: rgba(13, 110, 253, 0.12);
+  color: var(--bs-primary);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.reviews-map-popup {
+  min-width: 180px;
+}
+
+@media (max-width: 767.98px) {
+  .reviews-map-canvas {
+    min-height: 340px;
+  }
+}
+
 pre {
   display: block;
   margin-top: 0;

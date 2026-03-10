@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
-import es.nextjourney.vs_nextjourney.javaClass.Image;
-import es.nextjourney.vs_nextjourney.javaClass.User;
+import es.nextjourney.vs_nextjourney.model.Image;
+import es.nextjourney.vs_nextjourney.model.User;
 
 
 

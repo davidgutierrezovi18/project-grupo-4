@@ -111,4 +111,19 @@ public class WebController {
 	public String placeReviews(Model model) {
 		return "place_reviews";
 	}
+
+	@GetMapping("/error403")
+	public String showError403(Model model) {
+		return "error403";
+	}
+
+	@GetMapping("/error404")
+	public String showError404(Model model) {
+		return "error404";
+	}
+
+	@GetMapping("/error500")
+	public String showError500(Model model) {
+		return "error500";
+	}
 }

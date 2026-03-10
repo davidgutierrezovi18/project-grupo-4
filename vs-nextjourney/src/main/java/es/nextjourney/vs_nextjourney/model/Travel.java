@@ -1,4 +1,4 @@
-package es.nextjourney.vs_nextjourney.javaClass;
+package es.nextjourney.vs_nextjourney.model;
 
 import java.time.LocalDate;
 

@@ -28,6 +28,10 @@ public class UserService{
 		userRepository.deleteById(id);
 	}
 
+	public void modifyUser(User user) {
+		userRepository.save(user);
+	}
+
     public User addImageToUser(long id, Image image) {
 		User user = userRepository.findById(id).orElseThrow();
 		user.setImage(image);

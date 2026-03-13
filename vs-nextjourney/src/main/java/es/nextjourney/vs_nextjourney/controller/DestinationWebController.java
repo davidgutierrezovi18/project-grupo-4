@@ -27,22 +27,6 @@ public class DestinationWebController {
     @Autowired
     private DestinationService destinationService;
 
-    @Autowired
-    private ImageService imageService;
-
-    //destination
-    @ModelAttribute
-    public void addAttributes(Model model, HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
-        if (principal != null) {
-            model.addAttribute("logged", true);
-            model.addAttribute("userName", principal.getName());
-            model.addAttribute("admin", request.isUserInRole("ADMIN"));
-        } else {
-            model.addAttribute("logged", false);
-        }
-    }
-
     // LISTAR TODOS LOS DESTINOS
     @GetMapping("/destinations")
     public String showDestinations(Model model,HttpSession session) {

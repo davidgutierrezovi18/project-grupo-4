@@ -27,15 +27,6 @@ public class WebController {
 		return "faq";
 	}
 
-	@GetMapping("/register")
-	public String register() {
-		return "register";
-	}
-
-	@GetMapping("/sign_in")
-	public String signIn() {
-		return "sign_in";
-	}
 
 	@GetMapping("/mytravels")
 	public String myTravels(Model model) {
@@ -47,15 +38,6 @@ public class WebController {
 		return "reviews";
 	}
 
-	@GetMapping("/user_profile")
-	public String userProfile(Model model) {
-		return "user_profile";
-	}
-
-	@GetMapping("/edit_profile")
-	public String editProfile(Model model) {
-		return "edit_profile";
-	}
 
 	@GetMapping("/add_place")
 	public String addPlace() {

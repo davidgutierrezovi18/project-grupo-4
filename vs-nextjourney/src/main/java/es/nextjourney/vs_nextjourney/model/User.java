@@ -2,9 +2,12 @@ package es.nextjourney.vs_nextjourney.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -12,6 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 
 @Entity(name = "UsersTable")
 public class User {
@@ -21,8 +25,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
-    private String rol;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+	private List<String> roles;
 
     
 
@@ -80,8 +85,9 @@ public class User {
     //CONSTRUCTORS
     public User() {}
     
-    public User(String name, String lastName, String username, LocalDate dateOfBirth, String email, String password, Image image, List<Travel> travels, List<Review> reviews) {
+    public User(String name ,String lastName, String username, LocalDate dateOfBirth, String email, String password, Image image, List<Travel> travels, List<Review> reviews, String... roles) {
         this.name = name;
+        this.roles = Arrays.asList(roles);
         this.lastName = lastName;
         this.username = username;
         this.dateOfBirth = dateOfBirth;
@@ -99,9 +105,9 @@ public class User {
     }
     
     //GETTERS Y SETTERS
-    public String getRol() {
-        return rol;
-    }
+    public List<String> getRoles() {
+		return roles;
+	}
 
     public Long getId() {
         return id;
@@ -143,9 +149,9 @@ public class User {
         return reviews;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
+    public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
 
     public void setName(String name) {
         this.name = name;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.User;
+import java.util.Optional;
 
 
 
@@ -40,6 +41,16 @@ public class UserService{
 		return user;
 	}
 
+	public Optional<User> findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
 
+	public Optional<User> findByUserName(String userName) {
+		return userRepository.findByUserName(userName);
+	}
+
+	public Optional<User> findById(long id) {
+		return userRepository.findById(id);
+	}
 
 }

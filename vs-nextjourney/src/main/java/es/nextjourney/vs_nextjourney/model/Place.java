@@ -17,12 +17,12 @@ import jakarta.persistence.OneToMany;
 public class Place {
 
     public enum Category {
-        HISTORIA,
-        MUSEO,
-        PARQUE,
-        MIRADOR,
-        PLAZA,
-        OTRO
+        Historia,
+        Museo,
+        Parque,
+        Mirador,
+        Plaza,
+        Otro
     }
 
     // ID
@@ -131,5 +131,20 @@ public class Place {
             sb.append("]]");
         return sb.toString();
     }
+
+    
+        public String getIcon() {
+            if (this.category == null) return "bi-geo-alt";
+
+            return switch (this.category) {
+                case Historia -> "bi-bank";
+                case Museo    -> "bi-palette";
+                case Parque   -> "bi-tree";
+                case Mirador  -> "bi-sunset";
+                case Plaza    -> "bi-building";
+                case Otro     -> "bi-geo-alt";
+                
+            };
+        }
 
 }

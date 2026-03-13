@@ -4,55 +4,52 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Header-->
 {{> header}}
 
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
 
-        <!-- Navigation-->
         {{> nav_bar}}
 
-        <!-- Add Place Section -->
         <section class="py-5">
             <div class="container px-5">
                 <div class="text-center mb-5">
                     <h1 class="fw-bolder">Añadir lugar que visitar</h1>
                     <p class="lead fw-normal text-muted mb-0">
-                        Añade un nuevo punto de interés dentro de este destino.
+                        Añade un nuevo punto de interés para <strong>{{destination.name}}</strong>.
                     </p>
                 </div>
 
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
-                        <form>
+                        <form action="/destinations/{{destination.id}}/add_place" method="post">
+                            
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="placeName" placeholder="Nombre del lugar"
-                                    required>
+                                <input type="text" name="name" class="form-control" id="placeName" placeholder="Nombre del lugar" required>
                                 <label for="placeName">Nombre del lugar</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <textarea class="form-control" id="placeDescription" placeholder="Descripción"
+                                <textarea name="description" class="form-control" id="placeDescription" placeholder="Descripción"
                                     style="height: 150px" required></textarea>
                                 <label for="placeDescription">Descripción</label>
                             </div>
 
                             <div class="form-floating mb-4">
-                                <select class="form-select" id="placeCategory" required>
+                                <select name="category" class="form-select" id="placeCategory" required>
                                     <option value="" selected disabled>Selecciona una categoría</option>
-                                    <option>Historia</option>
-                                    <option>Museo</option>
-                                    <option>Parque</option>
-                                    <option>Mirador</option>
-                                    <option>Plaza</option>
-                                    <option>Otro</option>
+                                    <option value="Historia">Historia</option>
+                                    <option value="Museo">Museo</option>
+                                    <option value="Parque">Parque</option>
+                                    <option value="Mirador">Mirador</option>
+                                    <option value="Plaza">Plaza</option>
+                                    <option value="Otro">Otro</option>
                                 </select>
                                 <label for="placeCategory">Categoría</label>
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                                <a href="/one_destination" class="btn btn-outline-secondary btn-lg">
+                                <a href="/destinations/{{destination.id}}" class="btn btn-outline-secondary btn-lg">
                                     Cancelar
                                 </a>
                                 <button type="submit" class="btn btn-primary btn-lg">
@@ -67,7 +64,6 @@
 
     </main>
 
-    <!-- Footer-->
     {{> footer}}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

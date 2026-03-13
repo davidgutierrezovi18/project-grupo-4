@@ -17,11 +17,6 @@ public class WebController {
 		return "index";
 	}
 
-	@GetMapping("/contact")
-	public String contact() {
-		return "contact";
-	}
-
 	@GetMapping("/faq")
 	public String faq() {
 		return "faq";

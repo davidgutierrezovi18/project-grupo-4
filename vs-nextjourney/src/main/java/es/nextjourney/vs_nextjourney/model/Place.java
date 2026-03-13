@@ -1,5 +1,6 @@
 package es.nextjourney.vs_nextjourney.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -48,30 +49,31 @@ public class Place {
     private List<Review> reviews;
 
     // Destination relationship
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Destination destination;
 
     // CONSTRUCTORS
     public Place() {
+        this.reviews = new ArrayList<>();
     }
 
     public Place(String name, String description, Category category) {
+        this();
         this.name = name;
         this.description = description;
         this.category = category;
     }
 
     public Place(String name, String description, Category category, Review review) {
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        if (reviews != null){
+        this(name, description, category);
+        if (review != null) {
+            review.setPlace(this);
             this.reviews.add(review);
         }
     }
 
     // GETTERS Y SETTERS
-;
+
     public Long getId() {
         return id;
     }
@@ -102,11 +104,14 @@ public class Place {
 
     
     public List<Review> getReviews() {
+        if (reviews == null) {
+            reviews = new ArrayList<>();
+        }
         return reviews;
     }
     
     public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+        this.reviews = reviews != null ? reviews : new ArrayList<>();
     }
 
     public Destination getDestination() {
@@ -126,13 +131,15 @@ public class Place {
             .append(", name=").append(name)
             .append(", description=").append(description)
             .append(", category=").append(category)
-            .append(", destinationName=").append(destination.getName());
+            .append(", destinationName=")
+            .append(destination != null ? destination.getName() : "-");
 
             sb.append(", reviews=[");
             // Reviews
-            for (int i = 0; i < reviews.size(); i++) {
-                sb.append(reviews.get(i).getReviewText());
-                if (i < reviews.size() - 1){
+            List<Review> currentReviews = getReviews();
+            for (int i = 0; i < currentReviews.size(); i++) {
+                sb.append(currentReviews.get(i).getReviewText());
+                if (i < currentReviews.size() - 1){
                     sb.append(", ");
                 }
             }

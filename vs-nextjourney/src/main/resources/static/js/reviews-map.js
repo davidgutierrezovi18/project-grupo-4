@@ -320,6 +320,32 @@
     return "https://www.openstreetmap.org/?mlat=" + encodeURIComponent(lat) + "&mlon=" + encodeURIComponent(lon) + "#map=17/" + encodeURIComponent(lat) + "/" + encodeURIComponent(lon);
   }
 
+  function buildAddReviewLink(result) {
+    const url = new URL("/add-review", window.location.origin);
+    if (typeof result.placeId === "number") {
+      url.searchParams.set("placeId", String(result.placeId));
+      return url.pathname + url.search;
+    }
+
+    url.searchParams.set("placeName", result.name || "");
+    url.searchParams.set("placeType", result.subtitle || "");
+    url.searchParams.set("placeLat", String(result.lat || ""));
+    url.searchParams.set("placeLon", String(result.lon || ""));
+    return url.pathname + url.search;
+  }
+
+  function buildViewReviewsLink(result) {
+    const url = new URL("/place_reviews", window.location.origin);
+    if (typeof result.placeId === "number") {
+      url.searchParams.set("placeId", String(result.placeId));
+    }
+    url.searchParams.set("placeName", result.name || "");
+    url.searchParams.set("placeType", result.subtitle || "");
+    url.searchParams.set("placeLat", String(result.lat || ""));
+    url.searchParams.set("placeLon", String(result.lon || ""));
+    return url.pathname + url.search;
+  }
+
   function updateStatus(message, type) {
     searchStatus.textContent = message;
     searchStatus.className = "small mt-3 mb-0 text-center";
@@ -387,6 +413,12 @@
     resultsList.innerHTML = "";
 
     results.forEach((result, index) => {
+      const hasReviews = Number(result.reviewCount) > 0;
+      const starClass = hasReviews ? "text-warning" : "text-secondary";
+      const ratingLabel = hasReviews
+        ? Number(result.averageRating || 0).toFixed(1) + " (" + Number(result.reviewCount) + ")"
+        : "0.0 (0)";
+
       const item = document.createElement("button");
       item.type = "button";
       item.className = "list-group-item list-group-item-action text-start";
@@ -397,6 +429,7 @@
         '</div>',
         '<p class="mb-1 text-muted small">' + escapeHtml(result.subtitle) + '</p>',
         '<small>📍 ' + escapeHtml(result.address) + '</small>',
+        '<div class="small mt-1"><i class="bi bi-star-fill ' + starClass + '"></i> ' + escapeHtml(ratingLabel) + '</div>',
       ].join("");
 
       item.addEventListener("click", function () {
@@ -413,12 +446,22 @@
     const bounds = [];
 
     results.forEach((result) => {
+      const hasReviews = Number(result.reviewCount) > 0;
+      const starClass = hasReviews ? "text-warning" : "text-secondary";
+      const ratingLabel = hasReviews
+        ? Number(result.averageRating || 0).toFixed(1) + " (" + Number(result.reviewCount) + ")"
+        : "0.0 (0)";
+      const viewReviewsLinkHtml = '<a class="btn btn-sm btn-outline-primary mt-2 me-2" href="' + buildViewReviewsLink(result) + '">Ver reseñas</a>';
+      const addReviewLinkHtml = '<a class="btn btn-sm btn-primary mt-2" href="' + buildAddReviewLink(result) + '">Añadir reseña</a>';
+
       const marker = L.marker([result.lat, result.lon]);
       marker.bindPopup(
         '<div class="reviews-map-popup">' +
           '<strong>' + escapeHtml(result.name) + '</strong><br>' +
           '<span>' + escapeHtml(result.subtitle) + '</span><br>' +
           '<small>' + escapeHtml(result.address) + '</small><br>' +
+          '<small><i class="bi bi-star-fill ' + starClass + '"></i> ' + escapeHtml(ratingLabel) + '</small><br>' +
+          '<div>' + viewReviewsLinkHtml + addReviewLinkHtml + '</div>' +
           '<a href="' + buildOsmLink(result.lat, result.lon) + '" target="_blank" rel="noopener noreferrer">Abrir en OpenStreetMap</a>' +
         '</div>'
       );
@@ -446,6 +489,44 @@
     }
 
     return response.json();
+  }
+
+  async function enrichResultsWithPlaceMetrics(results, signal) {
+    if (!results.length) {
+      return results;
+    }
+
+    const names = dedupeBy(
+      results
+        .map((result) => result.name)
+        .filter(Boolean),
+      (name) => normalizeText(name)
+    );
+
+    if (!names.length) {
+      return results;
+    }
+
+    const url = new URL("/api/reviews/place-metrics", window.location.origin);
+    names.forEach((name) => url.searchParams.append("names", name));
+
+    try {
+      const metricsMap = await fetchJson(url.toString(), { signal: signal });
+      return results.map((result) => {
+        const metrics = metricsMap[result.name] || {};
+        return Object.assign({}, result, {
+          placeId: typeof metrics.placeId === "number" ? metrics.placeId : null,
+          reviewCount: Number(metrics.reviewCount) || 0,
+          averageRating: Number(metrics.averageRating) || 0,
+        });
+      });
+    } catch (error) {
+      return results.map((result) => Object.assign({}, result, {
+        placeId: null,
+        reviewCount: 0,
+        averageRating: 0,
+      }));
+    }
   }
 
   function buildNominatimUrl(path, params) {
@@ -670,6 +751,8 @@
         results = await searchGlobally(query, activeRequestController.signal);
         sourceLabel = "búsqueda global";
       }
+
+      results = await enrichResultsWithPlaceMetrics(results, activeRequestController.signal);
 
       if (!results.length) {
         clearMarkers();

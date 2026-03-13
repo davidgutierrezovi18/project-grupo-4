@@ -3,27 +3,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Header-->
 {{> header}}
 
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
 
-        <!-- Navigation-->
         {{> nav_bar}}
 
-        <!-- Header -->
         <header class="bg-dark py-5">
             <div class="container px-5">
                 <div class="row gx-5 align-items-center">
                     <div class="col-lg-8">
-                        <h1 class="display-6 fw-bolder text-white">Madrid, España</h1>
-                        <p class="text-white-50 mb-2">Capital vibrante con arte, historia y vida nocturna.</p>
+                        <h1 class="display-6 fw-bolder text-white">{{destination.name}}, {{destination.country}}</h1>
+                        <p class="text-white-50 mb-2">{{destination.description}}</p>
                         <div class="d-flex align-items-center text-white-50 small">
                             <i class="bi bi-geo-alt me-2"></i>
-                            Comunidad de Madrid
-                            <span class="mx-2">&middot;</span>
-                            3-5 días ideales
+                            {{destination.region}}
                         </div>
                     </div>
                     <div class="col-lg-4 text-lg-end">
@@ -31,13 +26,11 @@
                             <i class="bi bi-arrow-left me-1"></i>
                             Volver a destinos
                         </a>
-
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Places to visit -->
         <section class="py-5 bg-light">
             <div class="container px-5 my-5">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
@@ -45,118 +38,43 @@
                         <h2 class="fw-bolder mb-1">Lugares que visitar</h2>
                         <p class="text-muted mb-0">Historia, arte y paseos al aire libre.</p>
                     </div>
-                    <a class="btn btn-primary" href="/add_place">
+                    
+                    {{#logged}}
+                    <a class="btn btn-primary" href="/destinations/{{destination.id}}/add_place">
                         <i class="bi bi-plus-lg me-1"></i>
                         Añadir lugar que visitar
                     </a>
+                    {{/logged}}
 
                 </div>
+                
                 <div class="row g-4">
+                    {{#places}}
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-bank fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Palacio Real</h5>
+                                    <i class="bi {{icon}} fs-4 text-primary me-2"></i>
+                                    <h5 class="card-title mb-0">{{name}}</h5>
                                 </div>
-                                <p class="card-text text-muted">Salones majestuosos y jardines para caminar sin prisa.
-                                </p>
-                                <span class="badge bg-light text-dark">Historia</span>
+                                <p class="card-text text-muted">{{description}}</p>
+                                <span class="badge bg-light text-dark">{{category}}</span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-building fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Plaza Mayor</h5>
-                                </div>
-                                <p class="card-text text-muted">Arquitectura clásica y terrazas con ambiente local.</p>
-                                <span class="badge bg-light text-dark">Plaza</span>
-                            </div>
-                        </div>
+                    {{/places}}
+
+                    {{^places}}
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted italic">Aún no hay lugares recomendados para este destino. {{#logged}}¡Sé el primero en añadir uno!{{/logged}}</p>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-compass fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Puerta del Sol</h5>
-                                </div>
-                                <p class="card-text text-muted">Kilómetro cero y punto de encuentro imprescindible.</p>
-                                <span class="badge bg-light text-dark">Centro</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-palette fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Museo del Prado</h5>
-                                </div>
-                                <p class="card-text text-muted">Grandes obras de Velázquez, Goya y más.</p>
-                                <span class="badge bg-light text-dark">Museo</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-brush fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Museo Reina Sofía</h5>
-                                </div>
-                                <p class="card-text text-muted">Arte contemporáneo con el Guernica como emblema.</p>
-                                <span class="badge bg-light text-dark">Museo</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-tree fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Parque del Retiro</h5>
-                                </div>
-                                <p class="card-text text-muted">Jardines, lago y paseo perfecto al atardecer.</p>
-                                <span class="badge bg-light text-dark">Parque</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-lightning-charge fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Gran Vía</h5>
-                                </div>
-                                <p class="card-text text-muted">Teatros, tiendas y energía urbana a cualquier hora.</p>
-                                <span class="badge bg-light text-dark">Avenida</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-sunset fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Templo de Debod</h5>
-                                </div>
-                                <p class="card-text text-muted">El mejor spot para ver la puesta de sol.</p>
-                                <span class="badge bg-light text-dark">Mirador</span>
-                            </div>
-                        </div>
-                    </div>
+                    {{/places}}
                 </div>
             </div>
         </section>
 
-
     </main>
 
-    <!-- Footer-->
     {{> footer}}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

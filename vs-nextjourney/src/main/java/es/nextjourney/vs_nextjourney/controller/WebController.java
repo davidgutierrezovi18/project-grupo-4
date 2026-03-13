@@ -17,11 +17,6 @@ public class WebController {
 		return "index";
 	}
 
-	@GetMapping("/destinations")
-	public String destinations(Model model) {
-		return "destinations";
-	}
-
 	@GetMapping("/contact")
 	public String contact() {
 		return "contact";
@@ -60,11 +55,6 @@ public class WebController {
 	@GetMapping("/edit_profile")
 	public String editProfile(Model model) {
 		return "edit_profile";
-	}
-
-	@GetMapping("/add_destination")
-	public String addDestination() {
-		return "add_destination";
 	}
 
 	@GetMapping("/add_place")

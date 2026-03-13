@@ -4,16 +4,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Header-->
 {{> header}}
 
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
 
-        <!-- Navigation-->
         {{> nav_bar}}
 
-        <!-- Add Destination Section -->
         <section class="py-5">
             <div class="container px-5">
                 <div class="text-center mb-5">
@@ -25,57 +22,59 @@
 
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
-                        <form>
+                        <form action="/add_destination" method="post" enctype="multipart/form-data">
+                            
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="destinationName"
-                                    placeholder="Nombre del destino" required>
+                                <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre del destino" required>
                                 <label for="destinationName">Nombre del destino</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <textarea class="form-control" id="destinationDescription" placeholder="Descripción"
+                                <input type="text" name="country" class="form-control" id="destinationCountry" placeholder="País" required>
+                                <label for="destinationCountry">País</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <textarea name="description" class="form-control" id="destinationDescription" placeholder="Descripción"
                                     style="height: 150px" required></textarea>
                                 <label for="destinationDescription">Descripción</label>
                             </div>
 
                             <div class="text mb-4">
-                                <img id="previewImage"
-                                    src="https://dummyimage.com/300x200/6c757d/ffffff&text=Destination+Image"
+                                <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa"
                                     alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
 
                                 <div>
                                     <label for="destinationImage" class="btn btn-outline-secondary">
                                         Seleccione imagen del destino
                                     </label>
-                                    <input type="file" id="destinationImage" name="destinationImage"
-                                        accept="image/jpeg, image/png" hidden onchange="previewSelectedImage(event)">
+                                    <input type="file" id="destinationImage" name="imageFile" accept="image/jpeg, image/png" hidden onchange="previewSelectedImage(event)">
                                 </div>
-
-                                <small class="text-muted d-block mt-2">
-                                    Formatos permitidos: JPG, PNG
-                                </small>
                             </div>
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                                <a href="/destinations" class="btn btn-outline-secondary btn-lg">
-                                    Cancelar
-                                </a>
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    Guardar destino
-                                </button>
+                                <a href="/destinations" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+                                <button type="submit" class="btn btn-primary btn-lg">Guardar destino</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
-    <!-- Footer-->
     {{> footer}}
 
+    <script>
+        function previewSelectedImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('previewImage');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

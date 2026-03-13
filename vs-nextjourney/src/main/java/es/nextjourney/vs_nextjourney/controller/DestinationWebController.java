@@ -26,6 +26,8 @@ public class DestinationWebController {
 
     @Autowired
     private DestinationService destinationService;
+
+    @Autowired
     private ImageService imageService;
 
     // LISTAR TODOS LOS DESTINOS

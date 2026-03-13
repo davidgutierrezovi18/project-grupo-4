@@ -30,6 +30,9 @@ public class Destination {
     // Destination description
     private String description;
 
+    // Destination country
+    private String country;
+
     // COVER IMAGE
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     private Image coverImage;
@@ -89,6 +92,14 @@ public class Destination {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public Image getCoverImage() {

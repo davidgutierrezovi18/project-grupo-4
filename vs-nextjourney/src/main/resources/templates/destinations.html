@@ -1,171 +1,66 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 
-<!-- Header-->
 {{> header}}
 
 <body class="d-flex flex-column">
     <main class="flex-shrink-0">
 
-
-        <!-- Navigation-->
         {{> nav_bar}}
 
-        <!-- Header-->
         <header class="bg-dark py-5">
             <div class="container px-5">
-
-                <!-- Fila superior: lápiz a la derecha -->
+                <!--{{#logged}}-->
                 <div class="d-flex justify-content-end gap-2">
                     <a href="/add_destination" class="text-white fs-4" title="Añadir nuevo destino">
                         <i class="bi bi-plus-square"></i>
                     </a>
                 </div>
+                <!--{{/logged}}-->
 
-                <!-- Contenido centrado -->
                 <div class="text-center mt-3">
                     <h1 class="display-5 fw-bolder text-white mb-4">Destinos</h1>
                 </div>
-
             </div>
         </header>
 
-        <!-- My travels section-->
         <section class="py-5">
             <div class="container px-5">
-
-                <!-- First line-->
                 <div class="row gx-5">
+                    
+                    {{#destinations}}
                     <div class="col-lg-4 mb-5">
-                        <div class="card h-70 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Miami"
-                                alt="..." />
+                        <div class="card h-100 shadow border-0">
+                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text={{name}}" alt="{{name}}" />
+                            
                             <div class="card-body p-4 d-flex flex-column">
                                 <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Miami, Estados Unidos
+                                    <a class="text-decoration-none link-dark" href="/destinations/{{id}}">
+                                        {{name}}, {{country}}
                                     </a>
-
                                 </h5>
-
-                                <a class="btn btn-outline-primary align-self-start" href="/one_destination">Más
-                                    información</a>
+                                <p class="card-text mb-4 text-muted small">{{description}}</p>
+                                
+                                <a class="btn btn-outline-primary mt-auto align-self-start" href="/destinations/{{id}}">
+                                    Más información
+                                </a>
                             </div>
                         </div>
                     </div>
+                    {{/destinations}}
 
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-70 shadow border-0">
-                            <img class="card-img-top" src="https://www.dummyimage.com/600x350/6c757d/343a40&text=Madrid"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Madrid, España
-                                    </a>
-                                </h5>
-
-
-                                <a class="btn btn-outline-primary align-self-start" href="/one_destination">Más
-                                    información</a>
-                            </div>
-                        </div>
+                    {{^destinations}}
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">No hay destinos disponibles en este momento.</p>
                     </div>
-
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-70 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Barcelona"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Barcelona, España
-                                    </a>
-                                </h5>
-
-
-                                <a class="btn btn-outline-primary align-self-start" href="/one_destination">Más
-                                    información</a>
-                            </div>
-                        </div>
-                    </div>
+                    {{/destinations}}
 
                 </div>
-
-                <!-- Secund line-->
-                <!-- First line-->
-                <div class="row gx-5">
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-70 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Londres"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Londres, Reino Unido
-                                    </a>
-                                </h5>
-
-
-
-                                <a class="btn btn-outline-primary align-self-start" href="/one_destination">Más
-                                    información</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-70 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Dubái"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Dubái, Emiratos Árabes Unidos
-                                    </a>
-                                </h5>
-
-
-
-                                <a class="btn btn-outline-primary align-self-start" href="/one_destination">Más
-                                    información</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-70 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Ámsterdam"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Ámsterdam, Países Bajos
-                                    </a>
-                                </h5>
-
-
-
-                                <a class="btn btn-outline-primary align-self-start" href="/one_destination">Más
-                                    información</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
             </div>
         </section>
     </main>
 
-    <!-- Footer-->
     {{> footer}}
-
-
-    <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-    <script src="js/scripts.js"></script>
 </body>
-
 </html>

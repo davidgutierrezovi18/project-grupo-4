@@ -72,8 +72,8 @@ public class DestinationWebController {
     public String newDestinationProcess(Destination destination, MultipartFile imageField) throws IOException {
         
         if (imageField != null && !imageField.isEmpty()) {
-            Image image = imageService.createImage(imageField.getInputStream());
-            destination.setCoverImage(image);
+           Image image = imageService.createImage(imageField); // Sin el .getInputStream()
+           destination.setCoverImage(image);
         }
         
         destinationService.save(destination);

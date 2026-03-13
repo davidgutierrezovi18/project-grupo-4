@@ -99,7 +99,14 @@ public class Destination {
         this.coverImage = coverImage;
     }
 
-    
+    public List<Place> getPlaces() {
+    return places;
+}
+
+public void setPlaces(List<Place> places) {
+    this.places = places;
+}
+
     public List<Review> getReviews() {
         return reviews;
     }

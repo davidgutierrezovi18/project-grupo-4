@@ -26,6 +26,7 @@ public class DestinationWebController {
 
     @Autowired
     private DestinationService destinationService;
+    private ImageService imageService;
 
     // LISTAR TODOS LOS DESTINOS
     @GetMapping("/destinations")
@@ -60,10 +61,10 @@ public class DestinationWebController {
 
     // PROCESAR EL GUARDADO DEL DESTINO
     @PostMapping("/add_destination")
-    public String newDestinationProcess(Destination destination, MultipartFile imageField) throws IOException {
+    public String newDestinationProcess(Destination destination, MultipartFile imageFile) throws IOException {
         
-        if (imageField != null && !imageField.isEmpty()) {
-           Image image = imageService.createImage(imageField); // Sin el .getInputStream()
+        if (imageFile != null && !imageFile.isEmpty()) {
+           Image image = imageService.createImage(imageFile); 
            destination.setCoverImage(image);
         }
         

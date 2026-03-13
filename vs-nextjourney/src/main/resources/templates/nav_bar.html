@@ -21,24 +21,31 @@
                         <li class="nav-item"><a class="nav-link" href="/contact">Contacto</a></li>
 
                         <!-- Admin -->
+                        {{#isAdmin}}
                         <li class="nav-item">
                             <a class="nav-link" href="/admin_users">Admin</a>
                         </li>
-
+                        {{/isAdmin}}
                         <!--Profile-->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdownProfile" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false"> Mi perfil</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownProfile">
+
+                                {{#isLogged}}
                                 <li>
                                     <a class="dropdown-item" href="/user_profile">Ver mi perfil</a>
                                 </li>
+                                {{/isLogged}}
+
+                                {{^isLogged}}
                                 <li>
                                     <a class="dropdown-item" href="/sign_in">Iniciar sesión</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="/register">Registrarse</a>
                                 </li>
+                                {{/isLogged}}
                             </ul>
                         </li>
 

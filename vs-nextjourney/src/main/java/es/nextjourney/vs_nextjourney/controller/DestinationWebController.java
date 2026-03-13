@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ public class DestinationWebController {
     @Autowired
     private ImageService imageService;
 
+    //destination
     @ModelAttribute
     public void addAttributes(Model model, HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
@@ -43,8 +45,13 @@ public class DestinationWebController {
 
     // LISTAR TODOS LOS DESTINOS
     @GetMapping("/destinations")
-    public String showDestinations(Model model) {
+    public String showDestinations(Model model,HttpSession session) {
         model.addAttribute("destinations", destinationService.findAll());
+        if(session != null){
+
+            model.addAttribute("isLogged", true);
+
+        }
         return "destinations";
     }
 

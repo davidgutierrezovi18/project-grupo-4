@@ -33,11 +33,6 @@ public class WebController {
 		return "mytravels";
 	}
 
-	@GetMapping("/reviews")
-	public String reviews(Model model) {
-		return "reviews";
-	}
-
 
 	@GetMapping("/add_place")
 	public String addPlace() {
@@ -67,21 +62,6 @@ public class WebController {
 	@GetMapping("/edit_travel")
 	public String editTravel(Model model) {
 		return "edit_travel";
-	}
-
-	@GetMapping("/add-review")
-	public String addReview(Model model) {
-		return "add-review";
-	}
-
-	@GetMapping("/my_reviews")
-	public String myReviews(Model model) {
-		return "my_reviews";
-	}
-
-	@GetMapping("/place_reviews")
-	public String placeReviews(Model model) {
-		return "place_reviews";
 	}
 
 	@GetMapping("/error403")

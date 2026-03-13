@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 import es.nextjourney.vs_nextjourney.model.User;
-import es.nextjourney.vs_nextjourney.repository.UserRepository;
 import es.nextjourney.vs_nextjourney.service.UserService;
-import java.util.Optional;
+import java.util.Arrays;
 
 
 
@@ -42,7 +40,7 @@ public class LoginWebController {
 
     @PostMapping("/register")
     public String newUser(User user) {
-        user.setRol("USER");
+        user.setRoles(Arrays.asList("USER"));
         userService.saveUser(user);
 
         return "redirect:/sign_in";

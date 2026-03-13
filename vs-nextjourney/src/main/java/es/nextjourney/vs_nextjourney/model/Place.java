@@ -108,6 +108,14 @@ public class Place {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
+
+    public Destination getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Destination destination) {
+        this.destination = destination;
+    }
     
 
     // TO STRING

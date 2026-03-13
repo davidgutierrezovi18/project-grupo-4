@@ -29,26 +29,21 @@
             <div class="card shadow-sm mb-4">
               <div class="card-body">
                 <h5 class="card-title">Tu reseña</h5>
-                <form id="add-review-form">
-                  <input type="hidden" id="place-id" name="place-id" />
-                  <input type="hidden" id="place-lat" name="place-lat" />
-                  <input type="hidden" id="place-lon" name="place-lon" />
+                <form id="add-review-form" action="{{formAction}}" method="post">
+                  <input type="hidden" id="place-id" name="place-id" value="{{placeId}}" />
+                  <input type="hidden" id="place-lat" name="place-lat" value="{{placeLat}}" />
+                  <input type="hidden" id="place-lon" name="place-lon" value="{{placeLon}}" />
 
                   <div class="mb-3">
                     <label class="form-label">Nombre del lugar</label>
                     <input id="place-name" name="place-name" type="text" class="form-control"
-                      placeholder="Ej. La Casa del Sabor" />
+                      placeholder="Ej. La Casa del Sabor" value="{{placeName}}" />
 
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Tipo</label>
-                    <select id="place-type" class="form-select">
-                      <option>Restaurante</option>
-                      <option>Teatro</option>
-                      <option>Monumento</option>
-                      <option>Museo</option>
-                      <option>Hotel</option>
-                    </select>
+                    <input id="place-type" name="place-type" type="text" class="form-control"
+                      placeholder="Ej. Restaurante" value="{{placeType}}" />
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Puntuación</label>

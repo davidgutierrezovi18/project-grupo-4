@@ -48,7 +48,7 @@ public class Place {
     private List<Review> reviews;
 
     // Destination relationship
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private Destination destination;
 
     // CONSTRUCTORS

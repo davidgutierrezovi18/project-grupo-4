@@ -21,6 +21,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    
+    private String rol;
+
+    
+
     // @Column(name = "name", length = 15, nullable = false)
     // @Size(min = 1 ,max = 15, message = "Debes introducir un nombre de usuario
     // válido")
@@ -94,6 +99,10 @@ public class User {
     }
     
     //GETTERS Y SETTERS
+    public String getRol() {
+        return rol;
+    }
+
     public Long getId() {
         return id;
     }
@@ -132,6 +141,10 @@ public class User {
 
     public List<Review> getReviews() {
         return reviews;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public void setName(String name) {

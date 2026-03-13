@@ -20,6 +20,8 @@ public class Image {
     @Lob
     private Blob imageFile;
 
+    private String contentType;
+
     // Relationship for carousel images (travel class)
     @ManyToOne
     private Travel travelImage;
@@ -52,6 +54,30 @@ public class Image {
 
     public void setImageFile(Blob imageFile) {
         this.imageFile = imageFile;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public Travel getTravelImage() {
+        return travelImage;
+    }
+
+    public void setTravelImage(Travel travelImage) {
+        this.travelImage = travelImage;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
     }
 
 }

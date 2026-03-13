@@ -3,10 +3,13 @@ package es.nextjourney.vs_nextjourney.controller;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.text.Normalizer;
+import java.util.regex.Pattern;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -20,8 +23,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.nextjourney.vs_nextjourney.model.Destination;
+import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Place;
 import es.nextjourney.vs_nextjourney.model.Place.Category;
 import es.nextjourney.vs_nextjourney.model.Review;
@@ -30,6 +35,7 @@ import es.nextjourney.vs_nextjourney.repository.PlaceRepository;
 import es.nextjourney.vs_nextjourney.repository.ReviewRepository;
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
 import es.nextjourney.vs_nextjourney.service.DestinationService;
+import es.nextjourney.vs_nextjourney.service.ImageService;
 import es.nextjourney.vs_nextjourney.service.PlaceService;
 import es.nextjourney.vs_nextjourney.service.ReviewService;
 
@@ -53,6 +59,11 @@ public class ReviewWebController {
 
 	@Autowired
 	private DestinationService destinationService;
+
+	@Autowired
+	private ImageService imageService;
+
+	private static final Pattern NON_ALNUM_PATTERN = Pattern.compile("[^a-z0-9]");
 
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
@@ -104,14 +115,13 @@ public class ReviewWebController {
 			@RequestParam(name = "place-lat", required = false) String placeLat,
 			@RequestParam(name = "place-lon", required = false) String placeLon,
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
-			@RequestParam(name = "review-text", required = false) String reviewText) {
-
-		// TEMPORAL: allows creating reviews without login for testing.
-		// To restore mandatory login, replace with:
-		// Optional<User> userOpt = getSessionUser(session);
-		// if (userOpt.isEmpty()) { return "redirect:/sign_in"; }
-		// User user = userOpt.get();
-		User user = getSessionUser(session).orElseGet(this::getOrCreateGuestUser);
+			@RequestParam(name = "review-text", required = false) String reviewText,
+			@RequestParam(name = "photo", required = false) MultipartFile photo) {
+		Optional<User> userOpt = getSessionUser(session);
+		if (userOpt.isEmpty()) {
+			return "redirect:/sign_in";
+		}
+		User user = userOpt.get();
 
 		Optional<Place> placeOpt = resolveOrCreatePlace(placeId, placeName, placeType, placeLat, placeLon);
 		if (placeOpt.isEmpty()) {
@@ -124,7 +134,17 @@ public class ReviewWebController {
 		review.setRating(rating);
 		review.setReviewText(reviewText);
 		review.setCreatedAt(LocalDate.now());
-		reviewService.createReview(review);
+		Review savedReview = reviewService.createReview(review);
+
+		if (photo != null && !photo.isEmpty()) {
+			try {
+				Image image = imageService.createImage(photo);
+				image.setReview(savedReview);
+				imageService.save(image);
+			} catch (Exception exception) {
+				// If the image fails, keep the review instead of aborting user flow.
+			}
+		}
 
 		return "redirect:/review/" + placeOpt.get().getId();
 	}
@@ -192,6 +212,15 @@ public class ReviewWebController {
 	@ResponseBody
 	public Map<String, PlaceMetricResponse> getPlaceMetrics(@RequestParam(name = "names") List<String> names) {
 		Map<String, PlaceMetricResponse> response = new HashMap<>();
+		List<Place> allPlaces = placeRepository.findAll();
+		Map<String, Place> normalizedPlaceMap = new HashMap<>();
+
+		for (Place place : allPlaces) {
+			if (place.getName() == null || place.getName().isBlank()) {
+				continue;
+			}
+			normalizedPlaceMap.putIfAbsent(normalizeName(place.getName()), place);
+		}
 
 		for (String name : names) {
 			if (name == null || name.isBlank()) {
@@ -199,6 +228,14 @@ public class ReviewWebController {
 			}
 
 			Optional<Place> placeOpt = placeRepository.findFirstByNameIgnoreCase(name.trim());
+
+			if (placeOpt.isEmpty()) {
+				Place normalizedMatch = normalizedPlaceMap.get(normalizeName(name));
+				if (normalizedMatch != null) {
+					placeOpt = Optional.of(normalizedMatch);
+				}
+			}
+
 			if (placeOpt.isEmpty()) {
 				response.put(name, new PlaceMetricResponse(null, 0, 0.0));
 				continue;
@@ -217,6 +254,13 @@ public class ReviewWebController {
 		return response;
 	}
 
+	private String normalizeName(String value) {
+		String base = value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
+		String noAccents = Normalizer.normalize(base, Normalizer.Form.NFD)
+				.replaceAll("\\p{M}", "");
+		return NON_ALNUM_PATTERN.matcher(noAccents).replaceAll("");
+	}
+
 	private Optional<User> getSessionUser(HttpSession session) {
 		Object userObject = session.getAttribute("currentUser");
 		if (userObject instanceof User) {
@@ -233,21 +277,6 @@ public class ReviewWebController {
 		}
 
 		return Optional.empty();
-	}
-
-	private User getOrCreateGuestUser() {
-		// TEMPORAL helper for testing without authentication.
-		// Remove this method once login is required again.
-		return userRepository.findByUsername("guest").orElseGet(() -> {
-			User guest = new User();
-			guest.setRol("USER");
-			guest.setName("Invitado");
-			guest.setLastName("Temporal");
-			guest.setUsername("guest");
-			guest.setEmail("guest@local.test");
-			guest.setPassword("guest");
-			return userRepository.save(guest);
-		});
 	}
 
 	private Optional<Place> resolveOrCreatePlace(Long placeId, String placeName, String placeType, String placeLat, String placeLon) {

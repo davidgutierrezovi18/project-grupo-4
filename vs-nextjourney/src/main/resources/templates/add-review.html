@@ -29,7 +29,7 @@
             <div class="card shadow-sm mb-4">
               <div class="card-body">
                 <h5 class="card-title">Tu reseña</h5>
-                <form id="add-review-form" action="{{formAction}}" method="post">
+                <form id="add-review-form" action="{{formAction}}" method="post" enctype="multipart/form-data">
                   <input type="hidden" id="place-id" name="place-id" value="{{placeId}}" />
                   <input type="hidden" id="place-lat" name="place-lat" value="{{placeLat}}" />
                   <input type="hidden" id="place-lon" name="place-lon" value="{{placeLon}}" />
@@ -67,7 +67,7 @@
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Foto (opcional)</label>
-                    <input id="photo" class="form-control" type="file" accept="image/*" />
+                    <input id="photo" name="photo" class="form-control" type="file" accept="image/*" />
                   </div>
                   <button type="submit" class="btn btn-primary">Publicar reseña</button>
                   <a class="btn btn-outline-secondary ms-2" href="/reviews">Cancelar</a>

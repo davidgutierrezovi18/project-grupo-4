@@ -26,6 +26,7 @@ public class ImageService {
 
         try {
             image.setImageFile(new SerialBlob(imageFile.getBytes()));
+            image.setContentType(imageFile.getContentType());
         } catch (Exception e) {
             throw new IOException("Failed to create image", e);
         }
@@ -33,6 +34,14 @@ public class ImageService {
         imageRepository.save(image);
 
         return image;
+    }
+
+    public Image save(Image image) {
+        return imageRepository.save(image);
+    }
+
+    public Image getImageById(long id) {
+        return imageRepository.findById(id).orElseThrow();
     }
 
     public Resource getImageFile(long id) throws SQLException {

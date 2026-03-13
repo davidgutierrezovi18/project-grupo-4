@@ -19,10 +19,12 @@ public class User {
     // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    
     private String rol;
 
-    private Long id;
+    
 
     // @Column(name = "name", length = 15, nullable = false)
     // @Size(min = 1 ,max = 15, message = "Debes introducir un nombre de usuario

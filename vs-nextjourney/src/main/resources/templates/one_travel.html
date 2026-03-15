@@ -12,6 +12,8 @@
         <!-- Navigation-->
         {{> nav_bar}}
 
+        {{#travel}}
+
         <!-- Header -->
         <header class="bg-dark py-5">
             <div class="container px-5">
@@ -20,27 +22,30 @@
                     <!-- Info del viaje -->
                     <div class="col-lg-8">
                         <h1 class="display-6 fw-bolder text-white">
-                            Escapada urbana a Nueva York
+                            {{title}}
                         </h1>
 
                         <div class="d-flex align-items-center text-white-50 small">
                             <i class="bi bi-calendar-event me-2"></i>
-                            12 de junio de 2024 – 25 de junio de 2024
+                            {{startDate}} – {{endDate}}
                         </div>
                     </div>
 
                     <!-- Acciones -->
                     <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                        <a href="/edit_travel" class="btn btn-outline-light me-2">
+                        <a href="/travel/{{id}}/edit" class="btn btn-outline-light me-2">
                             <i class="bi bi-pencil-square"></i>
                             Editar
                         </a>
-                        <a href="/mytravels" class="btn btn-outline-danger"
-                            onclick="return confirm('¿Seguro que quieres eliminar este viaje?');">
-                            <i class="bi bi-trash"></i>
-                            Eliminar
-                        </a>
-                        <!-- Botón volver a mis viajes -->
+                        <form action="/travel/{{id}}/delete" method="post" style="display:inline;">
+                            <button class="btn btn-outline-danger"
+                                onclick="return confirm('¿Seguro que quieres eliminar este viaje?');">
+                                <i class="bi bi-trash"></i>
+                                Eliminar
+                            </button>
+                        </form>
+
+                        <!-- Button for going back to my travels -->
                         <div class="d-flex justify-content-end mt-3">
                             <a href="/mytravels" class="btn btn-outline-light">
                                 <i class="bi bi-arrow-left me-1"></i>
@@ -48,9 +53,6 @@
                             </a>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
         </header>
@@ -63,10 +65,9 @@
         <section class="py-5">
             <div class="container px-5 my-5">
 
-                <!-- Imagen encima de la descripción -->
+                <!-- Image above the description -->
                 <div class="text-center mb-4">
-                    <img src="https://dummyimage.com/800x300/6c757d/ffffff&text=Nueva+York" class="img-fluid rounded"
-                        alt="Vista de Nueva York">
+                    <img src="/travel/{{id}}/cover" class="img-fluid rounded" alt="cover">
                 </div>
             </div>
         </section>
@@ -80,7 +81,7 @@
                 </div>
 
                 <p class="lead fw-normal text-muted">
-                    Descubriendo la energía de la Gran Manzana, sus museos, musicales y comida callejera.
+                    {{description}}
                 </p>
             </div>
         </section>
@@ -92,20 +93,21 @@
                     <div>
                         <h2 class="fw-bolder mb-1">Países visitados</h2>
                     </div>
-
                 </div>
 
                 <div class="row g-4">
+                    {{#countriesList}}
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="bi bi-flag fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Estados Unidos</h5>
+                                    <h5 class="card-title mb-0">{{.}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{/countriesList}}
                 </div>
             </div>
 
@@ -118,17 +120,20 @@
                 </div>
 
                 <div class="row g-4">
+                    {{#citiesList}}
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="bi bi-building fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Nueva York</h5>
+                                    <h5 class="card-title mb-0">{{.}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{/citiesList}}
                 </div>
+
             </div>
 
             <!-- Other places -->
@@ -137,88 +142,38 @@
                     <div>
                         <h2 class="fw-bolder mb-1">Otros lugares</h2>
                     </div>
-
                 </div>
 
                 <div class="row g-4">
+                    {{#placesList}}
                     <div class="col-md-6 col-lg-4">
                         <div class="card h-100 shadow-sm">
                             <div class="card-body">
                                 <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-bank fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Manhattan</h5>
+                                    <i class="bi bi-geo-alt fs-4 text-primary me-2"></i>
+                                    <h5 class="card-title mb-0">{{.}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-building fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Estatua de la Libertad</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-compass fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Central Park</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="bi bi-buildings fs-4 text-primary me-2"></i>
-                                    <h5 class="card-title mb-0">Empire State</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {{/placesList}}
                 </div>
-
-
             </div>
-
         </section>
 
-        <!-- Carrusel de imágenes del viaje -->
+        <!-- Images carousel -->
         <section class="py-5">
             <div class="container px-5">
                 <h2 class="fw-bolder mb-4">Galería de fotos</h2>
                 <div id="tripCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <!-- Indicadores -->
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#tripCarousel" data-bs-slide-to="0" class="active"
-                            aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#tripCarousel" data-bs-slide-to="1"
-                            aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#tripCarousel" data-bs-slide-to="2"
-                            aria-label="Slide 3"></button>
-                    </div>
-                    <!-- Imágenes -->
                     <div class="carousel-inner rounded-3">
-                        <div class="carousel-item active">
-                            <img src="https://dummyimage.com/500x200/343a40/6c757d&text=Estatua de la Libertad"
-                                class="d-block w-100" alt="Foto 1">
+                        {{#carouselImages}}
+                        <div class="carousel-item {{#if @first}}active{{/if}}">
+                            <img src="{{this.url}}" class="d-block w-100" alt="Foto del viaje">
                         </div>
-                        <div class="carousel-item">
-                            <img src="https://dummyimage.com/500x200/495057/6c757d&text=Manhattan" class="d-block w-100"
-                                alt="Foto 2">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="https://dummyimage.com/500x200/6c757d/343a40&text=Foto grupal"
-                                class="d-block w-100" alt="Foto 3">
-                        </div>
+                        {{/carouselImages}}
                     </div>
-                    <!-- Controles -->
+
                     <button class="carousel-control-prev" type="button" data-bs-target="#tripCarousel"
                         data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -239,60 +194,44 @@
                 <h2 class="fw-bolder mb-4">Reseña del viaje</h2>
                 <!-- Calification -->
                 <div class="d-flex align-items-center mb-3">
+                    {{#eachRating rating}}
                     <i class="bi bi-star-fill text-warning me-1"></i>
-                    <i class="bi bi-star-fill text-warning me-1"></i>
-                    <i class="bi bi-star-fill text-warning me-1"></i>
-                    <i class="bi bi-star-fill text-warning me-1"></i>
-                    <i class="bi bi-star-fill text-warning me-1"></i>
-                    <span class="ms-2 text-muted">5 de 5 estrellas</span>
+                    {{/eachRating}}
+                    {{#eachRatingEmpty rating}}
+                    <i class="bi bi-star text-warning me-1"></i>
+                    {{/eachRatingEmpty}}
+                    <span class="ms-2 text-muted">{{rating}} de 5 estrellas</span>
                 </div>
                 <!-- Comment -->
-                <p class="lead text-dark">
-                    Ciudad vibrante, aunque un poco agobiante cuando hay mucha gente.
-                </p>
+                <p class="lead text-dark">{{comment}}</p>
             </div>
         </section>
 
         <!-- Other members-->
         <section class="py-5 bg-light">
-            <div class="container px-5 my-5">
-                <div class="text-center">
-                    <h2 class="fw-bolder">Colaboradores</h2>
-                    <p class="lead fw-normal text-muted mb-5">Otros miembros de esta experiencia</p>
-                </div>
+            <div class="container px-5 my-5 text-center">
+                <h2 class="fw-bolder">Colaboradores</h2>
+                <p class="lead fw-normal text-muted mb-5">Otros miembros de esta experiencia</p>
                 <div class="row gx-5 row-cols-1 row-cols-sm-2 row-cols-xl-4 justify-content-center">
-                    <div class="col mb-5 mb-5 mb-xl-0">
+                    {{#userTravels}}
+                    <div class="col mb-4">
                         <div class="text-center">
-                            <img class="img-fluid rounded-circle mb-4 px-4"
-                                src="https://dummyimage.com/150x150/ced4da/6c757d" alt="..." />
-                            <h5 class="fw-bolder">Antonio Pérez</h5>
+                            <h5 class="fw-bolder">{{name}}</h5>
                         </div>
                     </div>
-                    <div class="col mb-5 mb-5 mb-xl-0">
-                        <div class="text-center">
-                            <img class="img-fluid rounded-circle mb-4 px-4"
-                                src="https://dummyimage.com/150x150/ced4da/6c757d" alt="..." />
-                            <h5 class="fw-bolder">María García</h5>
-                        </div>
+                    {{/userTravels}}
+
+                    {{^userTravels}}
+                    <div class="col-12 text-center">
+                        <p class="text-muted">No hay colaboradores en este viaje.</p>
                     </div>
-                    <div class="col mb-5 mb-5 mb-sm-0">
-                        <div class="text-center">
-                            <img class="img-fluid rounded-circle mb-4 px-4"
-                                src="https://dummyimage.com/150x150/ced4da/6c757d" alt="..." />
-                            <h5 class="fw-bolder">Diego Llorente</h5>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="text-center">
-                            <img class="img-fluid rounded-circle mb-4 px-4"
-                                src="https://dummyimage.com/150x150/ced4da/6c757d" alt="..." />
-                            <h5 class="fw-bolder">Carlos Díaz</h5>
-                        </div>
-                    </div>
+                    {{/userTravels}}
                 </div>
             </div>
         </section>
+        {{/travel}}
     </main>
+
 
     <!-- Footer-->
     {{> footer}}

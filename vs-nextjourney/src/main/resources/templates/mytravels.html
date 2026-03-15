@@ -21,7 +21,7 @@
 
                 <!-- Fila superior: lápiz a la derecha -->
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="/create_new_travel" class="text-white fs-4" title="Editar viaje">
+                    <a href="/travel/new" class="text-white fs-4" title="Editar viaje">
                         <i class="bi bi-plus-square"></i>
                     </a>
                 </div>
@@ -38,131 +38,46 @@
         <section class="py-5">
             <div class="container px-5">
 
-                <!-- First line-->
+                <!-- If there are travels created-->
                 <div class="row gx-5">
+
+                    {{#travels}}
                     <div class="col-lg-4 mb-5">
                         <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Mallorca"
-                                alt="..." />
+
+                            <img class="card-img-top" src="/travel/{{id}}/cover" alt="cover" />
+
                             <div class="card-body p-4 d-flex flex-column">
+
                                 <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        De fiesta por Mallorca
+                                    <a class="text-decoration-none link-dark" href="/travel/{{id}}">
+                                        {{title}}
                                     </a>
                                 </h5>
 
                                 <p class="card-text">
-                                    Un viaje para hacer con amigos y disfrutar del verano de la mejor forma posible.
+                                    {{description}}
                                 </p>
-                                <a class="btn btn-outline-primary align-self-start" href="/one_travel">Ver detalles</a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Nueva York"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Escapada urbana a Nueva York
-                                    </a>
-                                </h5>
-
-                                <p class="card-text">
-                                    Descubriendo la energía de la Gran Manzana, sus museos, musicales y comida
-                                    callejera.
-                                </p>
-                                <a class="btn btn-outline-primary align-self-start" href="/one_travel">Ver detalles</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Japón"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Ruta cultural por Japón
-                                    </a>
-                                </h5>
-
-                                <p class="card-text">
-                                    Recorrido por el Japón más tradicional y moderno durante la temporada de cerezos en
-                                    flor.
-                                </p>
-                                <a class="btn btn-outline-primary align-self-start" href="/one_travel">Ver detalles</a>
+                                <a class="btn btn-outline-primary align-self-start" href="/travel/{{id}}">
+                                    Ver detalles
                                 </a>
+
                             </div>
                         </div>
                     </div>
+                    {{/travels}}
+
+                    <!-- If there are not travels created-->
+                    {{^travels}}
+                    <div class="col-12 text-center">
+                        <p class="lead text-muted">No tienes viajes registrados aún. <a href="/travel/new">Añade
+                                tu primer viaje</a>.</p>
+                    </div>
+                    {{/travels}}
 
                 </div>
 
-                <!-- Secund line-->
-                <!-- First line-->
-                <div class="row gx-5">
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Toscana"
-                                alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Escapada romántica por la Toscana
-                                    </a>
-                                </h5>
-
-                                <p class="card-text">
-                                    Una semana de paisajes, arte renacentista y vinos en el corazón de Italia.
-                                </p>
-                                <a class="btn btn-outline-primary align-self-start" href="/one_travel">Ver detalles</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top"
-                                src="https://dummyimage.com/600x350/6c757d/343a40&text=Islas Griegas" alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Vacaciones en las Islas Griegas
-                                    </a>
-                                </h5>
-
-                                <p class="card-text">
-                                    Dos semanas navegando entre islas, playas y pueblos blancos con mar turquesa.
-                                </p>
-                                <a class="btn btn-outline-primary align-self-start" href="/one_travel">Ver detalles</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top"
-                                src="https://dummyimage.com/600x350/6c757d/343a40&text=Norte Espana" alt="..." />
-                            <div class="card-body p-4 d-flex flex-column">
-                                <h5 class="card-title mb-3">
-                                    <a class="text-decoration-none link-dark" href="#!">
-                                        Descubriendo el norte de España
-                                    </a>
-                                </h5>
-
-                                <p class="card-text">
-                                    Ruta gastronómica y natural desde Galicia hasta el País Vasco.
-                                </p>
-                                <a class="btn btn-outline-primary align-self-start" href="/one_travel">Ver detalles</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
 
             </div>
         </section>

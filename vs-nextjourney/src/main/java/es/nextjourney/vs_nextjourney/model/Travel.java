@@ -43,11 +43,9 @@ public class Travel {
     private String description;
 
     // Travel countries, cities and places
-    //TODO: decide if String places or  List<Place> places
     private String countries;
     private String cities;
-    //@Column(name = "places_visited")
-    //private List<Place> places;
+    private String places;
 
     //@Column(name = "rating", nullable = false)
     //@Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
@@ -81,7 +79,7 @@ public class Travel {
 
     //TODO: add places
     public Travel(String ownerName, String title, Image coverImage, LocalDate startDate, LocalDate endDate,
-              String description, String countries, String cities, int rating, String comment,
+              String description, String countries, String cities, String places, int rating, String comment,
               List<Image> carouselImages, String itineraryUrl, String emailsColaborators, List<User> user) {
         this.ownerName = ownerName;
         this.title = title;
@@ -91,6 +89,7 @@ public class Travel {
         this.description = description;
         this.countries = countries;
         this.cities = cities;
+        this.places = places;
         this.rating = rating;
         this.comment = comment;
         this.carouselImages = new ArrayList<>();
@@ -144,12 +143,9 @@ public class Travel {
         return cities;
     }
 
-    //TODO: places getter
-    /* 
-    public Place getPlacesVisited() {
-        return placesVisited;
+    public String getPlaces() {
+        return places;
     }
-        */
 
     public int getRating() {
         return rating;
@@ -207,12 +203,9 @@ public class Travel {
         this.cities = cities;
     }
 
-    //TODO: places setter
-    /* 
-    public void setPlacesVisited(Place placesVisited) {
-        this.placesVisited = placesVisited;
+    public void setPlaces(String places) {
+        this.places = places;
     }
-    */
 
     public void setRating(int rating) {
         this.rating = rating;
@@ -238,8 +231,6 @@ public class Travel {
         this.userTravels = user;
     }
 
-    //TO STRING
-    //TODO: add places
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -251,6 +242,7 @@ public class Travel {
             .append(", description=").append(description)
             .append(", countries=").append(countries)
             .append(", cities=").append(cities)
+            .append(", places=").append(places)
             .append(", rating=").append(rating)
             .append(", comment=").append(comment)
             .append(", itineraryUrl=").append(itineraryUrl)

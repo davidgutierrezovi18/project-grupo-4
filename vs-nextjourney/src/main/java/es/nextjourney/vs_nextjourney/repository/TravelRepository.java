@@ -4,6 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.nextjourney.vs_nextjourney.model.Travel;
 
+import java.util.List;
+
 public interface TravelRepository extends JpaRepository<Travel, Long> {
+
+    List<Travel> findByOwnerName(String ownerName);
 
 }

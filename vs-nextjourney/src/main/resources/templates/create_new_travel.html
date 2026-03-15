@@ -26,108 +26,109 @@
                 </div>
 
                 <!-- Form for creating a net trip-->
-                <form>
+                <form action="/travel/new" method="post" enctype="multipart/form-data">
+                    
                     <!-- Title-->
                     <div class="mb-3">
                         <label for="tripTitle2" class="form-label">Título del viaje</label>
-                        <input type="text" class="form-control" id="tripTitle2" placeholder="Ej: Aventura por Italia"
+                        <input type="text" class="form-control" name="title" placeholder="Ej: Aventura por Italia"
                             required>
                     </div>
-                    <!-- Images-->
+                    
+                    <!-- Cover Image -->
                     <div class="mb-3">
                         <label class="form-label">Imagen de portada</label>
-                        <input type="file" class="form-control" required>
+                        <input type="file" class="form-control" name="coverImage" required>
                     </div>
-                    <!--Dates-->
+
+                    <!-- Dates -->
                     <div class="row mb-3">
                         <div class="col">
                             <label class="form-label">Fecha de inicio</label>
-                            <input type="date" class="form-control">
+                            <input type="date" class="form-control" name="startDate" required>
                         </div>
                         <div class="col">
                             <label class="form-label">Fecha de fin</label>
-                            <input type="date" class="form-control">
-                        </div>
-                    </div>
-                    <!-- Description-->
-                    <div class="mb-3">
-                        <label class="form-label">Descripción del viaje</label>
-                        <textarea class="form-control" rows="4" placeholder="Cuenta tu experiencia..."
-                            required></textarea>
-                    </div>
-                    <!-- Countries visited-->
-                    <div class="mb-3">
-                        <label class="form-label">País(es) visitado(s)</label>
-                        <input type="text" class="form-control" placeholder="Ej: Italia" required>
-                        <div class="form-text">Separados por comas</div>
-                    </div>
-                    <!-- Cities visited-->
-                    <div class="mb-3">
-                        <label class="form-label">Ciudad(es) visitada(s)</label>
-                        <input type="text" class="form-control" placeholder="Ej: Roma, Florencia, Venecia...">
-                        <div class="form-text">Separados por comas</div>
-                    </div>
-                    <!-- Other places visited-->
-                    <div class="mb-3">
-                        <label class="form-label">Lugares visitados</label>
-                        <input type="text" class="form-control"
-                            placeholder="Ej: Restaurante Tonnarello, Fontana di Trevi, Heladería Gelato Fantasy...">
-                        <div class="form-text">Separados por comas</div>
-                    </div>
-                    <!-- Calification-->
-                    <div class="mb-3">
-                        <label class="form-label">Califica tu viaje</label>
-                        <div class="star-rating" role="radiogroup" aria-label="Puntuación">
-                            <input type="radio" name="rating" id="r1" value="1" autocomplete="off">
-                            <label for="r1" data-value="1" aria-label="1 estrella"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r2" value="2" autocomplete="off">
-                            <label for="r2" data-value="2" aria-label="2 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r3" value="3" autocomplete="off">
-                            <label for="r3" data-value="3" aria-label="3 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r4" value="4" autocomplete="off">
-                            <label for="r4" data-value="4" aria-label="4 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r5" value="5" autocomplete="off" checked>
-                            <label for="r5" data-value="5" aria-label="5 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
+                            <input type="date" class="form-control" name="endDate" required>
                         </div>
                     </div>
 
-                    <!-- Comments-->
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label class="form-label">Descripción del viaje</label>
+                        <textarea class="form-control" name="description" rows="4"
+                            placeholder="Cuenta tu experiencia..." required></textarea>
+                    </div>
+
+                    <!-- Countries visited-->
+                    <div class="mb-3">
+                        <label class="form-label">País(es) visitado(s)</label>
+                        <input type="text" class="form-control" name="countries" placeholder="Ej: Italia">
+                        <div class="form-text">Separados por comas</div>
+                    </div>
+
+                    <!-- Cities visited-->
+                    <div class="mb-3">
+                        <label class="form-label">Ciudad(es) visitada(s)</label>
+                        <input type="text" class="form-control" name="cities"
+                            placeholder="Ej: Roma, Florencia, Venecia...">
+                        <div class="form-text">Separados por comas</div>
+                    </div>
+
+                    <!-- Other places visited-->
+                    <div class="mb-3">
+                        <label class="form-label">Lugares visitados</label>
+                        <input type="text" class="form-control" name="places"
+                            placeholder="Ej: Restaurante Tonnarello, Fontana di Trevi, Heladería Gelato Fantasy...">
+                        <div class="form-text">Separados por comas</div>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="mb-3">
+                        <label class="form-label">Califica tu viaje</label>
+                        <select class="form-select" name="rating">
+                            <option value="1">1 ⭐</option>
+                            <option value="2">2 ⭐</option>
+                            <option value="3">3 ⭐</option>
+                            <option value="4">4 ⭐</option>
+                            <option value="5" selected>5 ⭐</option>
+                        </select>
+                    </div>
+
+                    <!-- Comment -->
                     <div class="mb-3">
                         <label class="form-label">Comentario sobre el viaje</label>
-                        <textarea class="form-control" rows="4" placeholder="Comenta tu experiencia..."></textarea>
+                        <textarea class="form-control" name="comment" rows="4" placeholder="Comenta tu experiencia..."></textarea>
                     </div>
+                    
                     <!-- Images carousel-->
                     <div class="mb-3">
                         <label class="form-label">Imágenes del viaje</label>
-                        <input type="file" class="form-control" multiple>
+                        <input type="file" class="form-control" name="carouselImages" multiple>
                         <div class="form-text">Puedes subir varias imágenes</div>
                     </div>
+                    
                     <!-- PDF-->
                     <div class="mb-3">
                         <label class="form-label">PDF con itinerario del viaje</label>
-                        <input type="file" class="form-control">
+                        <input type="file" class="form-control" name="itineraryUrl">
                         <div class="form-text">Formato permitido: pdf</div>
                     </div>
+                    
                     <!-- Trip members-->
                     <div class="mb-3">
                         <label class="form-label">Miembros del viaje</label>
-                        <input type="email" class="form-control" placeholder="Ej: correo1@email.com, correo2@email.com">
+                        <input type="text" class="form-control" name="emailsColaborators"
+                            placeholder="Ej: correo1@email.com, correo2@email.com">
                         <div class="form-text">Correos separados por comas</div>
                     </div>
+                    
                     <!-- Buttons -->
                     <div class="d-flex justify-content-center gap-3 mt-4">
-                        <button type="submit" class="btn btn-primary px-5">
-                            Añadir
-                        </button>
-                        <a href="/mytravels" class="btn btn-outline-secondary px-5">
-                            Cancelar
-                        </a>
+                        <button type="submit" class="btn btn-primary px-5">Añadir</button>
+                        <a href="/mytravels" class="btn btn-outline-secondary px-5">Cancelar</a>
                     </div>
+                </form>
 
             </div>
         </section>

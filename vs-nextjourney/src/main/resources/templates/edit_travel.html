@@ -25,125 +25,111 @@
                     </div>
                 </div>
 
+                {{#travel}}
+
                 <!-- Form for creating a net trip-->
-                <form>
+                <form action="/travel/{{id}}/edit" method="post" enctype="multipart/form-data">
+
                     <!-- Title-->
                     <div class="mb-3">
-                        <label for="tripTitle2" class="form-label">Título del viaje</label>
-                        <input type="text" class="form-control" id="tripTitle2" placeholder="Aventura por Italia"
-                            required value="Escapada urbana a Nueva York">
+                        <label class="form-label">Título del viaje</label>
+                        <input type="text" class="form-control" name="title" value="{{title}}" required>
                     </div>
+
                     <!-- Images-->
                     <div class="mb-3">
                         <label class="form-label">Imagen de portada actual (selecciona otra si deseas cambiarla)</label>
                         <div class="mb-2">
-                            <img src="https://dummyimage.com/200x120/6c757d/343a40&text=Nueva York"
-                                alt="Portada Escapada urbana a Nueva York" class="img-fluid rounded">
+                            <img src="/travel/{{id}}/cover" alt="cover" class="img-fluid rounded">
                         </div>
-                        <input type="file" class="form-control" required>
+                        <input type="file" class="form-control" name="coverImage">
                     </div>
-                    <!--Dates-->
+
+                    <!-- Dates -->
                     <div class="row mb-3">
                         <div class="col">
                             <label class="form-label">Fecha de inicio</label>
-                            <input type="date" class="form-control" value="2024-06-12">
+                            <input type="date" class="form-control" name="startDate" value="{{startDate}}">
                         </div>
                         <div class="col">
                             <label class="form-label">Fecha de fin</label>
-                            <input type="date" class="form-control" value="2024-06-25">
+                            <input type="date" class="form-control" name="endDate" value="{{endDate}}">
                         </div>
                     </div>
-                    <!-- Description-->
+
+                    <!-- Description -->
                     <div class="mb-3">
                         <label class="form-label">Descripción del viaje</label>
-                        <textarea class="form-control" rows="4"
-                            required>Descubriendo la energía de la Gran Manzana, sus museos, musicales y comida callejera.</textarea>
+                        <textarea class="form-control" name="description" rows="4">{{description}}</textarea>
                     </div>
-                    <!-- Countries visited-->
+
+                    <!-- Countries -->
                     <div class="mb-3">
                         <label class="form-label">País(es) visitado(s)</label>
-                        <input type="text" class="form-control" placeholder="Italia" value="Estados Unidos">
+                        <input type="text" class="form-control" name="countries" value="{{countries}}">
                         <div class="form-text">Separados por comas</div>
                     </div>
-                    <!-- Cities visited-->
+
+                    <!-- Cities -->
                     <div class="mb-3">
                         <label class="form-label">Ciudad(es) visitada(s)</label>
-                        <input type="text" class="form-control" placeholder="Roma, Florencia, Venecia..."
-                            value="Nueva York">
+                        <input type="text" class="form-control" name="cities" value="{{cities}}">
                         <div class="form-text">Separados por comas</div>
                     </div>
-                    <!-- Other places visited-->
+
+                    <!-- Places -->
                     <div class="mb-3">
                         <label class="form-label">Lugares visitados</label>
-                        <input type="text" class="form-control"
-                            placeholder="Restaurante Tonnarello, Fontana di Trevi, Heladería Gelato Fantasy..."
-                            value="Central Park, Times Square, Museo Metropolitano">
+                        <input type="text" class="form-control" name="places" value="{{places}}">
                         <div class="form-text">Separados por comas</div>
                     </div>
-                    <!-- Calification-->
+
+                    <!-- Rating -->
                     <div class="mb-3">
-                        <label class="form-label">Califica de nuevo tu viaje</label>
-                        <div class="star-rating" role="radiogroup" aria-label="Puntuación">
-                            <input type="radio" name="rating" id="r1" value="1" autocomplete="off">
-                            <label for="r1" data-value="1" aria-label="1 estrella"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r2" value="2" autocomplete="off">
-                            <label for="r2" data-value="2" aria-label="2 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r3" value="3" autocomplete="off">
-                            <label for="r3" data-value="3" aria-label="3 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r4" value="4" autocomplete="off">
-                            <label for="r4" data-value="4" aria-label="4 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
-                            <input type="radio" name="rating" id="r5" value="5" autocomplete="off" checked>
-                            <label for="r5" data-value="5" aria-label="5 estrellas"><i
-                                    class="bi bi-star-fill"></i></label>
-                        </div>
+                        <label class="form-label">Calificación</label>
+                        <select class="form-select" name="rating">
+                            <option value="1" {{#rating1}}selected{{/rating1}}>1 ⭐</option>
+                            <option value="2" {{#rating2}}selected{{/rating2}}>2 ⭐</option>
+                            <option value="3" {{#rating3}}selected{{/rating3}}>3 ⭐</option>
+                            <option value="4" {{#rating4}}selected{{/rating4}}>4 ⭐</option>
+                            <option value="5" {{#rating5}}selected{{/rating5}}>5 ⭐</option>
+                        </select>
                     </div>
-                    <!-- Comentario-->
+
+                    <!-- Comment -->
                     <div class="mb-3">
                         <label class="form-label">Comentario sobre el viaje</label>
-                        <textarea class="form-control"
-                            rows="4"> Ciudad vibrante, aunque un poco agobiante cuando hay mucha gente.</textarea>
+                        <textarea class="form-control" name="comment" rows="4">{{comment}}</textarea>
                     </div>
-                    <!-- Images carousel-->
+
+                    <!-- Images -->
                     <div class="mb-3">
-                        <label class="form-label">Imágenes del viaje actuales (si deseas cambiarlas vuelve a seleccionar
-                            todas de nuevo)</label>
-                        <div class="mb-2">
-                            <img src="https://dummyimage.com/200x120/6c757d/343a40&text=Estatua de la Libertad"
-                                alt="Estatua de la Libertad" class="img-fluid rounded">
-                            <img src="https://dummyimage.com/200x120/6c757d/343a40&text=Manhattan" alt="Manhattan"
-                                class="img-fluid rounded">
-                            <img src="https://dummyimage.com/200x120/6c757d/343a40&text=Foto grupal" alt="Foto grupal"
-                                class="img-fluid rounded">
-                        </div>
-                        <input type="file" class="form-control" multiple>
+                        <label class="form-label">Imágenes del viaje</label>
+                        <input type="file" class="form-control" name="carouselImages" multiple>
                         <div class="form-text">Puedes subir varias imágenes</div>
                     </div>
-                    <!-- PDF-->
+
+                    <!-- PDF -->
                     <div class="mb-3">
-                        <label class="form-label">PDF con itinerario del viaje</label>
-                        <input type="file" class="form-control">
+                        <label class="form-label">PDF con itinerario</label>
+                        <input type="file" class="form-control" name="itineraryUrl">
                         <div class="form-text">Formato permitido: pdf</div>
                     </div>
-                    <!-- Trip members-->
+
+                    <!-- Members -->
                     <div class="mb-3">
                         <label class="form-label">Miembros del viaje</label>
-                        <input type="email" class="form-control" placeholder="correo1@email.com, correo2@email.com"
-                            value="a.perez@email.com, m.garcia@email.com, d.llorente@email.com, c.diaz@email.com">
+                        <input type="text" class="form-control" name="emailsColaborators" value="{{members}}">
                         <div class="form-text">Correos separados por comas</div>
                     </div>
+
                     <!-- Buttons -->
                     <div class="d-flex justify-content-center gap-3 mt-4">
-                        <button type="submit" class="btn btn-primary px-5">
-                            Aplicar cambios
-                        </button>
-                        <a href="/one_travel" class="btn btn-outline-secondary px-5">
-                            Cancelar
-                        </a>
+                        <button type="submit" class="btn btn-primary px-5"> Aplicar cambios </button>
+                        <a href="/travel/{{id}}" class="btn btn-outline-secondary px-5"> Cancelar </a>
                     </div>
+                </form>
+                {{/travel}}
             </div>
         </section>
     </main>

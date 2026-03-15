@@ -38,4 +38,13 @@ public class TravelService {
 		travelRepository.deleteById(id);
 	}
 
+    public void save(Travel travel) {
+		travelRepository.save(travel);
+	}
+
+    public List<Travel> findByOwnerName(String ownerName) {
+        return travelRepository.findByOwnerName(ownerName);
+    }
+
+
 }

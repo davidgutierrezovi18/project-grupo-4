@@ -47,106 +47,78 @@ public class TravelWebController {
         return "mytravels";
     }
 
-    // One travel
-    @GetMapping("/travel/{id}")
-    public String oneTravel(Model model, @PathVariable long id, Principal principal) {
-        Optional<Travel> travel = travelService.findById(id);
-        if (travel.isPresent()) {
-            if (!travel.get().getOwnerName().equals(principal.getName())) {
-                return "error403";
-            }
-            model.addAttribute("travel", travel.get());
-            return "one_travel";
-        }
-        return "error404";
-    }
-
     // Create travel
-    @PostMapping("/travel/new")
-    public String newTravel(Model model, Travel travel, HttpSession session) {
-        if(session!=null){
-            travelService.save(travel);
-		    return "create_new_travel";
-        }
-        else{
-            return "sign_in";
-        }
-	}
-
-    @PostMapping("/travel/new")
-    public String newTravel(@ModelAttribute Travel travel, Principal principal) {
-        travel.setOwnerName(principal.getName());
-        travelService.save(travel);
-        return "redirect:/mytravels";
-    }
-
     @PostMapping("/travel/new")
     public String newTravel(@ModelAttribute Travel travel, Principal principal) {
         if (principal == null) {
             return "redirect:/sign_in";
         }
-
         travel.setOwnerName(principal.getName());
-
         travelService.save(travel);
-
         return "redirect:/mytravels";
     }
 
-
-    // Edit travel
+    // Edit travel - GET
     @GetMapping("/travel/{id}/edit")
-    public String editTravelGet(Model model, HttpSession session, @PathVariable long id) {
-        if(session!=null){
-
-            Optional<Travel> travel = travelService.findById(id);
-            if (travel.isPresent()) {
-                model.addAttribute("travel", travel.get());
-                return "edit_travel";
-            } else {
-                return "error404";
-            }
+    public String editTravelForm(@PathVariable Long id, Model model, Principal principal) {
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()){
+            return "error404";
         }
-        else{
-            return "sign_in";
+        Travel travel = travelOpt.get();
+        if (!travel.getOwnerName().equals(principal.getName())){ 
+            return "error403";
         }
-	}
-
-    // Edit travel
+        model.addAttribute("travel", travel);
+        return "edit_travel";
+    }
+    
+    // Edit travel - POST
     @PostMapping("/travel/{id}/edit")
-    public String editTravelPost(Model model, HttpSession session) {
-        if(session!=null){
-		    return "edit_travel";
+    public String editTravelSubmit(@PathVariable Long id, @ModelAttribute Travel travel, Principal principal) {
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()){
+            return "error404";
         }
-        else{
-            return "sign_in";
+        Travel existingTravel = travelOpt.get();
+        if (!existingTravel.getOwnerName().equals(principal.getName())){
+            return "error403";
         }
-	}
+        travel.setId(existingTravel.getId());
+        travel.setOwnerName(existingTravel.getOwnerName());
+        travelService.save(travel);
+        return "redirect:/travel/" + id;
+    }
 
-/* 
-	@PostMapping("/editbook")
-	public String editBookProcess(Model model, Book book, boolean removeImage, MultipartFile imageField)
-			throws IOException, SQLException {
-
-		updateImage(book, removeImage, imageField);
-
-		bookService.save(book);
-
-		model.addAttribute("bookId", book.getId());
-
-		return "redirect:/books/" + book.getId();
-	}
-*/
+    // One travel
+    @GetMapping("/travel/{id}")
+    public String oneTravel(@PathVariable Long id, Model model, Principal principal) {
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()){
+            return "error404";
+        }
+        Travel travel = travelOpt.get();
+        model.addAttribute("travel", travel);
+        // Process elements split by comas
+        model.addAttribute("countriesList", travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
+        model.addAttribute("citiesList", travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
+        model.addAttribute("placesList", travel.getDescription() != null ? List.of(travel.getDescription().split(",")) : List.of());
+        return "one_travel";
+    }
 
     // Delete travel
     @PostMapping("/travel/{id}/delete")
-	public String deleteTravel(@PathVariable long id) {
-		Optional<Travel> travel = travelService.findById(id);
-		if (travel.isPresent()) {
-			travelService.deleteById(id);
-			return "mytravels";
-		} else {
-			return "error404";
-		}
-	}
+    public String deleteTravel(@PathVariable Long id, Principal principal) {
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()){
+            return "error404";
+        }
+        Travel travel = travelOpt.get();
+        if (!travel.getOwnerName().equals(principal.getName())){
+            return "error403";
+        }
+        travelService.deleteById(id);
+        return "redirect:/mytravels";
+    }
+		
 }

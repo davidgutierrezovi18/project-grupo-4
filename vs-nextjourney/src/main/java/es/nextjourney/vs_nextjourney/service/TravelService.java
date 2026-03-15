@@ -46,5 +46,4 @@ public class TravelService {
         return travelRepository.findByOwnerName(ownerName);
     }
 
-
 }

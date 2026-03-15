@@ -77,7 +77,7 @@ public class Travel {
     //CONSTRUCTORS
     public Travel() {}
 
-    //TODO: add places
+    //TO STRING
     public Travel(String ownerName, String title, Image coverImage, LocalDate startDate, LocalDate endDate,
               String description, String countries, String cities, String places, int rating, String comment,
               List<Image> carouselImages, String itineraryUrl, String emailsColaborators, List<User> user) {
@@ -109,6 +109,11 @@ public class Travel {
 
     public Long getId() {
         return id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getOwnerName() {
@@ -257,6 +262,10 @@ public class Travel {
             
             sb.append("]]");
         return sb.toString();
+    }
+
+    public List<User> getUserTravels() {
+        return userTravels;
     }
 
 }

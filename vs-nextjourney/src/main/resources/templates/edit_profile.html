@@ -44,18 +44,18 @@
                         </div>
 
 
-                        <form class="row g-3">
+                        <form class="row g-3 needs-validation" action="/user_profile/edit" method="post" novalidate>
                             <!-- Full Name -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="fullName" placeholder="Nombre completo"
-                                    value="María López">
+                                    value="{{user.name}}" name="name">
                                 <label for="fullName">Nombre completo</label>
                             </div>
 
                             <!-- Email -->
                             <div class="form-floating mb-3">
                                 <input type="email" class="form-control" id="inputEmail4"
-                                    placeholder="Introduce tu correo" value="maria@example.com" required>
+                                    placeholder="Introduce tu correo" value="{{user.email}}" name="email" required>
                                 <div class="invalid-feedback">
                                     Introduce una dirección de correo válida
                                 </div>
@@ -67,7 +67,7 @@
                             <!-- Username -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="inputAddress" minlength="4" maxlength="15"
-                                    placeholder="Crea tu nombre de usuario" value="maria123" required>
+                                    placeholder="Crea tu nombre de usuario" value="{{user.username}}" name="username" required>
                                 <div class="invalid-feedback">
                                     Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)
                                 </div>
@@ -77,10 +77,10 @@
                             <!-- Optional Password (hidden for view only) -->
                             <div class="form-floating mb-3">
 
-                                <input type="password" class="form-control" id="inputPassword4" minlength="8"
+                                <input type="password" class="form-control" id="inputPassword4" minlength="8" 
                                     maxlength="30" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$"
                                     title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos"
-                                    value="********" required>
+                                    value="{{user.password}}" name="password" required>
 
                                 <label for="inputPassword4" class="form-label">Contraseña</label>
                             </div>

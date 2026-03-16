@@ -23,20 +23,9 @@ public class WebController {
 	}
 
 
-	@GetMapping("/mytravels")
-	public String myTravels(Model model) {
-		return "mytravels";
-	}
-
-
 	@GetMapping("/add_place")
 	public String addPlace() {
 		return "add_place";
-	}
-
-	@GetMapping("/create_new_travel")
-	public String createNewTravel() {
-		return "create_new_travel";
 	}
 
 	@GetMapping("/one_destination")
@@ -44,19 +33,9 @@ public class WebController {
 		return "one_destination";
 	}
 
-	@GetMapping("/one_travel")
-	public String oneTravel(Model model) {
-		return "one_travel";
-	}
-
 	@GetMapping("/admin_users")
 	public String adminUsers(Model model) {
 		return "admin_users";
-	}
-
-	@GetMapping("/edit_travel")
-	public String editTravel(Model model) {
-		return "edit_travel";
 	}
 
 	@GetMapping("/error403")

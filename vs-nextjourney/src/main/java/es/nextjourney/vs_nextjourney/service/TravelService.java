@@ -2,7 +2,6 @@ package es.nextjourney.vs_nextjourney.service;
 
 import org.springframework.stereotype.Service;
 
-import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.repository.TravelRepository;
 

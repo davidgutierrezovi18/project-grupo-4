@@ -68,15 +68,27 @@ public class DestinationWebController {
 
     // PROCESAR EL GUARDADO DEL DESTINO
     @PostMapping("/add_destination")
-    public String newDestinationProcess(Destination destination, MultipartFile imageFile) throws IOException {
+    public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
         
-        if (imageFile != null && !imageFile.isEmpty()) {
-           Image image = imageService.createImage(imageFile); 
-           destination.setCoverImage(image);
+        if (imageFile == null || imageFile.isEmpty()) {
+
+            model.addAttribute("imageError", true);
+            model.addAttribute("destination", destination);
+            return "add_destination"; 
         }
-        
-        destinationService.save(destination);
-        return "redirect:/destinations/" + destination.getId();
+
+        try {
+            Image image = imageService.createImage(imageFile); 
+            destination.setCoverImage(image);
+            destinationService.save(destination);
+            return "redirect:/destinations/" + destination.getId();
+            
+        } catch (Exception e) {
+
+            model.addAttribute("imageError", true);
+            model.addAttribute("destination", destination);
+            return "add_destination";
+        }
     }
 
     // BORRAR DESTINO (Opcional, siguiendo el ejemplo del profe)

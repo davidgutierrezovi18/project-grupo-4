@@ -22,21 +22,31 @@
 
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
+
+                        {{#imageError}}
+                        <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>
+                                La imagen del destino es obligatoria.
+                            </div>
+                        </div>
+                        {{/imageError}}
+
                         <form action="/add_destination" method="post" enctype="multipart/form-data">
                             
                             <div class="form-floating mb-3">
-                                <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre del destino" required>
+                                <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre del destino" required value="{{#destination}}{{name}}{{/destination}}">
                                 <label for="destinationName">Nombre del destino</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input type="text" name="country" class="form-control" id="destinationCountry" placeholder="País" required>
+                                <input type="text" name="country" class="form-control" id="destinationCountry" placeholder="País" required value="{{#destination}}{{country}}{{/destination}}">
                                 <label for="destinationCountry">País</label>
                             </div>
 
                             <div class="form-floating mb-3">
                                 <textarea name="description" class="form-control" id="destinationDescription" placeholder="Descripción"
-                                    style="height: 150px" required></textarea>
+                                    style="height: 150px" required>{{#destination}}{{description}}{{/destination}}</textarea>
                                 <label for="destinationDescription">Descripción</label>
                             </div>
 

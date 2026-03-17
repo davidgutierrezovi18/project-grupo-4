@@ -67,8 +67,81 @@ public class ReviewWebController {
 	}
 
 	@GetMapping("/my_reviews")
-	public String myReviews(Model model) {
+	public String myReviews(Model model, Principal principal) {
+		if (principal == null) {
+			return "redirect:/sign_in";
+		}
+
+		List<Review> userReviews = reviewRepository.findByUserReviewsUsernameOrderByCreatedAtDesc(principal.getName());
+		model.addAttribute("reviews", userReviews);
+		model.addAttribute("hasReviews", !userReviews.isEmpty());
 		return "my_reviews";
+	}
+
+	@GetMapping("/my_reviews/{reviewId}/edit")
+	public String editMyReviewForm(@PathVariable Long reviewId, Model model, Principal principal) {
+		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
+		if (reviewOpt.isEmpty()) {
+			return "redirect:/my_reviews";
+		}
+
+		Review review = reviewOpt.get();
+		Place place = review.getPlace();
+
+		model.addAttribute("formAction", "/my_reviews/" + review.getId() + "/edit");
+		model.addAttribute("placeId", place != null && place.getId() != null ? place.getId() : "");
+		model.addAttribute("placeName", place != null && place.getName() != null ? place.getName() : "");
+		model.addAttribute("placeType", place != null && place.getCategory() != null ? place.getCategory().name() : "");
+		model.addAttribute("placeLat", "");
+		model.addAttribute("placeLon", "");
+		model.addAttribute("reviewText", review.getReviewText() != null ? review.getReviewText() : "");
+		model.addAttribute("rating1", review.getRating() == 1);
+		model.addAttribute("rating2", review.getRating() == 2);
+		model.addAttribute("rating3", review.getRating() == 3);
+		model.addAttribute("rating4", review.getRating() == 4);
+		model.addAttribute("rating5", review.getRating() == 5);
+		return "add-review";
+	}
+
+	@PostMapping("/my_reviews/{reviewId}/edit")
+	public String editMyReview(
+			@PathVariable Long reviewId,
+			Principal principal,
+			@RequestParam(name = "rating", defaultValue = "5") int rating,
+			@RequestParam(name = "review-text", required = false) String reviewText,
+			@RequestParam(name = "photo", required = false) MultipartFile photo) {
+		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
+		if (reviewOpt.isEmpty()) {
+			return "redirect:/my_reviews";
+		}
+
+		Review review = reviewOpt.get();
+		review.setRating(rating);
+		review.setReviewText(reviewText);
+		Review savedReview = reviewService.modifyReview(review);
+
+		if (photo != null && !photo.isEmpty()) {
+			try {
+				Image image = imageService.createImage(photo);
+				image.setReview(savedReview);
+				imageService.save(image);
+			} catch (Exception exception) {
+				// Keep edited review even if image upload fails.
+			}
+		}
+
+		return "redirect:/my_reviews";
+	}
+
+	@PostMapping("/my_reviews/{reviewId}/delete")
+	public String deleteMyReview(@PathVariable Long reviewId, Principal principal) {
+		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
+		if (reviewOpt.isEmpty()) {
+			return "redirect:/my_reviews";
+		}
+
+		reviewService.deleteReview(reviewId);
+		return "redirect:/my_reviews";
 	}
 
 	@GetMapping("/add-review")
@@ -86,6 +159,12 @@ public class ReviewWebController {
 		model.addAttribute("placeType", placeType != null ? placeType : "");
 		model.addAttribute("placeLat", placeLat != null ? placeLat : "");
 		model.addAttribute("placeLon", placeLon != null ? placeLon : "");
+		model.addAttribute("reviewText", "");
+		model.addAttribute("rating1", false);
+		model.addAttribute("rating2", false);
+		model.addAttribute("rating3", false);
+		model.addAttribute("rating4", false);
+		model.addAttribute("rating5", true);
 		return "add-review";
 	}
 
@@ -249,6 +328,28 @@ public class ReviewWebController {
 			return Optional.empty();
 		}
 		return userRepository.findByUsername(principal.getName());
+	}
+
+	private Optional<Review> getOwnedReview(Long reviewId, Principal principal) {
+		if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
+			return Optional.empty();
+		}
+
+		Optional<Review> reviewOpt = reviewRepository.findById(reviewId);
+		if (reviewOpt.isEmpty()) {
+			return Optional.empty();
+		}
+
+		Review review = reviewOpt.get();
+		if (review.getUser() == null || review.getUser().getUsername() == null) {
+			return Optional.empty();
+		}
+
+		if (!review.getUser().getUsername().equals(principal.getName())) {
+			return Optional.empty();
+		}
+
+		return Optional.of(review);
 	}
 
 	private Optional<Place> resolveOrCreatePlace(Long placeId, String placeName, String placeType, String placeLat, String placeLon) {

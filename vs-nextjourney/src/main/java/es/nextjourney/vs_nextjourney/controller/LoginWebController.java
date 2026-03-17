@@ -1,6 +1,7 @@
 package es.nextjourney.vs_nextjourney.controller;
 
 import java.security.Principal;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,9 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
 import es.nextjourney.vs_nextjourney.model.User;
 import es.nextjourney.vs_nextjourney.service.UserService;
-import jakarta.servlet.http.HttpSession;
-
-import java.util.Arrays;
 
 @Controller
 public class LoginWebController {
@@ -24,39 +22,11 @@ public class LoginWebController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/sign_in") // quitar de webcontroler
-    public String signIn() {
-        return "sign_in";
-    }
-
-    @PostMapping("/login")
-    public String login(String username, String password, HttpSession session) {
-
-        try {
-            User user = userService.findByUserName(username);
-
-            boolean loginOk = false;
-            String storedPassword = user.getPassword();
-
-            if (storedPassword != null && storedPassword.startsWith("$2")) {
-                loginOk = passwordEncoder.matches(password, storedPassword);
-            } else {
-                
-                loginOk = storedPassword != null && storedPassword.equals(password);
-                if (loginOk) {
-                    user.setPassword(passwordEncoder.encode(password));
-                    userService.modifyUser(user);
-                }
-            }
-
-            if (loginOk) {
-                session.setAttribute("user", user);
-                return "redirect:/user_profile";
-            }
-
-        } catch (Exception e) {
+    public String signIn(Principal principal) {
+        if (principal != null) {
+            return "redirect:/user_profile";
         }
-
-        return "redirect:/loginerror";
+        return "sign_in";
     }
 
     @GetMapping("/loginerror") // hacer pagina loginerror
@@ -80,13 +50,12 @@ public class LoginWebController {
     }
 
     @GetMapping("/user_profile")
-    public String profile(Model model, HttpSession session) {
-
-        User user = (User) session.getAttribute("user"); //cambiar a principal
-
-        if (user == null) {
+    public String profile(Model model, Principal principal) {
+        if (principal == null) {
             return "redirect:/sign_in";
         }
+
+        User user = userService.findByUserName(principal.getName());
 
         model.addAttribute("user", user);
 
@@ -94,13 +63,12 @@ public class LoginWebController {
     }
 
     @GetMapping("/user_profile/edit")
-    public String editProfile(Model model, HttpSession session) {
-
-        User user = (User) session.getAttribute("user"); //cambiar a principal
-
-        if (user == null) {
+    public String editProfile(Model model, Principal principal) {
+        if (principal == null) {
             return "redirect:/sign_in";
         }
+
+        User user = userService.findByUserName(principal.getName());
 
         model.addAttribute("user", user);
 
@@ -108,13 +76,12 @@ public class LoginWebController {
     }
 
     @PostMapping("/user_profile/edit")
-    public String editProfile(User user, HttpSession session) {
-
-        User user2 = (User) session.getAttribute("user"); //cambiar a principal
-
-        if (user2 == null) {
+    public String editProfile(User user, Principal principal) {
+        if (principal == null) {
             return "redirect:/sign_in";
         }
+
+        User user2 = userService.findByUserName(principal.getName());
 
         user2.setName(user.getName());
         user2.setLastName(user.getLastName());
@@ -125,8 +92,6 @@ public class LoginWebController {
         }
 
         userService.modifyUser(user2);
-
-        session.setAttribute("user", user2);
 
         return "redirect:/user_profile";
     }

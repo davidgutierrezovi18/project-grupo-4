@@ -33,74 +33,42 @@
         </div>
 
         <div class="row g-4">
+          {{#hasReviews}}
+          {{#reviews}}
           <div class="col-lg-6">
             <div class="card h-100 shadow-sm">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h5 class="card-title mb-0"><i class="bi bi-shop"></i> Sagrada Familia</h5>
-                  <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> 4.0</span>
+                  <h5 class="card-title mb-0">
+                    <i class="bi bi-geo-alt"></i>
+                    {{#place}}{{name}}{{/place}}{{^place}}Lugar sin registrar{{/place}}
+                  </h5>
+                  <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> {{rating}}.0</span>
                 </div>
-                <p class="card-text text-muted">“Una visita imprescindible. Recomiendo ir temprano para evitar colas.”
-                </p>
+                <p class="card-text text-muted">{{reviewText}}</p>
                 <div class="d-flex gap-2">
-                  <a href="/add-review" class="btn btn-primary btn-sm">Editar</a>
-                  <a href="#" class="btn btn-outline-danger btn-sm">Borrar</a>
+                  <a href="/my_reviews/{{id}}/edit" class="btn btn-primary btn-sm">Editar</a>
+                  <form action="/my_reviews/{{id}}/delete" method="post" class="m-0">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Borrar</button>
+                  </form>
+                  {{#place}}
+                  <a href="/review/{{id}}" class="btn btn-outline-primary btn-sm">Ver reseñas del lugar</a>
+                  {{/place}}
                 </div>
               </div>
-              <div class="card-footer text-muted small">Publicado: 12/01/2026</div>
+              <div class="card-footer text-muted small">Publicado: {{createdAt}}</div>
             </div>
           </div>
+          {{/reviews}}
+          {{/hasReviews}}
 
-          <div class="col-lg-6">
-            <div class="card h-100 shadow-sm">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h5 class="card-title mb-0"><i class="bi bi-cup-hot"></i> Café La Esquina</h5>
-                  <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> 5.0</span>
-                </div>
-                <p class="card-text text-muted">“Café de especialidad y ambiente tranquilo. Volveré seguro.”</p>
-                <div class="d-flex gap-2">
-                  <a href="/add-review" class="btn btn-primary btn-sm">Editar</a>
-                  <a href="#" class="btn btn-outline-danger btn-sm">Borrar</a>
-                </div>
-              </div>
-              <div class="card-footer text-muted small">Publicado: 27/12/2025</div>
+          {{^hasReviews}}
+          <div class="col-12">
+            <div class="alert alert-info mb-0">
+              Aun no has publicado reseñas. Cuando publiques una, aparecera aqui.
             </div>
           </div>
-
-          <div class="col-lg-6">
-            <div class="card h-100 shadow-sm">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h5 class="card-title mb-0"><i class="bi bi-museum"></i> Museo de Arte Moderno</h5>
-                  <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> 4.5</span>
-                </div>
-                <p class="card-text text-muted">“Exposiciones muy bien curadas. Ideal para una tarde cultural.”</p>
-                <div class="d-flex gap-2">
-                  <a href="/add-review" class="btn btn-primary btn-sm">Editar</a>
-                  <a href="#" class="btn btn-outline-danger btn-sm">Borrar</a>
-                </div>
-              </div>
-              <div class="card-footer text-muted small">Publicado: 03/12/2025</div>
-            </div>
-          </div>
-
-          <div class="col-lg-6">
-            <div class="card h-100 shadow-sm">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h5 class="card-title mb-0"><i class="bi bi-tree"></i> Parque Central</h5>
-                  <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> 4.0</span>
-                </div>
-                <p class="card-text text-muted">“Buen sitio para pasear y desconectar. Zonas de sombra amplias.”</p>
-                <div class="d-flex gap-2">
-                  <a href="/add-review" class="btn btn-primary btn-sm">Editar</a>
-                  <a href="#" class="btn btn-outline-danger btn-sm">Borrar</a>
-                </div>
-              </div>
-              <div class="card-footer text-muted small">Publicado: 21/11/2025</div>
-            </div>
-          </div>
+          {{/hasReviews}}
         </div>
       </div>
     </section>

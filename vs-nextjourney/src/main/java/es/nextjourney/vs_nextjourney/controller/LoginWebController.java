@@ -2,6 +2,8 @@ package es.nextjourney.vs_nextjourney.controller;
 
 import java.security.Principal;
 import java.util.Arrays;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,8 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
+
+import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.User;
 import es.nextjourney.vs_nextjourney.service.UserService;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class LoginWebController {
@@ -41,9 +47,16 @@ public class LoginWebController {
     }
 
     @PostMapping("/register")
-    public String newUser(User user) {
+    public String newUser(User user, @RequestParam("imageFile") MultipartFile file) throws IOException, SQLException {
         user.setRoles(Arrays.asList("USER"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (file != null && !file.isEmpty()) {
+            Image image = new Image();
+            image.setImageFile(new javax.sql.rowset.serial.SerialBlob(file.getBytes()));
+            image.setContentType(file.getContentType());
+
+            user.setImage(image);
+        }
         userService.saveUser(user);
 
         return "redirect:/sign_in";

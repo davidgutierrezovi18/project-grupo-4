@@ -3,6 +3,7 @@ package es.nextjourney.vs_nextjourney.controller;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,9 @@ public class LoginWebController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/sign_in") // quitar de webcontroler
     public String signIn() {
         return "sign_in";
@@ -30,7 +34,21 @@ public class LoginWebController {
         try {
             User user = userService.findByUserName(username);
 
-            if (user.getPassword().equals(password)) { //cambiar a principal
+            boolean loginOk = false;
+            String storedPassword = user.getPassword();
+
+            if (storedPassword != null && storedPassword.startsWith("$2")) {
+                loginOk = passwordEncoder.matches(password, storedPassword);
+            } else {
+                
+                loginOk = storedPassword != null && storedPassword.equals(password);
+                if (loginOk) {
+                    user.setPassword(passwordEncoder.encode(password));
+                    userService.modifyUser(user);
+                }
+            }
+
+            if (loginOk) {
                 session.setAttribute("user", user);
                 return "redirect:/user_profile";
             }
@@ -55,6 +73,7 @@ public class LoginWebController {
     @PostMapping("/register")
     public String newUser(User user) {
         user.setRoles(Arrays.asList("USER"));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
 
         return "redirect:/sign_in";
@@ -101,7 +120,9 @@ public class LoginWebController {
         user2.setLastName(user.getLastName());
         user2.setDateOfBirth(user.getDateOfBirth());
         user2.setEmail(user.getEmail());
-        user2.setPassword(user.getPassword());
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            user2.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
 
         userService.modifyUser(user2);
 

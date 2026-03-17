@@ -48,22 +48,22 @@
                   <div class="mb-3">
                     <label class="form-label">Puntuación</label>
                     <div class="star-rating" role="radiogroup" aria-label="Puntuación">
-                      <input type="radio" name="rating" id="r5" value="5" autocomplete="off" checked>
+                      <input type="radio" name="rating" id="r5" value="5" autocomplete="off" {{#rating5}}checked{{/rating5}}>
                       <label for="r5" data-value="5" aria-label="5 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r4" value="4" autocomplete="off">
+                      <input type="radio" name="rating" id="r4" value="4" autocomplete="off" {{#rating4}}checked{{/rating4}}>
                       <label for="r4" data-value="4" aria-label="4 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r3" value="3" autocomplete="off">
+                      <input type="radio" name="rating" id="r3" value="3" autocomplete="off" {{#rating3}}checked{{/rating3}}>
                       <label for="r3" data-value="3" aria-label="3 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r2" value="2" autocomplete="off">
+                      <input type="radio" name="rating" id="r2" value="2" autocomplete="off" {{#rating2}}checked{{/rating2}}>
                       <label for="r2" data-value="2" aria-label="2 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r1" value="1" autocomplete="off">
+                      <input type="radio" name="rating" id="r1" value="1" autocomplete="off" {{#rating1}}checked{{/rating1}}>
                       <label for="r1" data-value="1" aria-label="1 estrella"><i class="bi bi-star-fill"></i></label>
                     </div>
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Tu reseña</label>
                     <textarea id="review-text" name="review-text" class="form-control" rows="5"
-                      placeholder="Cuenta tu experiencia..."></textarea>
+                      placeholder="Cuenta tu experiencia...">{{reviewText}}</textarea>
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Foto (opcional)</label>

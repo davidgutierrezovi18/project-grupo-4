@@ -14,7 +14,10 @@
         <section class="py-5">
             <div class="container px-5">
                 <div class="text-center mb-5">
-                    <h1 class="fw-bolder">Añadir nuevo destino</h1>
+                    <h1 class="fw-bolder">
+                        {{#isEditing}}Editar destino{{/isEditing}}
+                        {{^isEditing}}Añadir nuevo destino{{/isEditing}}
+                    </h1>
                     <p class="lead fw-normal text-muted mb-0">
                         Introduce un destino que aún no exista en la plataforma.
                     </p>
@@ -31,16 +34,29 @@
                             </div>
                         </div>
                         {{/imageError}}
-
                         <form action="/add_destination" method="post" enctype="multipart/form-data">
+
+                            {{#destination}}
+                                {{#id}}<input type="hidden" name="id" value="{{id}}">{{/id}}
+                            {{/destination}}
                             
+                        <form action="/add_destination" method="post" enctype="multipart/form-data">
+
+                            {{#destination}}
+                                {{#id}}
+                                <input type="hidden" name="id" value="{{id}}">
+                                {{/id}}
+                            {{/destination}}
+
                             <div class="form-floating mb-3">
-                                <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre del destino" required value="{{#destination}}{{name}}{{/destination}}">
+                                <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre" required 
+                                    value="{{#destination}}{{name}}{{/destination}}">
                                 <label for="destinationName">Nombre del destino</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input type="text" name="country" class="form-control" id="destinationCountry" placeholder="País" required value="{{#destination}}{{country}}{{/destination}}">
+                                <input type="text" name="country" class="form-control" id="destinationCountry" placeholder="País" required 
+                                    value="{{#destination}}{{country}}{{/destination}}">
                                 <label for="destinationCountry">País</label>
                             </div>
 
@@ -51,12 +67,24 @@
                             </div>
 
                             <div class="text mb-4">
-                                <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa"
-                                    alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                
+                                {{#destination}}
+                                    {{#coverImage}}
+                                        <img id="previewImage" src="/images/{{id}}" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                    {{/coverImage}}
+                                    {{^coverImage}}
+                                        <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                    {{/coverImage}}
+                                {{/destination}}
+                                
+                                {{^destination}}
+                                    <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                {{/destination}}
 
                                 <div>
                                     <label for="destinationImage" class="btn btn-outline-secondary">
-                                        Seleccione imagen del destino
+                                        {{#isEditing}}Cambiar imagen (opcional){{/isEditing}}
+                                        {{^isEditing}}Seleccione imagen del destino{{/isEditing}}
                                     </label>
                                     <input type="file" id="destinationImage" name="imageFile" accept="image/jpeg, image/png" hidden onchange="previewSelectedImage(event)">
                                 </div>
@@ -64,7 +92,10 @@
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                 <a href="/destinations" class="btn btn-outline-secondary btn-lg">Cancelar</a>
-                                <button type="submit" class="btn btn-primary btn-lg">Guardar destino</button>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    {{#isEditing}}Actualizar destino{{/isEditing}}
+                                    {{^isEditing}}Guardar destino{{/isEditing}}
+                                </button>
                             </div>
                         </form>
                     </div>

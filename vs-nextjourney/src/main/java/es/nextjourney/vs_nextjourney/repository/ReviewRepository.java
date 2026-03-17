@@ -10,4 +10,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
 	List<Review> findByPlaceId(Long placeId);
 
+	List<Review> findByUserReviewsUsernameOrderByCreatedAtDesc(String username);
+
 }

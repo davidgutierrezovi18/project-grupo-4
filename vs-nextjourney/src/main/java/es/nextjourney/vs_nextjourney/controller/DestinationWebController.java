@@ -63,35 +63,64 @@ public class DestinationWebController {
     // MOSTRAR FORMULARIO DE NUEVO DESTINO
     @GetMapping("/add_destination")
     public String newDestination(Model model) {
+        model.addAttribute("isEditing", false);
         return "add_destination";
+    }
+
+    // MOSTRAR FORMULARIO DE EDICIÓN
+    @GetMapping("/destinations/{id}/edit")
+    public String editDestination(Model model, @PathVariable long id) {
+        Optional<Destination> destination = destinationService.findById(id);
+        if (destination.isPresent()) {
+            model.addAttribute("destination", destination.get());
+            model.addAttribute("isEditing", true); // Esto sirve para cambiar el título en el HTML
+            return "add_destination";
+        }
+        return "redirect:/destinations";
     }
 
     // PROCESAR EL GUARDADO DEL DESTINO
     @PostMapping("/add_destination")
     public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
         
-        if (imageFile == null || imageFile.isEmpty()) {
-
+        // 1. Verificar si estamos EDITANDO (el destino ya tiene un ID)
+        if (destination.getId() != null && destination.getId() != 0) {
+            Optional<Destination> oldDest = destinationService.findById(destination.getId());
+            if (oldDest.isPresent()) {
+                // Si el usuario NO ha subido una imagen nueva, mantenemos la que ya tenía
+                if (imageFile == null || imageFile.isEmpty()) {
+                    destination.setCoverImage(oldDest.get().getCoverImage());
+                }
+            }
+        } 
+        // 2. Si es NUEVO y no hay imagen, lanzamos error
+        else if (imageFile == null || imageFile.isEmpty()) {
             model.addAttribute("imageError", true);
             model.addAttribute("destination", destination);
+            model.addAttribute("isEditing", false);
             return "add_destination"; 
         }
 
+        // 3. Si se ha subido una imagen nueva (sea edición o nuevo), la procesamos
         try {
-            Image image = imageService.createImage(imageFile); 
-            destination.setCoverImage(image);
+            if (imageFile != null && !imageFile.isEmpty()) {
+                Image image = imageService.createImage(imageFile); 
+                destination.setCoverImage(image);
+            }
+            
+            // destinationService.save() es inteligente: 
+            // Si el objeto tiene ID -> Hace un UPDATE. Si no tiene ID -> Hace un INSERT.
             destinationService.save(destination);
             return "redirect:/destinations/" + destination.getId();
             
         } catch (Exception e) {
-
             model.addAttribute("imageError", true);
             model.addAttribute("destination", destination);
             return "add_destination";
         }
     }
 
-    // BORRAR DESTINO (Opcional, siguiendo el ejemplo del profe)
+    // BORRAR DESTINO 
     @PostMapping("/destinations/{id}/delete")
     public String deleteDestination(@PathVariable long id) {
         destinationService.delete(id);

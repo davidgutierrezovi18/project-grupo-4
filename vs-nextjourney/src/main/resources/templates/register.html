@@ -25,30 +25,31 @@
                     </div>
 
 
-                    <form class="row g-3" action="\register" method="post">
-                        <div class="text-center mb-4">
+                    <form class="row g-3" action="\register" method="post" enctype="multipart/form-data">
 
-                            <!--User Avatar-->
-                            <img src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"
+                        <div class="text-center mb-4">
+                            <!-- User Avatar -->
+                            <img id="previewImage" src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"
                                 class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
 
-                            <!--Profile Picture-->
+                            <!-- Profile Picture Button -->
                             <div>
                                 <label for="profileImage" class="btn btn-outline-secondary">
                                     Selecciona tu foto de perfil
                                 </label>
-                                <input type="file" id="profileImage" name="image" accept="image/jpeg, image/png"
+                                <input type="file" id="profileImage" name="imageFile" accept="image/jpeg, image/png"
                                     hidden />
                             </div>
 
+                            <!-- Small text -->
                             <small class="text-muted d-block mt-2">
                                 Formatos permitidos: JPG, PNG
                             </small>
                         </div>
                         <div class="col-md-6">
                             <label for="inputNombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="inputNombre" name="name" placeholder="Introduce tu nombre"
-                                required>
+                            <input type="text" class="form-control" id="inputNombre" name="name"
+                                placeholder="Introduce tu nombre" required>
                         </div>
 
                         <div class="col-md-6">
@@ -64,8 +65,8 @@
 
                         <div class="col-md-6">
                             <label for="inputAddress" class="form-label">Nombre de usuario</label>
-                            <input type="text" class="form-control" name="username" id="inputAddress" minlength="4" maxlength="15"
-                                placeholder="Crea tu nombre de usuario" required>
+                            <input type="text" class="form-control" name="username" id="inputAddress" minlength="4"
+                                maxlength="15" placeholder="Crea tu nombre de usuario" required>
                             <div class="invalid-feedback">
                                 Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)
                             </div>
@@ -73,8 +74,8 @@
 
                         <div class="col-12">
                             <label for="inputEmail4" class="form-label">Correo</label>
-                            <input type="email" class="form-control" id="inputEmail4" name="email" placeholder="Introduce tu correo"
-                                required>
+                            <input type="email" class="form-control" id="inputEmail4" name="email"
+                                placeholder="Introduce tu correo" required>
                             <div class="invalid-feedback">
                                 Introduce una dirección de correo válida
                             </div>
@@ -84,7 +85,7 @@
                             <input type="password" class="form-control" id="inputPassword4" minlength="8" maxlength="30"
                                 pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$"
                                 placeholder="Introduce tu contraseña"
-                                title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos" 
+                                title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos"
                                 name="password" required>
 
                         </div>
@@ -128,6 +129,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
+    <script src="js/profile-preview.js"></script>
 </body>
 
 </html>

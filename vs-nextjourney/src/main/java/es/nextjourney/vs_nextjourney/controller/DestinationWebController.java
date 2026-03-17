@@ -63,35 +63,76 @@ public class DestinationWebController {
     // MOSTRAR FORMULARIO DE NUEVO DESTINO
     @GetMapping("/add_destination")
     public String newDestination(Model model) {
+        model.addAttribute("isEditing", false);
         return "add_destination";
+    }
+
+    // MOSTRAR FORMULARIO DE EDICIÓN
+    @GetMapping("/destinations/{id}/edit")
+    public String editDestination(Model model, @PathVariable long id) {
+        Optional<Destination> destination = destinationService.findById(id);
+        if (destination.isPresent()) {
+            model.addAttribute("destination", destination.get());
+            model.addAttribute("isEditing", true); // Esto sirve para cambiar el título en el HTML
+            return "add_destination";
+        }
+        return "redirect:/destinations";
     }
 
     // PROCESAR EL GUARDADO DEL DESTINO
     @PostMapping("/add_destination")
-    public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
+    public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile, Long id) throws IOException {
         
-        if (imageFile == null || imageFile.isEmpty()) {
+        // 1. Forzamos el ID si viene como parámetro separado (evita duplicados)
+        if (id != null && id != 0) {
+            destination.setId(id);
+        }
 
+        // 2. Lógica de Edición vs Nuevo
+        if (destination.getId() != null && destination.getId() != 0) {
+            Optional<Destination> oldDestOpt = destinationService.findById(destination.getId());
+            
+            if (oldDestOpt.isPresent()) {
+                Destination oldDest = oldDestOpt.get();
+
+                // A. Si no hay imagen nueva, recuperamos la que ya tenía
+                if (imageFile == null || imageFile.isEmpty()) {
+                    destination.setCoverImage(oldDest.getCoverImage());
+                }
+
+                // B. ¡FUNDAMENTAL! Recuperamos las listas para que no se borren
+                // Al hacer esto, JPA entiende que quieres mantener los hijos existentes
+                destination.setPlaces(oldDest.getPlaces());
+                destination.setReviews(oldDest.getReviews());
+            }
+        } 
+        // 3. Si es nuevo y no hay imagen, lanzamos el error
+        else if (imageFile == null || imageFile.isEmpty()) {
             model.addAttribute("imageError", true);
             model.addAttribute("destination", destination);
+            model.addAttribute("isEditing", false);
             return "add_destination"; 
         }
 
         try {
-            Image image = imageService.createImage(imageFile); 
-            destination.setCoverImage(image);
+            // 4. Procesar imagen nueva si el usuario la seleccionó
+            if (imageFile != null && !imageFile.isEmpty()) {
+                Image image = imageService.createImage(imageFile); 
+                destination.setCoverImage(image);
+            }
+            
+            // 5. Guardar: Al tener el ID y las listas recuperadas, hace un UPDATE limpio
             destinationService.save(destination);
-            return "redirect:/destinations/" + destination.getId();
+            return "redirect:/destinations";
             
         } catch (Exception e) {
-
             model.addAttribute("imageError", true);
             model.addAttribute("destination", destination);
             return "add_destination";
         }
     }
 
-    // BORRAR DESTINO (Opcional, siguiendo el ejemplo del profe)
+    // BORRAR DESTINO 
     @PostMapping("/destinations/{id}/delete")
     public String deleteDestination(@PathVariable long id) {
         destinationService.delete(id);

@@ -329,8 +329,6 @@
 
     url.searchParams.set("placeName", result.name || "");
     url.searchParams.set("placeType", result.subtitle || "");
-    url.searchParams.set("placeLat", String(result.lat || ""));
-    url.searchParams.set("placeLon", String(result.lon || ""));
     return url.pathname + url.search;
   }
 
@@ -341,8 +339,6 @@
     }
     url.searchParams.set("placeName", result.name || "");
     url.searchParams.set("placeType", result.subtitle || "");
-    url.searchParams.set("placeLat", String(result.lat || ""));
-    url.searchParams.set("placeLon", String(result.lon || ""));
     return url.pathname + url.search;
   }
 

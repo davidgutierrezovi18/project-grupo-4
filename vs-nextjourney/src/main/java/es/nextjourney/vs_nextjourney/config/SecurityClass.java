@@ -36,13 +36,12 @@ public class SecurityClass {
             .authorizeHttpRequests(auth -> auth
                 
                 .requestMatchers(
-                    "/", "/index", "/faq",
-                    "/destinations", "/destinations/**", "/one_destination", "/add_place",
+                    "/", "/index",
+                    "/destinations", "/destinations/**", "/one_destination",
                     "/sign_in", "/register", "/login", "/loginerror",
                     "/error403", "/error404", "/error500",
-                    "/css/**", "/js/**", "/images/**", "/assets/**", "/webjars/**",
-                    "/h2-console/**",
-                    "/reviews", "/review/**", "/place_reviews", "/api/reviews/place-metrics"
+                    "/css/**", "/js/**", "/images/**", "/assets/**",
+                    "/reviews", "/review/**", "/place_reviews"
                 ).permitAll()
                 
                 
@@ -50,7 +49,7 @@ public class SecurityClass {
                 
                
                 .requestMatchers(
-                    "/mytravels", "/travel/**", "/user_profile/**",
+                    "/mytravels", "/travel/**", "/user_profile/**","/add_place","/add_destinstion","/add_place/**","/add_destination/**",
                     "/my_reviews", "/add-review", "/add-review/**"
                 ).authenticated()
                 

@@ -61,9 +61,9 @@ public class TravelWebController {
     // Create travel - POST
     @PostMapping("/travel/new")
     public String newTravelPost(@ModelAttribute Travel travel,
-            @RequestParam("coverImage") MultipartFile coverImage,
-            @RequestParam("carouselImages") MultipartFile[] carouselImages,
-            @RequestParam("itineraryUrl") MultipartFile itinerary,
+            @RequestParam("coverImageFile") MultipartFile coverImage,
+            @RequestParam("carouselImageFiles") MultipartFile[] carouselImages,
+            @RequestParam("itineraryFile") MultipartFile itinerary,
             Principal principal) throws IOException {
         if (principal == null) {
             return "redirect:/sign_in";

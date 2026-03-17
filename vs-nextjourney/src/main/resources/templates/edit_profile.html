@@ -20,31 +20,34 @@
                         Edita tu información personal.
                     </p>
                 </div>
+                <form class="row g-3 needs-validation" action="/edit_profile" method="post"
+                    enctype="multipart/form-data" novalidate>
 
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="text-center mb-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="text-center mb-4">
 
-                            <!-- User Avatar -->
-                            <img src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"
-                                class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
+                                <!-- User Avatar -->
+                                <img id="previewImage"
+                                    src="{{#user.image}}/images/{{user.image.id}}{{/user.image}}{{^user.image}}https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar{{/user.image}}"
+                                    class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
 
-                            <!-- Input para cambiar foto -->
-                            <div>
-                                <label for="profileImage" class="btn btn-outline-secondary">
-                                    Cambiar foto de perfil
-                                </label>
-                                <input type="file" id="profileImage" name="profileImage" accept="image/jpeg, image/png"
-                                    hidden />
+                                <!-- Input para cambiar foto -->
+                                <div>
+                                    <label for="profileImage" class="btn btn-outline-secondary">
+                                        Cambiar foto de perfil
+                                    </label>
+                                    <input type="file" id="profileImage" name="imageFile" accept="image/jpeg, image/png"
+                                        hidden />
+                                </div>
+
+                                <small class="text-muted d-block mt-2">
+                                    Formatos permitidos: JPG, PNG
+                                </small>
                             </div>
 
-                            <small class="text-muted d-block mt-2">
-                                Formatos permitidos: JPG, PNG
-                            </small>
-                        </div>
 
 
-                        <form class="row g-3 needs-validation" action="/user_profile/edit" method="post" novalidate>
                             <!-- Full Name -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="fullName" placeholder="Nombre completo"
@@ -67,7 +70,8 @@
                             <!-- Username -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="inputAddress" minlength="4" maxlength="15"
-                                    placeholder="Crea tu nombre de usuario" value="{{user.username}}" name="username" required>
+                                    placeholder="Crea tu nombre de usuario" value="{{user.username}}" name="username"
+                                    required>
                                 <div class="invalid-feedback">
                                     Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)
                                 </div>
@@ -77,16 +81,16 @@
                             <!-- Optional Password (hidden for view only) -->
                             <div class="form-floating mb-3">
 
-                                <input type="password" class="form-control" id="inputPassword4" minlength="8" 
+                                <input type="password" class="form-control" id="inputPassword4" minlength="8"
                                     maxlength="30" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$"
                                     title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos"
-                                    value="{{user.password}}" name="password" required>
+                                    value="" name="password" required>
 
                                 <label for="inputPassword4" class="form-label">Contraseña</label>
                             </div>
                             <div class="form-floating mb-3">
 
-                                <input type="password" class="form-control" id="inputPassword4Confirm" value="********"
+                                <input type="password" class="form-control" id="inputPassword4Confirm" value="" 
                                     required>
                                 <label for="inputPassword4Confirm" class="form-label">Confirma la contraseña</label>
                             </div>
@@ -100,9 +104,10 @@
                                     Guardar cambios
                                 </button>
                             </div>
-                        </form>
+
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </section>
 
@@ -113,6 +118,8 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/profile-preview.js"></script>
 </body>
 
 </html>

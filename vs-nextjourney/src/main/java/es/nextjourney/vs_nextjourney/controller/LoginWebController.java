@@ -75,40 +75,34 @@ public class LoginWebController {
         return "user_profile";
     }
 
-    @GetMapping("/user_profile/edit")
-    public String editProfile(Model model, Principal principal) {
-        if (principal == null) {
-            return "redirect:/sign_in";
-        }
-
-        User user = userService.findByUserName(principal.getName());
-
-        model.addAttribute("user", user);
-
-        return "edit_profile";
-    }
-
-    @PostMapping("/user_profile/edit")
-    public String editProfile(User user, Principal principal) {
-        if (principal == null) {
-            return "redirect:/sign_in";
-        }
-
-        User user2 = userService.findByUserName(principal.getName());
-
-        user2.setName(user.getName());
-        user2.setLastName(user.getLastName());
-        user2.setDateOfBirth(user.getDateOfBirth());
-        user2.setEmail(user.getEmail());
-        if (user.getPassword() != null && !user.getPassword().isBlank()) {
-            user2.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        userService.modifyUser(user2);
-
-        return "redirect:/user_profile";
-    }
-
+    @GetMapping("/edit_profile")
+public String editProfile(Model model, Principal principal) {
+    if (principal == null) return "redirect:/sign_in";
+    User user = userService.findByUserName(principal.getName());
+    model.addAttribute("user", user);
+    return "edit_profile";
 }
+
+@PostMapping("/edit_profile")
+public String editProfile(User user, @RequestParam("imageFile") MultipartFile file,
+        Principal principal) throws IOException, SQLException {
+    if (principal == null) return "redirect:/sign_in";
+    User user2 = userService.findByUserName(principal.getName());
+    user2.setName(user.getName());
+    user2.setLastName(user.getLastName());
+    user2.setDateOfBirth(user.getDateOfBirth());
+    user2.setEmail(user.getEmail());
+    if (user.getPassword() != null && !user.getPassword().isBlank()) {
+        user2.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+    if (file != null && !file.isEmpty()) {
+        Image image = new Image();
+        image.setImageFile(new javax.sql.rowset.serial.SerialBlob(file.getBytes()));
+        image.setContentType(file.getContentType());
+        user2.setImage(image);
+    }
+    userService.modifyUser(user2);
+    return "redirect:/user_profile";
+}}
 
 // añadir loginerror

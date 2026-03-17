@@ -168,10 +168,11 @@
                 <div id="tripCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner rounded-3">
                         {{#carouselImages}}
-                        <div class="carousel-item {{#if @first}}active{{/if}}">
-                            <img src="{{this.url}}" class="d-block w-100" alt="Foto del viaje">
+                        <div class="carousel-item {{#active}}active{{/active}}">
+                            <img src="{{url}}" class="d-block w-100" alt="Foto del viaje">
                         </div>
                         {{/carouselImages}}
+
                     </div>
 
                     <button class="carousel-control-prev" type="button" data-bs-target="#tripCarousel"
@@ -192,16 +193,17 @@
         <section class="py-5">
             <div class="container px-5">
                 <h2 class="fw-bolder mb-4">Reseña del viaje</h2>
-                <!-- Calification -->
+                <!-- Calificación -->
                 <div class="d-flex align-items-center mb-3">
-                    {{#eachRating rating}}
+                    {{#filledStars}}
                     <i class="bi bi-star-fill text-warning me-1"></i>
-                    {{/eachRating}}
-                    {{#eachRatingEmpty rating}}
+                    {{/filledStars}}
+                    {{#emptyStars}}
                     <i class="bi bi-star text-warning me-1"></i>
-                    {{/eachRatingEmpty}}
-                    <span class="ms-2 text-muted">{{rating}} de 5 estrellas</span>
+                    {{/emptyStars}}
+                    <span class="ms-2 text-muted">{{travel.rating}} de 5 estrellas</span>
                 </div>
+
                 <!-- Comment -->
                 <p class="lead text-dark">{{comment}}</p>
             </div>

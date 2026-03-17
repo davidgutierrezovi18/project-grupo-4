@@ -45,19 +45,6 @@ public class TravelWebController {
         return "create_new_travel";
     }
 
-    /*
-    // Create travel - POST
-    @PostMapping("/travel/new")
-    public String newTravelPost(@ModelAttribute Travel travel, Principal principal) {
-        if (principal == null) {
-            return "redirect:/sign_in";
-        }
-        travel.setOwnerName(principal.getName());
-        travelService.save(travel);
-        return "redirect:/mytravels";
-    }
-        */
-
     // Create travel - POST
     @PostMapping("/travel/new")
     public String newTravelPost(@ModelAttribute Travel travel,
@@ -127,6 +114,7 @@ public class TravelWebController {
         return "redirect:/travel/" + id;
     }
 
+    /* 
     // One travel
     @GetMapping("/travel/{id}")
     public String oneTravel(@PathVariable Long id, Model model, Principal principal) {
@@ -143,6 +131,52 @@ public class TravelWebController {
                 travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
         model.addAttribute("placesList",
                 travel.getPlaces() != null ? List.of(travel.getPlaces().split(",")) : List.of());
+        return "one_travel";
+    }
+        */
+
+    @GetMapping("/travel/{id}")
+    public String oneTravel(@PathVariable Long id, Model model, Principal principal) {
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return "error404";
+        }
+        Travel travel = travelOpt.get();
+        model.addAttribute("travel", travel);
+
+        // Listas de países, ciudades y lugares
+        model.addAttribute("countriesList",
+                travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
+        model.addAttribute("citiesList",
+                travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
+        model.addAttribute("placesList",
+                travel.getPlaces() != null ? List.of(travel.getPlaces().split(",")) : List.of());
+
+        // Marcar la primera imagen del carrusel
+        List<Image> carouselImages = travel.getCarouselImages();
+        for (int i = 0; i < carouselImages.size(); i++) {
+            carouselImages.get(i).setActive(i == 0); // solo la primera es active
+        }
+        model.addAttribute("carouselImages", carouselImages);
+
+        // Estrellas para rating
+        List<Integer> filledStars = new ArrayList<>();
+        List<Integer> emptyStars = new ArrayList<>();
+
+        // Llenas
+        for (int i = 0; i < travel.getRating(); i++) {
+            filledStars.add(i);
+        }
+
+        // Vacías
+        for (int i = travel.getRating(); i < 5; i++) {
+            emptyStars.add(i);
+        }
+
+        // Se pasan al modelo
+        model.addAttribute("filledStars", filledStars);
+        model.addAttribute("emptyStars", emptyStars);
+
         return "one_travel";
     }
 

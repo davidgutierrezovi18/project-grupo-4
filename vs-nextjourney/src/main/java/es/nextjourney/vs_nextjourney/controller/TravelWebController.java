@@ -1,8 +1,6 @@
 package es.nextjourney.vs_nextjourney.controller;
 
-import java.io.IOException;
 import java.security.Principal;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,25 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.service.TravelService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class TravelWebController {
     @Autowired
     private TravelService travelService;
-
-    @ModelAttribute
-    public void addAttributes(Model model, HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
-
-        if (principal != null) {
-            model.addAttribute("logged", true);
-            model.addAttribute("userName", principal.getName());
-            model.addAttribute("admin", request.isUserInRole("ADMIN"));
-        } else {
-            model.addAttribute("logged", false);
-        }
-    }
 
     // All the travels of a specific user
     @GetMapping("/mytravels")

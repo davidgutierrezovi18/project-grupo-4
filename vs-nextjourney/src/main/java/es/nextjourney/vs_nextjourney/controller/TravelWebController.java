@@ -1,6 +1,8 @@
 package es.nextjourney.vs_nextjourney.controller;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 
@@ -29,13 +34,63 @@ public class TravelWebController {
         return "mytravels";
     }
 
-    // Create travel
+
+    // Create travel - GET
+    @GetMapping("/travel/new")
+    public String newTravelGet(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/sign_in";
+        }
+        model.addAttribute("travel", new Travel());
+        return "create_new_travel";
+    }
+
+    /*
+    // Create travel - POST
     @PostMapping("/travel/new")
-    public String newTravel(@ModelAttribute Travel travel, Principal principal) {
+    public String newTravelPost(@ModelAttribute Travel travel, Principal principal) {
         if (principal == null) {
             return "redirect:/sign_in";
         }
         travel.setOwnerName(principal.getName());
+        travelService.save(travel);
+        return "redirect:/mytravels";
+    }
+        */
+
+    // Create travel - POST
+    @PostMapping("/travel/new")
+    public String newTravelPost(@ModelAttribute Travel travel,
+            @RequestParam("coverImage") MultipartFile coverImage,
+            @RequestParam("carouselImages") MultipartFile[] carouselImages,
+            @RequestParam("itineraryUrl") MultipartFile itinerary,
+            Principal principal) throws IOException {
+        if (principal == null) {
+            return "redirect:/sign_in";
+        }
+        travel.setOwnerName(principal.getName());
+
+        // Cover image
+        if (!coverImage.isEmpty()) {
+            Image cover = new Image();
+            travel.setCoverImage(cover);
+        }
+
+        // Carrousel images
+        List<Image> images = new ArrayList<>();
+        for (MultipartFile file : carouselImages) {
+            if (!file.isEmpty()) {
+                Image img = new Image();
+                img.setTravelImage(travel);
+                images.add(img);
+            }
+        }
+        travel.setCarouselImagesUrls(images);
+
+        // Itinerary PDF
+        if (!itinerary.isEmpty()) {
+            travel.setItineraryUrl(itinerary.getOriginalFilename());
+        }
         travelService.save(travel);
         return "redirect:/mytravels";
     }
@@ -44,26 +99,26 @@ public class TravelWebController {
     @GetMapping("/travel/{id}/edit")
     public String editTravelForm(@PathVariable Long id, Model model, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()){
+        if (travelOpt.isEmpty()) {
             return "error404";
         }
         Travel travel = travelOpt.get();
-        if (!travel.getOwnerName().equals(principal.getName())){ 
+        if (!travel.getOwnerName().equals(principal.getName())) {
             return "error403";
         }
         model.addAttribute("travel", travel);
         return "edit_travel";
     }
-    
+
     // Edit travel - POST
     @PostMapping("/travel/{id}/edit")
     public String editTravelSubmit(@PathVariable Long id, @ModelAttribute Travel travel, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()){
+        if (travelOpt.isEmpty()) {
             return "error404";
         }
         Travel existingTravel = travelOpt.get();
-        if (!existingTravel.getOwnerName().equals(principal.getName())){
+        if (!existingTravel.getOwnerName().equals(principal.getName())) {
             return "error403";
         }
         travel.setId(existingTravel.getId());
@@ -76,15 +131,18 @@ public class TravelWebController {
     @GetMapping("/travel/{id}")
     public String oneTravel(@PathVariable Long id, Model model, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()){
+        if (travelOpt.isEmpty()) {
             return "error404";
         }
         Travel travel = travelOpt.get();
         model.addAttribute("travel", travel);
         // Process elements split by comas
-        model.addAttribute("countriesList", travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
-        model.addAttribute("citiesList", travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
-        model.addAttribute("placesList", travel.getDescription() != null ? List.of(travel.getDescription().split(",")) : List.of());
+        model.addAttribute("countriesList",
+                travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
+        model.addAttribute("citiesList",
+                travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
+        model.addAttribute("placesList",
+                travel.getPlaces() != null ? List.of(travel.getPlaces().split(",")) : List.of());
         return "one_travel";
     }
 
@@ -92,15 +150,15 @@ public class TravelWebController {
     @PostMapping("/travel/{id}/delete")
     public String deleteTravel(@PathVariable Long id, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()){
+        if (travelOpt.isEmpty()) {
             return "error404";
         }
         Travel travel = travelOpt.get();
-        if (!travel.getOwnerName().equals(principal.getName())){
+        if (!travel.getOwnerName().equals(principal.getName())) {
             return "error403";
         }
         travelService.deleteById(id);
         return "redirect:/mytravels";
     }
-		
+
 }

@@ -92,8 +92,6 @@ public class ReviewWebController {
 		model.addAttribute("placeId", place != null && place.getId() != null ? place.getId() : "");
 		model.addAttribute("placeName", place != null && place.getName() != null ? place.getName() : "");
 		model.addAttribute("placeType", place != null && place.getCategory() != null ? place.getCategory().name() : "");
-		model.addAttribute("placeLat", "");
-		model.addAttribute("placeLon", "");
 		model.addAttribute("reviewText", review.getReviewText() != null ? review.getReviewText() : "");
 		model.addAttribute("rating1", review.getRating() == 1);
 		model.addAttribute("rating2", review.getRating() == 2);
@@ -149,16 +147,12 @@ public class ReviewWebController {
 			@RequestParam(name = "placeId", required = false) Long placeId,
 			@RequestParam(name = "placeName", required = false) String placeName,
 			@RequestParam(name = "placeType", required = false) String placeType,
-			@RequestParam(name = "placeLat", required = false) String placeLat,
-			@RequestParam(name = "placeLon", required = false) String placeLon,
 			Model model) {
 
 		model.addAttribute("formAction", "/add-review");
 		model.addAttribute("placeId", placeId != null ? placeId : "");
 		model.addAttribute("placeName", placeName != null ? placeName : "");
 		model.addAttribute("placeType", placeType != null ? placeType : "");
-		model.addAttribute("placeLat", placeLat != null ? placeLat : "");
-		model.addAttribute("placeLon", placeLon != null ? placeLon : "");
 		model.addAttribute("reviewText", "");
 		model.addAttribute("rating1", false);
 		model.addAttribute("rating2", false);
@@ -174,8 +168,6 @@ public class ReviewWebController {
 			@RequestParam(name = "place-id", required = false) Long placeId,
 			@RequestParam(name = "place-name", required = false) String placeName,
 			@RequestParam(name = "place-type", required = false) String placeType,
-			@RequestParam(name = "place-lat", required = false) String placeLat,
-			@RequestParam(name = "place-lon", required = false) String placeLon,
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
 			@RequestParam(name = "review-text", required = false) String reviewText,
 			@RequestParam(name = "photo", required = false) MultipartFile photo) {
@@ -185,7 +177,7 @@ public class ReviewWebController {
 		}
 		User user = userOpt.get();
 
-		Optional<Place> placeOpt = resolveOrCreatePlace(placeId, placeName, placeType, placeLat, placeLon);
+		Optional<Place> placeOpt = resolveOrCreatePlace(placeId, placeName, placeType);
 		if (placeOpt.isEmpty()) {
 			return "redirect:/reviews";
 		}
@@ -236,8 +228,6 @@ public class ReviewWebController {
 			@RequestParam(name = "placeId", required = false) Long placeId,
 			@RequestParam(name = "placeName", required = false) String placeName,
 			@RequestParam(name = "placeType", required = false) String placeType,
-			@RequestParam(name = "placeLat", required = false) String placeLat,
-			@RequestParam(name = "placeLon", required = false) String placeLon,
 			Model model) {
 
 		String resolvedName = placeName != null && !placeName.isBlank() ? placeName.trim() : "Lugar sin registrar";
@@ -265,8 +255,6 @@ public class ReviewWebController {
 		model.addAttribute("reviews", List.of());
 		model.addAttribute("hasReviews", false);
 		model.addAttribute("newPlaceType", placeType != null ? placeType : "");
-		model.addAttribute("newPlaceLat", placeLat != null ? placeLat : "");
-		model.addAttribute("newPlaceLon", placeLon != null ? placeLon : "");
 		return "place_reviews";
 	}
 
@@ -352,7 +340,7 @@ public class ReviewWebController {
 		return Optional.of(review);
 	}
 
-	private Optional<Place> resolveOrCreatePlace(Long placeId, String placeName, String placeType, String placeLat, String placeLon) {
+	private Optional<Place> resolveOrCreatePlace(Long placeId, String placeName, String placeType) {
 		if (placeId != null) {
 			return placeService.findById(placeId);
 		}
@@ -371,7 +359,7 @@ public class ReviewWebController {
 		Place place = new Place();
 		place.setName(placeName.trim());
 		place.setCategory(mapCategory(placeType));
-		place.setDescription(buildGeneratedDescription(placeType, placeLat, placeLon));
+		place.setDescription(buildGeneratedDescription(placeType));
 		destinationOpt.ifPresent(place::setDestination);
 		placeService.save(place);
 		return Optional.of(place);
@@ -397,13 +385,10 @@ public class ReviewWebController {
 		return Category.Otro;
 	}
 
-	private String buildGeneratedDescription(String placeType, String placeLat, String placeLon) {
+	private String buildGeneratedDescription(String placeType) {
 		StringBuilder builder = new StringBuilder("Lugar creado automaticamente desde una reseña");
 		if (placeType != null && !placeType.isBlank()) {
 			builder.append(". Tipo: ").append(placeType.trim());
-		}
-		if (placeLat != null && !placeLat.isBlank() && placeLon != null && !placeLon.isBlank()) {
-			builder.append(". Coordenadas: ").append(placeLat.trim()).append(", ").append(placeLon.trim());
 		}
 		return builder.toString();
 	}

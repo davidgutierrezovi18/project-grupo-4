@@ -81,19 +81,24 @@ public class DestinationWebController {
 
     // PROCESAR EL GUARDADO DEL DESTINO
     @PostMapping("/add_destination")
-    public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
+        public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile, Long id) throws IOException {
         
-        // 1. Verificar si estamos EDITANDO (el destino ya tiene un ID)
+        // 1. Forzamos el ID si viene como parámetro separado (esto evita el duplicado)
+        if (id != null && id != 0) {
+            destination.setId(id);
+        }
+
+        // 2. Lógica de Edición vs Nuevo
         if (destination.getId() != null && destination.getId() != 0) {
             Optional<Destination> oldDest = destinationService.findById(destination.getId());
             if (oldDest.isPresent()) {
-                // Si el usuario NO ha subido una imagen nueva, mantenemos la que ya tenía
+                // Si no hay imagen nueva, recuperamos la que ya tenía la DB
                 if (imageFile == null || imageFile.isEmpty()) {
                     destination.setCoverImage(oldDest.get().getCoverImage());
                 }
             }
         } 
-        // 2. Si es NUEVO y no hay imagen, lanzamos error
+        // Si es nuevo y no hay imagen, error
         else if (imageFile == null || imageFile.isEmpty()) {
             model.addAttribute("imageError", true);
             model.addAttribute("destination", destination);
@@ -101,15 +106,14 @@ public class DestinationWebController {
             return "add_destination"; 
         }
 
-        // 3. Si se ha subido una imagen nueva (sea edición o nuevo), la procesamos
         try {
+            // Si hay una imagen nueva, la guardamos
             if (imageFile != null && !imageFile.isEmpty()) {
                 Image image = imageService.createImage(imageFile); 
                 destination.setCoverImage(image);
             }
             
-            // destinationService.save() es inteligente: 
-            // Si el objeto tiene ID -> Hace un UPDATE. Si no tiene ID -> Hace un INSERT.
+            // Al tener el ID correctamente seteado arriba, save() hará un UPDATE
             destinationService.save(destination);
             return "redirect:/destinations/" + destination.getId();
             

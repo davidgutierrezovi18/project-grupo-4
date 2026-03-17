@@ -34,52 +34,38 @@
                             </div>
                         </div>
                         {{/imageError}}
+
                         <form action="/add_destination" method="post" enctype="multipart/form-data">
 
-                            {{#destination}}
-                                {{#id}}<input type="hidden" name="id" value="{{id}}">{{/id}}
-                            {{/destination}}
-                            
-                        <form action="/add_destination" method="post" enctype="multipart/form-data">
-
-                            {{#destination}}
-                                {{#id}}
-                                <input type="hidden" name="id" value="{{id}}">
-                                {{/id}}
-                            {{/destination}}
+                            {{#destination.id}}
+                                <input type="hidden" name="id" value="{{destination.id}}">
+                            {{/destination.id}}
 
                             <div class="form-floating mb-3">
                                 <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre" required 
-                                    value="{{#destination}}{{name}}{{/destination}}">
+                                    value="{{#destination.name}}{{destination.name}}{{/destination.name}}">
                                 <label for="destinationName">Nombre del destino</label>
                             </div>
 
                             <div class="form-floating mb-3">
                                 <input type="text" name="country" class="form-control" id="destinationCountry" placeholder="País" required 
-                                    value="{{#destination}}{{country}}{{/destination}}">
+                                    value="{{#destination.country}}{{destination.country}}{{/destination.country}}">
                                 <label for="destinationCountry">País</label>
                             </div>
 
                             <div class="form-floating mb-3">
                                 <textarea name="description" class="form-control" id="destinationDescription" placeholder="Descripción"
-                                    style="height: 150px" required>{{#destination}}{{description}}{{/destination}}</textarea>
+                                    style="height: 150px" required>{{#destination.description}}{{destination.description}}{{/destination.description}}</textarea>
                                 <label for="destinationDescription">Descripción</label>
                             </div>
 
                             <div class="text mb-4">
-                                
-                                {{#destination}}
-                                    {{#coverImage}}
-                                        <img id="previewImage" src="/images/{{id}}" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
-                                    {{/coverImage}}
-                                    {{^coverImage}}
-                                        <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
-                                    {{/coverImage}}
-                                {{/destination}}
-                                
-                                {{^destination}}
+                                {{#destination.coverImage.id}}
+                                    <img id="previewImage" src="/images/{{destination.coverImage.id}}" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                {{/destination.coverImage.id}}
+                                {{^destination.coverImage.id}}
                                     <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
-                                {{/destination}}
+                                {{/destination.coverImage.id}}
 
                                 <div>
                                     <label for="destinationImage" class="btn btn-outline-secondary">

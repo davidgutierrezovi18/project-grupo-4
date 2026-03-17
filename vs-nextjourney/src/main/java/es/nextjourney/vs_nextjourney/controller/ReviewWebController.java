@@ -6,19 +6,15 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,19 +61,6 @@ public class ReviewWebController {
 
 	private static final Pattern NON_ALNUM_PATTERN = Pattern.compile("[^a-z0-9]");
 
-	@ModelAttribute
-	public void addAttributes(Model model, HttpServletRequest request) {
-		Principal principal = request.getUserPrincipal();
-
-		if (principal != null) {
-			model.addAttribute("logged", true);
-			model.addAttribute("userName", principal.getName());
-			model.addAttribute("admin", request.isUserInRole("ADMIN"));
-		} else {
-			model.addAttribute("logged", false);
-		}
-	}
-
 	@GetMapping("/reviews")
 	public String reviews(Model model) {
 		return "reviews";
@@ -108,7 +91,7 @@ public class ReviewWebController {
 
 	@PostMapping("/add-review")
 	public String createReview(
-			HttpSession session,
+			Principal principal,
 			@RequestParam(name = "place-id", required = false) Long placeId,
 			@RequestParam(name = "place-name", required = false) String placeName,
 			@RequestParam(name = "place-type", required = false) String placeType,
@@ -117,7 +100,7 @@ public class ReviewWebController {
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
 			@RequestParam(name = "review-text", required = false) String reviewText,
 			@RequestParam(name = "photo", required = false) MultipartFile photo) {
-		Optional<User> userOpt = getSessionUser(session);
+		Optional<User> userOpt = getAuthenticatedUser(principal);
 		if (userOpt.isEmpty()) {
 			return "redirect:/sign_in";
 		}
@@ -261,22 +244,11 @@ public class ReviewWebController {
 		return NON_ALNUM_PATTERN.matcher(noAccents).replaceAll("");
 	}
 
-	private Optional<User> getSessionUser(HttpSession session) {
-		Object userObject = session.getAttribute("currentUser");
-		if (userObject instanceof User) {
-			return Optional.of((User) userObject);
+	private Optional<User> getAuthenticatedUser(Principal principal) {
+		if (principal == null || principal.getName() == null || principal.getName().isBlank()) {
+			return Optional.empty();
 		}
-
-		Object userId = session.getAttribute("currentUserId");
-		if (userId instanceof Long) {
-			return userRepository.findById((Long) userId);
-		}
-
-		if (userId instanceof Integer) {
-			return userRepository.findById(((Integer) userId).longValue());
-		}
-
-		return Optional.empty();
+		return userRepository.findByUsername(principal.getName());
 	}
 
 	private Optional<Place> resolveOrCreatePlace(Long placeId, String placeName, String placeType, String placeLat, String placeLon) {

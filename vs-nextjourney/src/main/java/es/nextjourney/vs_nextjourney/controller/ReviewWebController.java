@@ -1,5 +1,6 @@
 package es.nextjourney.vs_nextjourney.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -107,7 +108,7 @@ public class ReviewWebController {
 			Principal principal,
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
 			@RequestParam(name = "review-text", required = false) String reviewText,
-			@RequestParam(name = "photo", required = false) MultipartFile photo) {
+			@RequestParam(name = "photo", required = false) List<MultipartFile> photos) throws IOException {
 		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
 		if (reviewOpt.isEmpty()) {
 			return "redirect:/my_reviews";
@@ -118,13 +119,13 @@ public class ReviewWebController {
 		review.setReviewText(reviewText);
 		Review savedReview = reviewService.modifyReview(review);
 
-		if (photo != null && !photo.isEmpty()) {
-			try {
-				Image image = imageService.createImage(photo);
-				image.setReview(savedReview);
-				imageService.save(image);
-			} catch (Exception exception) {
-				// Keep edited review even if image upload fails.
+		if (photos != null) {
+			for (MultipartFile photo : photos) {
+				if (!photo.isEmpty()) {
+					Image image = imageService.createImage(photo);
+					image.setReview(savedReview);
+					imageService.save(image);
+				}
 			}
 		}
 
@@ -170,7 +171,7 @@ public class ReviewWebController {
 			@RequestParam(name = "place-type", required = false) String placeType,
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
 			@RequestParam(name = "review-text", required = false) String reviewText,
-			@RequestParam(name = "photo", required = false) MultipartFile photo) {
+			@RequestParam(name = "photo", required = false) List<MultipartFile> photos) throws IOException {
 		Optional<User> userOpt = getAuthenticatedUser(principal);
 		if (userOpt.isEmpty()) {
 			return "redirect:/sign_in";
@@ -190,13 +191,13 @@ public class ReviewWebController {
 		review.setCreatedAt(LocalDate.now());
 		Review savedReview = reviewService.createReview(review);
 
-		if (photo != null && !photo.isEmpty()) {
-			try {
-				Image image = imageService.createImage(photo);
-				image.setReview(savedReview);
-				imageService.save(image);
-			} catch (Exception exception) {
-				// If the image fails, keep the review instead of aborting user flow.
+		if (photos != null) {
+			for (MultipartFile photo : photos) {
+				if (!photo.isEmpty()) {
+					Image image = imageService.createImage(photo);
+					image.setReview(savedReview);
+					imageService.save(image);
+				}
 			}
 		}
 

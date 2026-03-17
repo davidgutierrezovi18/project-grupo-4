@@ -46,6 +46,11 @@
                   <span class="badge bg-warning text-dark"><i class="bi bi-star-fill"></i> {{rating}}.0</span>
                 </div>
                 <p class="card-text text-muted">{{reviewText}}</p>
+                {{#images}}
+                <div class="mt-3">
+                  <img src="/images/{{id}}" alt="Foto de la reseña" class="img-fluid rounded" style="max-height: 220px;" />
+                </div>
+                {{/images}}
                 <div class="d-flex gap-2">
                   <a href="/my_reviews/{{id}}/edit" class="btn btn-primary btn-sm">Editar</a>
                   <form action="/my_reviews/{{id}}/delete" method="post" class="m-0">

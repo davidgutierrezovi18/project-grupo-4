@@ -67,7 +67,9 @@
 
                 <!-- Image above the description -->
                 <div class="text-center mb-4">
-                    <img src="/travel/{{id}}/cover" class="img-fluid rounded" alt="cover">
+                    {{#travel.coverImage}}
+                    <img src="/images/{{travel.coverImage.id}}" class="img-fluid rounded" alt="cover">
+                    {{/travel.coverImage}}
                 </div>
             </div>
         </section>
@@ -169,7 +171,7 @@
                     <div class="carousel-inner rounded-3">
                         {{#carouselImages}}
                         <div class="carousel-item {{#active}}active{{/active}}">
-                            <img src="{{url}}" class="d-block w-100" alt="Foto del viaje">
+                            <img src="/images/{{id}}" class="d-block w-100" alt="Foto del viaje">
                         </div>
                         {{/carouselImages}}
 

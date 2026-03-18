@@ -99,6 +99,11 @@ public class ReviewWebController {
 		model.addAttribute("rating3", review.getRating() == 3);
 		model.addAttribute("rating4", review.getRating() == 4);
 		model.addAttribute("rating5", review.getRating() == 5);
+		model.addAttribute("isEditing", true);
+		model.addAttribute("existingImages", review.getImages() != null ? review.getImages() : List.of());
+		model.addAttribute("hasExistingImages", review.getImages() != null && !review.getImages().isEmpty());
+		model.addAttribute("submitLabel", "Guardar cambios");
+		model.addAttribute("cancelUrl", "/my_reviews");
 		return "add-review";
 	}
 
@@ -108,6 +113,7 @@ public class ReviewWebController {
 			Principal principal,
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
 			@RequestParam(name = "review-text", required = false) String reviewText,
+			@RequestParam(name = "deleteImageIds", required = false) List<Long> deleteImageIds,
 			@RequestParam(name = "photo", required = false) List<MultipartFile> photos) throws IOException {
 		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
 		if (reviewOpt.isEmpty()) {
@@ -117,6 +123,11 @@ public class ReviewWebController {
 		Review review = reviewOpt.get();
 		review.setRating(rating);
 		review.setReviewText(reviewText);
+
+		if (deleteImageIds != null && review.getImages() != null) {
+			review.getImages().removeIf(image -> image.getId() != null && deleteImageIds.contains(image.getId()));
+		}
+
 		Review savedReview = reviewService.modifyReview(review);
 
 		if (photos != null) {
@@ -160,6 +171,11 @@ public class ReviewWebController {
 		model.addAttribute("rating3", false);
 		model.addAttribute("rating4", false);
 		model.addAttribute("rating5", true);
+		model.addAttribute("isEditing", false);
+		model.addAttribute("existingImages", List.of());
+		model.addAttribute("hasExistingImages", false);
+		model.addAttribute("submitLabel", "Publicar reseña");
+		model.addAttribute("cancelUrl", "/reviews");
 		return "add-review";
 	}
 

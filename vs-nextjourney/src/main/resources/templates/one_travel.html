@@ -217,25 +217,33 @@
                 <h2 class="fw-bolder">Colaboradores</h2>
                 <p class="lead fw-normal text-muted mb-5">Otros miembros de esta experiencia</p>
                 <div class="row gx-5 row-cols-1 row-cols-sm-2 row-cols-xl-4 justify-content-center">
-                    {{#userTravels}}
+                    {{#collaborators}}
                     <div class="col mb-4">
                         <div class="text-center">
-                            <h5 class="fw-bolder">{{name}}</h5>
+                            {{#image}}
+                            <img class="rounded-circle mb-4"
+                                src="/images/{{image.id}}" alt="..." style="width: 150px; height: 150px; object-fit: cover;" />
+                            {{/image}}
+                            {{^image}}
+                            <img class="rounded-circle mb-4"
+                                src="https://dummyimage.com/150x150/ced4da/6c757d&text=Avatar" alt="..." style="width: 150px; height: 150px; object-fit: cover;"  />
+                            {{/image}}
+                            <h5 class="fw-bolder">{{username}}</h5>
+                            <p class="lead text-dark">{{email}}</p>
                         </div>
                     </div>
-                    {{/userTravels}}
+                    {{/collaborators}}
 
-                    {{^userTravels}}
+                    {{^emailsColaborators}}
                     <div class="col-12 text-center">
                         <p class="text-muted">No hay colaboradores en este viaje.</p>
                     </div>
-                    {{/userTravels}}
+                    {{/emailsColaborators}}
                 </div>
             </div>
         </section>
         {{/travel}}
     </main>
-
 
     <!-- Footer-->
     {{> footer}}

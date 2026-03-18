@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
+import es.nextjourney.vs_nextjourney.model.User;
+import es.nextjourney.vs_nextjourney.repository.UserRepository;
 import es.nextjourney.vs_nextjourney.service.ImageService;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 
@@ -29,6 +31,9 @@ public class TravelWebController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // All the travels of a specific user
     @GetMapping("/mytravels")
     public String myTravels(Model model, Principal principal) {
@@ -37,7 +42,6 @@ public class TravelWebController {
         model.addAttribute("travels", travels);
         return "mytravels";
     }
-
 
     // Create travel - GET
     @GetMapping("/travel/new")
@@ -85,23 +89,8 @@ public class TravelWebController {
         travelService.save(travel);
         return "redirect:/mytravels";
     }
-/* 
-    // Edit travel - GET
-    @GetMapping("/travel/{id}/edit")
-    public String editTravelForm(@PathVariable Long id, Model model, Principal principal) {
-        Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()) {
-            return "error404";
-        }
-        Travel travel = travelOpt.get();
-        if (!travel.getOwnerName().equals(principal.getName())) {
-            return "error403";
-        }
-        model.addAttribute("travel", travel);
-        return "edit_travel";
-    }
-        */
 
+    // Edit travel - GET
     @GetMapping("/travel/{id}/edit")
     public String editTravel(@PathVariable Long id, Model model) {
         Optional<Travel> travelOpt = travelService.findById(id);
@@ -114,32 +103,37 @@ public class TravelWebController {
         // Countries
         String countriesList = travel.getCountries();
         model.addAttribute("countries", (countriesList != null && !countriesList.isEmpty())
-            ? String.join(", ", countriesList) : "");
+                ? String.join(", ", countriesList)
+                : "");
 
         // Cities
         String citiesList = travel.getCities();
-        model.addAttribute("cities", (citiesList != null && !citiesList.isEmpty()) ? String.join(", ", citiesList) : "");
+        model.addAttribute("cities",
+                (citiesList != null && !citiesList.isEmpty()) ? String.join(", ", citiesList) : "");
 
         // Places
         String placesList = travel.getPlaces();
-        model.addAttribute("places", (placesList != null && !placesList.isEmpty()) ? String.join(", ", placesList) : "");
+        model.addAttribute("places",
+                (placesList != null && !placesList.isEmpty()) ? String.join(", ", placesList) : "");
 
-        // Rating: generamos variables booleans para mostrar selected
+        // Rating
         Integer ratingObj = travel.getRating();
-        int rating = (ratingObj != null) ? ratingObj : 0;        model.addAttribute("rating1", rating == 1);
+        int rating = (ratingObj != null) ? ratingObj : 0;
+        model.addAttribute("rating1", rating == 1);
         model.addAttribute("rating2", rating == 2);
         model.addAttribute("rating3", rating == 3);
         model.addAttribute("rating4", rating == 4);
         model.addAttribute("rating5", rating == 5);
 
-        // Comentario
+        // Comments
         model.addAttribute("comment", travel.getComment() != null ? travel.getComment() : "");
 
-        // Miembros
-        String membersList = travel.getEmailsColaborators() != null ? travel.getEmailsColaborators() : "";
-        model.addAttribute("members", String.join(", ", membersList));
+        // Members
+        String membersList = travel.getEmailsColaborators();
+        model.addAttribute("members",
+                (membersList != null && !membersList.isEmpty()) ? String.join(", ", membersList) : "");
 
-        return "edit_travel"; // Tu plantilla Mustache
+        return "edit_travel";
     }
 
     // Edit travel - POST
@@ -196,8 +190,8 @@ public class TravelWebController {
         travelService.save(travel);
         return "redirect:/travel/" + id;
     }
-        
 
+    // One travel
     @GetMapping("/travel/{id}")
     public String oneTravel(@PathVariable Long id, Model model, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
@@ -207,7 +201,7 @@ public class TravelWebController {
         Travel travel = travelOpt.get();
         model.addAttribute("travel", travel);
 
-        // Listas de países, ciudades y lugares
+        // Countries, cities and places lists
         model.addAttribute("countriesList",
                 travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
         model.addAttribute("citiesList",
@@ -215,30 +209,50 @@ public class TravelWebController {
         model.addAttribute("placesList",
                 travel.getPlaces() != null ? List.of(travel.getPlaces().split(",")) : List.of());
 
-        // Marcar la primera imagen del carrusel
+        // First carousel image
         List<Image> carouselImages = travel.getCarouselImages();
         for (int i = 0; i < carouselImages.size(); i++) {
-            carouselImages.get(i).setActive(i == 0); // solo la primera es active
+            carouselImages.get(i).setActive(i == 0);
         }
         model.addAttribute("carouselImages", carouselImages);
 
-        // Estrellas para rating
+        // Star ratig
         List<Integer> filledStars = new ArrayList<>();
         List<Integer> emptyStars = new ArrayList<>();
-
-        // Llenas
+        // FIlled stars
         for (int i = 0; i < travel.getRating(); i++) {
             filledStars.add(i);
         }
-
-        // Vacías
+        // Empty stars
         for (int i = travel.getRating(); i < 5; i++) {
             emptyStars.add(i);
         }
-
-        // Se pasan al modelo
         model.addAttribute("filledStars", filledStars);
         model.addAttribute("emptyStars", emptyStars);
+
+        // Colaborators
+        /* 
+        model.addAttribute("emailsColaborators",
+                travel.getEmailsColaborators() != null ? List.of(travel.getEmailsColaborators().split(","))
+                        : List.of());
+                        */
+
+        // Get colaborator users by email
+        List<User> collaborators = new ArrayList<>();
+        String emails = travel.getEmailsColaborators();
+        if (emails != null && !emails.trim().isEmpty()) {
+            String[] emailArray = emails.split(",");
+            for (String email : emailArray) {
+                String trimmedEmail = email.trim();
+                if (!trimmedEmail.isEmpty()) {
+                    Optional<User> userOpt = userRepository.findByEmail(trimmedEmail);
+                    if (userOpt.isPresent()) {
+                        collaborators.add(userOpt.get());
+                    }
+                }
+            }
+        }
+        model.addAttribute("collaborators", collaborators);
 
         return "one_travel";
     }

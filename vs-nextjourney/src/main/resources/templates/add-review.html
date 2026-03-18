@@ -66,9 +66,34 @@
                   <div class="mb-3">
                     <label class="form-label">Fotos (opcional)</label>
                     <input id="photo" name="photo" class="form-control" type="file" accept="image/*" multiple />
+                    <div class="form-text">Puedes añadir mas fotos al editar.</div>
                   </div>
-                  <button type="submit" class="btn btn-primary">Publicar reseña</button>
-                  <a class="btn btn-outline-secondary ms-2" href="/reviews">Cancelar</a>
+
+                  {{#isEditing}}
+                  {{#hasExistingImages}}
+                  <div class="mb-3">
+                    <label class="form-label">Fotos actuales</label>
+                    <div class="row g-3">
+                      {{#existingImages}}
+                      <div class="col-md-4 col-sm-6">
+                        <div class="card h-100">
+                          <img src="/images/{{id}}" alt="Foto de reseña" class="card-img-top" style="height: 160px; object-fit: cover;" />
+                          <div class="card-body py-2">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" name="deleteImageIds" value="{{id}}" id="delete-image-{{id}}" />
+                              <label class="form-check-label" for="delete-image-{{id}}">Eliminar</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {{/existingImages}}
+                    </div>
+                  </div>
+                  {{/hasExistingImages}}
+                  {{/isEditing}}
+
+                  <button type="submit" class="btn btn-primary">{{submitLabel}}</button>
+                  <a class="btn btn-outline-secondary ms-2" href="{{cancelUrl}}">Cancelar</a>
                 </form>
               </div>
             </div>

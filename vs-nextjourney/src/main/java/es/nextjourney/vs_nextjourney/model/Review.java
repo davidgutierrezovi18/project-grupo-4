@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -26,12 +29,13 @@ public class Review {
     // Review stars
     private int rating;
 
-    // @Column(name = "review_text", columnDefinition = "TEXT")
     // Review content
+    @Lob
+    @Column(name = "review_text", columnDefinition = "TEXT")
     private String reviewText;
 
     // REVIEW IMAGES
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Image> images;
 
     // @Column(name = "created_at", nullable = false)

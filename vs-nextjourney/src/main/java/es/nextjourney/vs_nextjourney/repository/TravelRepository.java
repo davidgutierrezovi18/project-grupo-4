@@ -10,4 +10,6 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
 
     List<Travel> findByOwnerName(String ownerName);
 
+    List<Travel> findByUserTravels_Id(Long userId);
+
 }

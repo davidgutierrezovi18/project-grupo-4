@@ -45,4 +45,8 @@ public class TravelService {
         return travelRepository.findByOwnerName(ownerName);
     }
 
+    public List<Travel> findByUserId(long userId) {
+        return travelRepository.findByUserTravels_Id(userId);
+    }
+
 }

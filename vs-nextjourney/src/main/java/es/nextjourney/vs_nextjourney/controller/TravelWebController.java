@@ -18,12 +18,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
+import es.nextjourney.vs_nextjourney.model.User;
+import es.nextjourney.vs_nextjourney.repository.UserRepository;
+import es.nextjourney.vs_nextjourney.service.ImageService;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 
 @Controller
 public class TravelWebController {
     @Autowired
     private TravelService travelService;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // All the travels of a specific user
     @GetMapping("/mytravels")
@@ -34,7 +43,6 @@ public class TravelWebController {
         return "mytravels";
     }
 
-
     // Create travel - GET
     @GetMapping("/travel/new")
     public String newTravelGet(Model model, Principal principal) {
@@ -44,19 +52,6 @@ public class TravelWebController {
         model.addAttribute("travel", new Travel());
         return "create_new_travel";
     }
-
-    /*
-    // Create travel - POST
-    @PostMapping("/travel/new")
-    public String newTravelPost(@ModelAttribute Travel travel, Principal principal) {
-        if (principal == null) {
-            return "redirect:/sign_in";
-        }
-        travel.setOwnerName(principal.getName());
-        travelService.save(travel);
-        return "redirect:/mytravels";
-    }
-        */
 
     // Create travel - POST
     @PostMapping("/travel/new")
@@ -72,7 +67,7 @@ public class TravelWebController {
 
         // Cover image
         if (!coverImage.isEmpty()) {
-            Image cover = new Image();
+            Image cover = imageService.createImage(coverImage);
             travel.setCoverImage(cover);
         }
 
@@ -80,7 +75,7 @@ public class TravelWebController {
         List<Image> images = new ArrayList<>();
         for (MultipartFile file : carouselImages) {
             if (!file.isEmpty()) {
-                Image img = new Image();
+                Image img = imageService.createImage(file);
                 img.setTravelImage(travel);
                 images.add(img);
             }
@@ -97,22 +92,57 @@ public class TravelWebController {
 
     // Edit travel - GET
     @GetMapping("/travel/{id}/edit")
-    public String editTravelForm(@PathVariable Long id, Model model, Principal principal) {
+    public String editTravel(@PathVariable Long id, Model model) {
         Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()) {
-            return "error404";
+        if (travelOpt == null) {
+            return "redirect:/mytravels";
         }
         Travel travel = travelOpt.get();
-        if (!travel.getOwnerName().equals(principal.getName())) {
-            return "error403";
-        }
         model.addAttribute("travel", travel);
+
+        // Countries
+        String countriesList = travel.getCountries();
+        model.addAttribute("countries", (countriesList != null && !countriesList.isEmpty())
+                ? String.join(", ", countriesList)
+                : "");
+
+        // Cities
+        String citiesList = travel.getCities();
+        model.addAttribute("cities",
+                (citiesList != null && !citiesList.isEmpty()) ? String.join(", ", citiesList) : "");
+
+        // Places
+        String placesList = travel.getPlaces();
+        model.addAttribute("places",
+                (placesList != null && !placesList.isEmpty()) ? String.join(", ", placesList) : "");
+
+        // Rating
+        Integer ratingObj = travel.getRating();
+        int rating = (ratingObj != null) ? ratingObj : 0;
+        model.addAttribute("rating1", rating == 1);
+        model.addAttribute("rating2", rating == 2);
+        model.addAttribute("rating3", rating == 3);
+        model.addAttribute("rating4", rating == 4);
+        model.addAttribute("rating5", rating == 5);
+
+        // Comments
+        model.addAttribute("comment", travel.getComment() != null ? travel.getComment() : "");
+
+        // Members
+        String membersList = travel.getEmailsColaborators();
+        model.addAttribute("members",
+                (membersList != null && !membersList.isEmpty()) ? String.join(", ", membersList) : "");
+
         return "edit_travel";
     }
 
     // Edit travel - POST
     @PostMapping("/travel/{id}/edit")
-    public String editTravelSubmit(@PathVariable Long id, @ModelAttribute Travel travel, Principal principal) {
+    public String editTravelSubmit(@PathVariable Long id, @ModelAttribute Travel travel,
+            @RequestParam(value = "coverImageFile", required = false) MultipartFile coverImage,
+            @RequestParam(value = "carouselImageFiles", required = false) MultipartFile[] carouselImages,
+            @RequestParam(value = "itineraryFile", required = false) MultipartFile itinerary,
+            Principal principal) throws IOException {
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
             return "error404";
@@ -123,6 +153,40 @@ public class TravelWebController {
         }
         travel.setId(existingTravel.getId());
         travel.setOwnerName(existingTravel.getOwnerName());
+
+        // Update cover image if provided
+        if (coverImage != null && !coverImage.isEmpty()) {
+            Image cover = imageService.createImage(coverImage);
+            travel.setCoverImage(cover);
+        } else {
+            // Keep existing cover image
+            travel.setCoverImage(existingTravel.getCoverImage());
+        }
+
+        // Update carousel images if provided
+        if (carouselImages != null && carouselImages.length > 0) {
+            List<Image> images = new ArrayList<>();
+            for (MultipartFile file : carouselImages) {
+                if (!file.isEmpty()) {
+                    Image img = imageService.createImage(file);
+                    img.setTravelImage(travel);
+                    images.add(img);
+                }
+            }
+            travel.setCarouselImagesUrls(images);
+        } else {
+            // Keep existing carousel images
+            travel.setCarouselImagesUrls(existingTravel.getCarouselImages());
+        }
+
+        // Update itinerary if provided
+        if (itinerary != null && !itinerary.isEmpty()) {
+            travel.setItineraryUrl(itinerary.getOriginalFilename());
+        } else {
+            // Keep existing itinerary
+            travel.setItineraryUrl(existingTravel.getItineraryUrl());
+        }
+
         travelService.save(travel);
         return "redirect:/travel/" + id;
     }
@@ -136,13 +200,60 @@ public class TravelWebController {
         }
         Travel travel = travelOpt.get();
         model.addAttribute("travel", travel);
-        // Process elements split by comas
+
+        // Countries, cities and places lists
         model.addAttribute("countriesList",
                 travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
         model.addAttribute("citiesList",
                 travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
         model.addAttribute("placesList",
                 travel.getPlaces() != null ? List.of(travel.getPlaces().split(",")) : List.of());
+
+        // First carousel image
+        List<Image> carouselImages = travel.getCarouselImages();
+        for (int i = 0; i < carouselImages.size(); i++) {
+            carouselImages.get(i).setActive(i == 0);
+        }
+        model.addAttribute("carouselImages", carouselImages);
+
+        // Star ratig
+        List<Integer> filledStars = new ArrayList<>();
+        List<Integer> emptyStars = new ArrayList<>();
+        // FIlled stars
+        for (int i = 0; i < travel.getRating(); i++) {
+            filledStars.add(i);
+        }
+        // Empty stars
+        for (int i = travel.getRating(); i < 5; i++) {
+            emptyStars.add(i);
+        }
+        model.addAttribute("filledStars", filledStars);
+        model.addAttribute("emptyStars", emptyStars);
+
+        // Colaborators
+        /* 
+        model.addAttribute("emailsColaborators",
+                travel.getEmailsColaborators() != null ? List.of(travel.getEmailsColaborators().split(","))
+                        : List.of());
+                        */
+
+        // Get colaborator users by email
+        List<User> collaborators = new ArrayList<>();
+        String emails = travel.getEmailsColaborators();
+        if (emails != null && !emails.trim().isEmpty()) {
+            String[] emailArray = emails.split(",");
+            for (String email : emailArray) {
+                String trimmedEmail = email.trim();
+                if (!trimmedEmail.isEmpty()) {
+                    Optional<User> userOpt = userRepository.findByEmail(trimmedEmail);
+                    if (userOpt.isPresent()) {
+                        collaborators.add(userOpt.get());
+                    }
+                }
+            }
+        }
+        model.addAttribute("collaborators", collaborators);
+
         return "one_travel";
     }
 

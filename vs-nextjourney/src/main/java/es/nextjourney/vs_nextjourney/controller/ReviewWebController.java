@@ -1,5 +1,6 @@
 package es.nextjourney.vs_nextjourney.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -98,6 +99,11 @@ public class ReviewWebController {
 		model.addAttribute("rating3", review.getRating() == 3);
 		model.addAttribute("rating4", review.getRating() == 4);
 		model.addAttribute("rating5", review.getRating() == 5);
+		model.addAttribute("isEditing", true);
+		model.addAttribute("existingImages", review.getImages() != null ? review.getImages() : List.of());
+		model.addAttribute("hasExistingImages", review.getImages() != null && !review.getImages().isEmpty());
+		model.addAttribute("submitLabel", "Guardar cambios");
+		model.addAttribute("cancelUrl", "/my_reviews");
 		return "add-review";
 	}
 
@@ -107,7 +113,8 @@ public class ReviewWebController {
 			Principal principal,
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
 			@RequestParam(name = "review-text", required = false) String reviewText,
-			@RequestParam(name = "photo", required = false) MultipartFile photo) {
+			@RequestParam(name = "deleteImageIds", required = false) List<Long> deleteImageIds,
+			@RequestParam(name = "photo", required = false) List<MultipartFile> photos) throws IOException {
 		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
 		if (reviewOpt.isEmpty()) {
 			return "redirect:/my_reviews";
@@ -116,15 +123,20 @@ public class ReviewWebController {
 		Review review = reviewOpt.get();
 		review.setRating(rating);
 		review.setReviewText(reviewText);
+
+		if (deleteImageIds != null && review.getImages() != null) {
+			review.getImages().removeIf(image -> image.getId() != null && deleteImageIds.contains(image.getId()));
+		}
+
 		Review savedReview = reviewService.modifyReview(review);
 
-		if (photo != null && !photo.isEmpty()) {
-			try {
-				Image image = imageService.createImage(photo);
-				image.setReview(savedReview);
-				imageService.save(image);
-			} catch (Exception exception) {
-				// Keep edited review even if image upload fails.
+		if (photos != null) {
+			for (MultipartFile photo : photos) {
+				if (!photo.isEmpty()) {
+					Image image = imageService.createImage(photo);
+					image.setReview(savedReview);
+					imageService.save(image);
+				}
 			}
 		}
 
@@ -159,6 +171,11 @@ public class ReviewWebController {
 		model.addAttribute("rating3", false);
 		model.addAttribute("rating4", false);
 		model.addAttribute("rating5", true);
+		model.addAttribute("isEditing", false);
+		model.addAttribute("existingImages", List.of());
+		model.addAttribute("hasExistingImages", false);
+		model.addAttribute("submitLabel", "Publicar reseña");
+		model.addAttribute("cancelUrl", "/reviews");
 		return "add-review";
 	}
 
@@ -170,7 +187,7 @@ public class ReviewWebController {
 			@RequestParam(name = "place-type", required = false) String placeType,
 			@RequestParam(name = "rating", defaultValue = "5") int rating,
 			@RequestParam(name = "review-text", required = false) String reviewText,
-			@RequestParam(name = "photo", required = false) MultipartFile photo) {
+			@RequestParam(name = "photo", required = false) List<MultipartFile> photos) throws IOException {
 		Optional<User> userOpt = getAuthenticatedUser(principal);
 		if (userOpt.isEmpty()) {
 			return "redirect:/sign_in";
@@ -190,13 +207,13 @@ public class ReviewWebController {
 		review.setCreatedAt(LocalDate.now());
 		Review savedReview = reviewService.createReview(review);
 
-		if (photo != null && !photo.isEmpty()) {
-			try {
-				Image image = imageService.createImage(photo);
-				image.setReview(savedReview);
-				imageService.save(image);
-			} catch (Exception exception) {
-				// If the image fails, keep the review instead of aborting user flow.
+		if (photos != null) {
+			for (MultipartFile photo : photos) {
+				if (!photo.isEmpty()) {
+					Image image = imageService.createImage(photo);
+					image.setReview(savedReview);
+					imageService.save(image);
+				}
 			}
 		}
 

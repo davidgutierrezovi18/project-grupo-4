@@ -67,7 +67,9 @@
 
                 <!-- Image above the description -->
                 <div class="text-center mb-4">
-                    <img src="/travel/{{id}}/cover" class="img-fluid rounded" alt="cover">
+                    {{#travel.coverImage}}
+                    <img src="/images/{{travel.coverImage.id}}" class="img-fluid rounded" alt="cover">
+                    {{/travel.coverImage}}
                 </div>
             </div>
         </section>
@@ -168,10 +170,11 @@
                 <div id="tripCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner rounded-3">
                         {{#carouselImages}}
-                        <div class="carousel-item {{#if @first}}active{{/if}}">
-                            <img src="{{this.url}}" class="d-block w-100" alt="Foto del viaje">
+                        <div class="carousel-item {{#active}}active{{/active}}">
+                            <img src="/images/{{id}}" class="d-block w-100" alt="Foto del viaje">
                         </div>
                         {{/carouselImages}}
+
                     </div>
 
                     <button class="carousel-control-prev" type="button" data-bs-target="#tripCarousel"
@@ -192,16 +195,17 @@
         <section class="py-5">
             <div class="container px-5">
                 <h2 class="fw-bolder mb-4">Reseña del viaje</h2>
-                <!-- Calification -->
+                <!-- Calificación -->
                 <div class="d-flex align-items-center mb-3">
-                    {{#eachRating rating}}
+                    {{#filledStars}}
                     <i class="bi bi-star-fill text-warning me-1"></i>
-                    {{/eachRating}}
-                    {{#eachRatingEmpty rating}}
+                    {{/filledStars}}
+                    {{#emptyStars}}
                     <i class="bi bi-star text-warning me-1"></i>
-                    {{/eachRatingEmpty}}
-                    <span class="ms-2 text-muted">{{rating}} de 5 estrellas</span>
+                    {{/emptyStars}}
+                    <span class="ms-2 text-muted">{{travel.rating}} de 5 estrellas</span>
                 </div>
+
                 <!-- Comment -->
                 <p class="lead text-dark">{{comment}}</p>
             </div>
@@ -213,25 +217,33 @@
                 <h2 class="fw-bolder">Colaboradores</h2>
                 <p class="lead fw-normal text-muted mb-5">Otros miembros de esta experiencia</p>
                 <div class="row gx-5 row-cols-1 row-cols-sm-2 row-cols-xl-4 justify-content-center">
-                    {{#userTravels}}
+                    {{#collaborators}}
                     <div class="col mb-4">
                         <div class="text-center">
-                            <h5 class="fw-bolder">{{name}}</h5>
+                            {{#image}}
+                            <img class="rounded-circle mb-4"
+                                src="/images/{{image.id}}" alt="..." style="width: 150px; height: 150px; object-fit: cover;" />
+                            {{/image}}
+                            {{^image}}
+                            <img class="rounded-circle mb-4"
+                                src="https://dummyimage.com/150x150/ced4da/6c757d&text=Avatar" alt="..." style="width: 150px; height: 150px; object-fit: cover;"  />
+                            {{/image}}
+                            <h5 class="fw-bolder">{{username}}</h5>
+                            <p class="lead text-dark">{{email}}</p>
                         </div>
                     </div>
-                    {{/userTravels}}
+                    {{/collaborators}}
 
-                    {{^userTravels}}
+                    {{^emailsColaborators}}
                     <div class="col-12 text-center">
                         <p class="text-muted">No hay colaboradores en este viaje.</p>
                     </div>
-                    {{/userTravels}}
+                    {{/emailsColaborators}}
                 </div>
             </div>
         </section>
         {{/travel}}
     </main>
-
 
     <!-- Footer-->
     {{> footer}}

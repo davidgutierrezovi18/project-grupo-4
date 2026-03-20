@@ -30,6 +30,10 @@ public class Image {
     @ManyToOne
     private Review review;
 
+    private boolean active;
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
     // CONSTRUCTORS
     public Image() {

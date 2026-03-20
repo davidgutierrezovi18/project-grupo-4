@@ -79,57 +79,58 @@ public class DestinationWebController {
         return "redirect:/destinations";
     }
 
-    // PROCESAR EL GUARDADO DEL DESTINO
+    // --- CREACIÓN ---
     @PostMapping("/add_destination")
-    public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile, Long id) throws IOException {
-        
-        // 1. Forzamos el ID si viene como parámetro separado (evita duplicados)
-        if (id != null && id != 0) {
-            destination.setId(id);
-        }
-
-        // 2. Lógica de Edición vs Nuevo
-        if (destination.getId() != null && destination.getId() != 0) {
-            Optional<Destination> oldDestOpt = destinationService.findById(destination.getId());
-            
-            if (oldDestOpt.isPresent()) {
-                Destination oldDest = oldDestOpt.get();
-
-                // A. Si no hay imagen nueva, recuperamos la que ya tenía
-                if (imageFile == null || imageFile.isEmpty()) {
-                    destination.setCoverImage(oldDest.getCoverImage());
-                }
-
-                // B. ¡FUNDAMENTAL! Recuperamos las listas para que no se borren
-                // Al hacer esto, JPA entiende que quieres mantener los hijos existentes
-                destination.setPlaces(oldDest.getPlaces());
-                destination.setReviews(oldDest.getReviews());
-            }
-        } 
-        // 3. Si es nuevo y no hay imagen, lanzamos el error
-        else if (imageFile == null || imageFile.isEmpty()) {
-            model.addAttribute("imageError", true);
-            model.addAttribute("destination", destination);
-            model.addAttribute("isEditing", false);
-            return "add_destination"; 
+    public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
+        // Si no hay imagen en un registro nuevo, error
+        if (imageFile == null || imageFile.isEmpty()) {
+            return showError(model, destination, false);
         }
 
         try {
-            // 4. Procesar imagen nueva si el usuario la seleccionó
-            if (imageFile != null && !imageFile.isEmpty()) {
-                Image image = imageService.createImage(imageFile); 
-                destination.setCoverImage(image);
-            }
-            
-            // 5. Guardar: Al tener el ID y las listas recuperadas, hace un UPDATE limpio
+            Image image = imageService.createImage(imageFile);
+            destination.setCoverImage(image);
             destinationService.save(destination);
             return "redirect:/destinations";
-            
         } catch (Exception e) {
-            model.addAttribute("imageError", true);
-            model.addAttribute("destination", destination);
-            return "add_destination";
+            return showError(model, destination, false);
         }
+    }
+
+    // --- EDICIÓN ---
+    @PostMapping("/destinations/{id}/edit")
+    public String editDestinationProcess(Model model, Destination destination, MultipartFile imageFile, @PathVariable long id) throws IOException {
+        Optional<Destination> oldDestOpt = destinationService.findById(id);
+        
+        if (oldDestOpt.isPresent()) {
+            Destination oldDest = oldDestOpt.get();
+            
+            // Mantenemos la identidad y las listas
+            destination.setId(id);
+            destination.setPlaces(oldDest.getPlaces());
+            destination.setReviews(oldDest.getReviews());
+
+            // Lógica de imagen: si no hay nueva, mantenemos la vieja
+            if (imageFile == null || imageFile.isEmpty()) {
+                destination.setCoverImage(oldDest.getCoverImage());
+            } else {
+                Image image = imageService.createImage(imageFile);
+                destination.setCoverImage(image);
+            }
+
+            destinationService.save(destination);
+            return "redirect:/destinations";
+        }
+        
+        return "redirect:/destinations";
+    }
+
+    // Método auxiliar para no repetir código de error
+    private String showError(Model model, Destination destination, boolean isEditing) {
+        model.addAttribute("imageError", true);
+        model.addAttribute("destination", destination);
+        model.addAttribute("isEditing", isEditing);
+        return "add_destination";
     }
 
     // BORRAR DESTINO 

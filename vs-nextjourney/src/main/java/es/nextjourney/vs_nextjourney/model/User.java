@@ -69,6 +69,9 @@ public class User {
     // User password
     private String password;
 
+    // Account status controlled by administrators
+    private boolean blocked;
+
     // PROFILE IMAGE
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
@@ -137,6 +140,17 @@ public class User {
         return password;
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public boolean isAdminUser() {
+        if (roles == null) {
+            return false;
+        }
+        return roles.stream().anyMatch(role -> "ADMIN".equals(role) || "ROLE_ADMIN".equals(role));
+    }
+
     public Image getImage() {
         return image;
     }
@@ -175,6 +189,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 
     public void setImage(Image image) {

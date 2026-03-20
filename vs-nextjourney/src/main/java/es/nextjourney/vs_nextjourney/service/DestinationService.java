@@ -1,7 +1,9 @@
 package es.nextjourney.vs_nextjourney.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class DestinationService {
     public Optional<Destination> findById(long id) {
         return repository.findById(id);
     }
+
+    
 
     public List<Destination> findAll() {
         return repository.findAll();
@@ -38,5 +42,14 @@ public class DestinationService {
     // Método adicional útil para cuando necesites buscar varios por una lista de IDs
     public List<Destination> findAllById(List<Long> ids) {
         return repository.findAllById(ids);
+    }
+
+    // Get random destinations
+    public List<Destination> getRandomDestinations(int limit) {
+        List<Destination> allDestinations = repository.findAll();
+        Collections.shuffle(allDestinations);
+        return allDestinations.stream()
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }

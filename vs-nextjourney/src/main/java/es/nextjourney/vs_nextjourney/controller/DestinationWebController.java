@@ -84,7 +84,7 @@ public class DestinationWebController {
     public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
         // Si no hay imagen en un registro nuevo, error
         if (imageFile == null || imageFile.isEmpty()) {
-            return showError(model, destination, false);
+            return showErrorDestination(model, destination, false);
         }
 
         try {
@@ -93,7 +93,7 @@ public class DestinationWebController {
             destinationService.save(destination);
             return "redirect:/destinations";
         } catch (Exception e) {
-            return showError(model, destination, false);
+            return showErrorDestination(model, destination, false);
         }
     }
 
@@ -126,7 +126,7 @@ public class DestinationWebController {
     }
 
     // Método auxiliar para no repetir código de error
-    private String showError(Model model, Destination destination, boolean isEditing) {
+    private String showErrorDestination(Model model, Destination destination, boolean isEditing) {
         model.addAttribute("imageError", true);
         model.addAttribute("destination", destination);
         model.addAttribute("isEditing", isEditing);
@@ -140,29 +140,89 @@ public class DestinationWebController {
         return "redirect:/destinations";
     }
 
-    // MOSTRAR FORMULARIO PARA AÑADIR LUGAR
+
+    // MOSTRAR FORMULARIO PARA AÑADIR NUEVO LUGAR
     @GetMapping("/destinations/{id}/add_place")
     public String showAddPlaceForm(Model model, @PathVariable long id) {
         Optional<Destination> destination = destinationService.findById(id);
         if (destination.isPresent()) {
             model.addAttribute("destination", destination.get());
-            return "add_place"; // Este es el nombre de tu archivo .html
-        } else {
-            return "redirect:/destinations";
+            model.addAttribute("place", new Place()); // Objeto vacío para el formulario
+            model.addAttribute("isEditing", false);
+            return "add_place";
         }
+        return "redirect:/destinations";
     }
 
-    // PROCESAR EL GUARDADO DEL LUGAR
+    // PROCESAR EL GUARDADO DE UN NUEVO LUGAR
     @PostMapping("/destinations/{id}/add_place")
-    public String savePlace(@PathVariable long id, Place place) {
-        Optional<Destination> destination = destinationService.findById(id);
-        if (destination.isPresent()) {
-            // MUY IMPORTANTE: Asociamos el lugar con su destino
-            place.setDestination(destination.get());
-            placeService.save(place); 
+    public String savePlace(Model model, @PathVariable long id, Place place) {
+        Optional<Destination> destinationOpt = destinationService.findById(id);
+        
+        if (destinationOpt.isPresent()) {
+            // Forzamos que sea un registro nuevo para evitar errores de persistencia
+            place.setId(null); 
+            place.setDestination(destinationOpt.get());
             
+            // Validación básica de nombre
+            if (place.getName() == null || place.getName().isBlank()) {
+                return showErrorPlace(model, destinationOpt.get(), place, false);
+            }
+
+            placeService.save(place); 
             return "redirect:/destinations/" + id;
         }
         return "redirect:/destinations";
+    }
+
+    // MOSTRAR FORMULARIO DE EDICIÓN DE LUGAR
+    @GetMapping("/destinations/{destId}/places/{placeId}/edit")
+    public String editPlaceForm(Model model, @PathVariable long destId, @PathVariable long placeId) {
+        Optional<Destination> destination = destinationService.findById(destId);
+        Optional<Place> place = placeService.findById(placeId);
+
+        if (destination.isPresent() && place.isPresent()) {
+            model.addAttribute("destination", destination.get());
+            model.addAttribute("place", place.get()); // Pasamos el lugar existente
+            model.addAttribute("isEditing", true);
+            return "add_place";
+        }
+        return "redirect:/destinations/" + destId;
+    }
+
+    // PROCESAR LA EDICIÓN DEL LUGAR
+    @PostMapping("/destinations/{destId}/places/{placeId}/edit")
+    public String editPlaceProcess(Model model, @PathVariable long destId, @PathVariable long placeId, Place place) {
+        Optional<Destination> destination = destinationService.findById(destId);
+        Optional<Place> oldPlaceOpt = placeService.findById(placeId);
+
+        if (destination.isPresent() && oldPlaceOpt.isPresent()) {
+            try {
+                // Mantenemos la identidad (ID) y vinculamos al destino padre
+                place.setId(placeId); 
+                place.setDestination(destination.get()); 
+                
+                placeService.save(place);
+                return "redirect:/destinations/" + destId;
+                
+            } catch (Exception e) {
+                return showErrorPlace(model, destination.get(), place, true);
+            }
+        }
+        return "redirect:/destinations";
+    }
+
+    // BORRAR LUGAR
+    @PostMapping("/destinations/{destId}/places/{placeId}/delete")
+    public String deletePlace(@PathVariable long destId, @PathVariable long placeId) {
+        placeService.delete(placeId);
+        return "redirect:/destinations/" + destId; 
+    }
+    // Método auxiliar para lugares
+    private String showErrorPlace(Model model, Destination destination, Place place, boolean isEditing) {
+    model.addAttribute("destination", destination);
+    model.addAttribute("place", place);
+    model.addAttribute("isEditing", isEditing);
+    return "add_place";
     }
 }

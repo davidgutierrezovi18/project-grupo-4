@@ -23,7 +23,6 @@ import es.nextjourney.vs_nextjourney.repository.ReviewRepository;
 import es.nextjourney.vs_nextjourney.service.DestinationService;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 import es.nextjourney.vs_nextjourney.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class WebController {
@@ -85,9 +84,9 @@ public class WebController {
 	}
 
 	@GetMapping("/admin_users")
-	public String adminUsers(Model model, HttpServletRequest request,
+	public String adminUsers(Model model, Principal principal,
 			@RequestParam(name = "msg", required = false) String msg) {
-		requireAdmin(request);
+		requireAdmin(principal);
 
 		List<User> users = userService.findAll();
 		long totalUsers = users.size();
@@ -107,9 +106,9 @@ public class WebController {
 	}
 
 	@GetMapping("/admin_users/{id}")
-	public String adminUserDetail(@PathVariable long id, Model model, HttpServletRequest request,
+	public String adminUserDetail(@PathVariable long id, Model model, Principal principal,
 			@RequestParam(name = "msg", required = false) String msg) {
-		requireAdmin(request);
+		requireAdmin(principal);
 		User user = userService.findById(id);
 		List<Review> userReviews = reviewRepository.findByUserReviewsIdOrderByCreatedAtDesc(id);
 		List<Travel> userTravels = travelService.findByUserId(id);
@@ -133,11 +132,11 @@ public class WebController {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestParam(value = "isAdmin", defaultValue = "false") boolean isAdmin,
 			@RequestParam(value = "blocked", defaultValue = "false") boolean blocked,
-			HttpServletRequest request) {
-		requireAdmin(request);
+			Principal principal) {
+		requireAdmin(principal);
 		User user = userService.findById(id);
 
-		String currentUser = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "";
+		String currentUser = principal != null ? principal.getName() : "";
 		boolean isSelf = user.getUsername() != null && user.getUsername().equals(currentUser);
 		if (isSelf) {
 			isAdmin = true;
@@ -158,11 +157,11 @@ public class WebController {
 	}
 
 	@PostMapping("/admin_users/{id}/toggle-admin")
-	public String adminToggleRole(@PathVariable long id, HttpServletRequest request) {
-		requireAdmin(request);
+	public String adminToggleRole(@PathVariable long id, Principal principal) {
+		requireAdmin(principal);
 		User user = userService.findById(id);
 
-		String currentUser = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "";
+		String currentUser = principal != null ? principal.getName() : "";
 		if (user.getUsername() != null && user.getUsername().equals(currentUser)) {
 			return "redirect:/admin_users?msg=No puedes quitarte el rol ADMIN";
 		}
@@ -177,11 +176,11 @@ public class WebController {
 	}
 
 	@PostMapping("/admin_users/{id}/toggle-block")
-	public String adminToggleBlock(@PathVariable long id, HttpServletRequest request) {
-		requireAdmin(request);
+	public String adminToggleBlock(@PathVariable long id, Principal principal) {
+		requireAdmin(principal);
 		User user = userService.findById(id);
 
-		String currentUser = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : "";
+		String currentUser = principal != null ? principal.getName() : "";
 		if (user.getUsername() != null && user.getUsername().equals(currentUser)) {
 			return "redirect:/admin_users?msg=No puedes bloquear tu propia cuenta";
 		}
@@ -206,8 +205,13 @@ public class WebController {
 		return "error500";
 	}
 
-	private void requireAdmin(HttpServletRequest request) {
-		if (!request.isUserInRole("ADMIN")) {
+	private void requireAdmin(Principal principal) {
+		if (principal == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso solo para administradores");
+		}
+
+		User currentUser = userService.findByUserName(principal.getName());
+		if (!currentUser.isAdminUser()) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acceso solo para administradores");
 		}
 	}

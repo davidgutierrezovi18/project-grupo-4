@@ -35,11 +35,9 @@
                         </div>
                         {{/imageError}}
 
-                        <form action="/add_destination" method="post" enctype="multipart/form-data">
-
-                            {{#destination.id}}
-                                <input type="hidden" name="id" value="{{destination.id}}">
-                            {{/destination.id}}
+                        <form action="{{#isEditing}}/destinations/{{destination.id}}/edit{{/isEditing}}{{^isEditing}}/add_destination{{/isEditing}}" 
+                            method="post" 
+                            enctype="multipart/form-data">
 
                             <div class="form-floating mb-3">
                                 <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre" required 

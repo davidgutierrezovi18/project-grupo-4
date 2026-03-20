@@ -76,33 +76,68 @@ public class LoginWebController {
     }
 
     @GetMapping("/edit_profile")
-public String editProfile(Model model, Principal principal) {
-    if (principal == null) return "redirect:/sign_in";
-    User user = userService.findByUserName(principal.getName());
-    model.addAttribute("user", user);
-    return "edit_profile";
-}
+    public String editProfile(Model model, Principal principal) {
+        if (principal == null)
+            return "redirect:/sign_in";
+        User user = userService.findByUserName(principal.getName());
+        model.addAttribute("user", user);
+        return "edit_profile";
+    }
 
-@PostMapping("/edit_profile")
-public String editProfile(User user, @RequestParam("imageFile") MultipartFile file,
-        Principal principal) throws IOException, SQLException {
-    if (principal == null) return "redirect:/sign_in";
-    User user2 = userService.findByUserName(principal.getName());
-    user2.setName(user.getName());
-    user2.setLastName(user.getLastName());
-    user2.setDateOfBirth(user.getDateOfBirth());
-    user2.setEmail(user.getEmail());
-    if (user.getPassword() != null && !user.getPassword().isBlank()) {
-        user2.setPassword(passwordEncoder.encode(user.getPassword()));
+    @PostMapping("/edit_profile")
+    public String editProfile(
+            User user,
+            @RequestParam(required = false) String currentPassword,
+            @RequestParam(required = false) String newPassword,
+            @RequestParam(required = false) String confirmPassword,
+            @RequestParam("imageFile") MultipartFile file,
+            Principal principal,
+            Model model) throws IOException, SQLException {
+
+        if (principal == null)
+            return "redirect:/sign_in";
+
+        User user2 = userService.findByUserName(principal.getName());
+        user2.setName(user.getName());
+        user2.setLastName(user.getLastName());
+        user2.setDateOfBirth(user.getDateOfBirth());
+        user2.setEmail(user.getEmail());
+        user2.setUsername(user.getUsername());
+
+        if (file != null && !file.isEmpty()) {
+            Image image = new Image();
+            image.setImageFile(new javax.sql.rowset.serial.SerialBlob(file.getBytes()));
+            image.setContentType(file.getContentType());
+            user2.setImage(image);
+        }
+
+        if (currentPassword != null && !currentPassword.isBlank()) {
+
+            if (!passwordEncoder.matches(currentPassword, user2.getPassword())) {
+                model.addAttribute("user", user2);
+                model.addAttribute("error", "Contraseña incorrecta");
+                return "edit_profile";
+            }
+
+            if (newPassword == null || newPassword.isBlank()) {
+                model.addAttribute("user", user2);
+                model.addAttribute("error", "Debes introducir una nueva contraseña");
+                return "edit_profile";
+            }
+
+            if (!newPassword.equals(confirmPassword)) {
+                model.addAttribute("user", user2);
+                model.addAttribute("error", "Las contraseñas no coinciden");
+                return "edit_profile";
+            }
+
+            user2.setPassword(passwordEncoder.encode(newPassword));
+        }
+
+        userService.modifyUser(user2);
+
+        return "redirect:/user_profile";
     }
-    if (file != null && !file.isEmpty()) {
-        Image image = new Image();
-        image.setImageFile(new javax.sql.rowset.serial.SerialBlob(file.getBytes()));
-        image.setContentType(file.getContentType());
-        user2.setImage(image);
-    }
-    userService.modifyUser(user2);
-    return "redirect:/user_profile";
-}}
+}
 
 // añadir loginerror

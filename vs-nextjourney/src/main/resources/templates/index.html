@@ -43,61 +43,35 @@
                             nuestros usuarios.</p>
                     </div>
                 </div>
+                {{#random_reviews}}
                 <div class="row gx-5">
                     <div class="col-lg-4 mb-5">
                         <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/ced4da/6c757d&text=Par%C3%ADs"
-                                alt="París" />
+                            
+                            <!--Cover image-->
+                            {{#destination.coverImage}}
+                            <img src="/images/{{destination.coverImage.id}}" class="img-fluid rounded" alt="cover">
+                            {{/destination.coverImage}}
+                            
+                            {{^ destination.coverImage}}
+                            <img src="https://dummyimage.com/600x350/6c757d/343a40&text=Imagen no disponible" class="img-fluid rounded" alt="cover">
+                            {{/destination.coverImage}}
+                            
+                            <!--Name and description-->
                             <div class="card-body p-4">
-                                <h5 class="card-title mb-2">París, Francia</h5>
-                                <p class="card-text mb-2">Museos, arquitectura y gastronomía reconocida mundialmente.
-                                </p>
-                                <div class="small text-muted mb-2">Valoración: <i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-half text-warning"></i> 4.8</div>
-                                <a class="btn btn-outline-primary" href="/one_destination">Ver detalles</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/adb5bd/495057&text=Mallorca"
-                                alt="Mallorca" />
-                            <div class="card-body p-4">
-                                <h5 class="card-title mb-2">Mallorca, España</h5>
-                                <p class="card-text mb-2">Playas, calas y rutas por la sierra para desconectar.</p>
-                                <div class="small text-muted mb-2">Valoración: <i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i class="bi bi-star text-muted"></i>
-                                    4.6</div>
-                                <a class="btn btn-outline-primary" href="/one_destination">Ver detalles</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-5">
-                        <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/6c757d/343a40&text=Tokio"
-                                alt="Tokio" />
-                            <div class="card-body p-4">
-                                <h5 class="card-title mb-2">Tokio, Japón</h5>
-                                <p class="card-text mb-2">Contraste entre tradición y vanguardia, con una escena
-                                    gastronómica única.</p>
-                                <div class="small text-muted mb-2">Valoración: <i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i><i
-                                        class="bi bi-star-fill text-warning"></i> 4.9</div>
+                                <h5 class="card-title mb-2">{{name}}</h5>
+                                <p class="card-text mb-2">{{description}}</p>
                                 <a class="btn btn-outline-primary" href="/one_destination">Ver detalles</a>
                             </div>
                         </div>
                     </div>
                 </div>
+                {{/random_reviews}}
+
+                <!--If there are not destinations created-->
+                {{^random_reviews}}
+                    <p class="card-text mb-2">No hay destinos recomendados disponibles.</p>
+                {{/random_reviews}}
             </div>
         </section>
 
@@ -111,6 +85,8 @@
                         </p>
                     </div>
                 </div>
+
+                {{#recent_reviews}}
                 <div class="row gx-5">
                     <div class="col-lg-6 mb-4">
                         <div class="d-flex">
@@ -138,6 +114,7 @@
                         </div>
                     </div>
                 </div>
+                {{/recent_reviews}}
             </div>
         </section>
 

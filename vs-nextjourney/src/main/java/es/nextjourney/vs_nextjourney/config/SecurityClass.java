@@ -45,7 +45,7 @@ public class SecurityClass {
                 ).permitAll()
                 
                 
-                .requestMatchers("/admin/**", "/admin_users").hasRole("ADMIN")
+                .requestMatchers("/admin/**", "/admin_users", "/admin_users/**").hasRole("ADMIN")
                 
                
                 .requestMatchers(
@@ -94,6 +94,7 @@ public class SecurityClass {
                 return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
                     .password(user.getPassword())
                     .authorities(authorities)
+                    .accountLocked(user.isBlocked())
                     .build();
             })
             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));

@@ -22,6 +22,11 @@
                 </div>
                 <form class="row g-3 needs-validation" action="/edit_profile" method="post"
                     enctype="multipart/form-data" novalidate>
+                    {{#error}}
+                    <div class="alert alert-danger text-center">
+                        {{error}}
+                    </div>
+                    {{/error}}
 
                     <div class="row justify-content-center">
                         <div class="col-lg-8">
@@ -78,21 +83,34 @@
                                 <label for="username">Usuario</label>
                             </div>
 
-                            <!-- Optional Password (hidden for view only) -->
-                            <div class="form-floating mb-3">
-
-                                <input type="password" class="form-control" id="inputPassword4" minlength="8"
-                                    maxlength="30" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$"
-                                    title="Debe tener al menos 8 caracteres, incluir letras, números y símbolos"
-                                    value="" name="password" required>
-
-                                <label for="inputPassword4" class="form-label">Contraseña</label>
+                            <!-- Change Password -->
+                            <div class="text-center mb-3">
+                                <button type="button" class="btn btn-warning" onclick="togglePasswordChange()">
+                                    Cambiar contraseña
+                                </button>
                             </div>
-                            <div class="form-floating mb-3">
+                            <div id="passwordSection" style="display:none;">
 
-                                <input type="password" class="form-control" id="inputPassword4Confirm" value="" 
-                                    required>
-                                <label for="inputPassword4Confirm" class="form-label">Confirma la contraseña</label>
+                                <!-- Contraseña actual -->
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" name="currentPassword"
+                                        placeholder="Contraseña actual" required>
+                                    <label>Contraseña actual</label>
+                                </div>
+
+                                <!-- Nueva contraseña -->
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" name="newPassword" minlength="8"
+                                        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$" required>
+                                    <label>Nueva contraseña</label>
+                                </div>
+
+                                <!-- Confirmación -->
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control" name="confirmPassword" required>
+                                    <label>Confirmar nueva contraseña</label>
+                                </div>
+
                             </div>
 
                             <!-- Buttons -->
@@ -120,6 +138,25 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
     <script src="js/profile-preview.js"></script>
+    <script>
+        function togglePasswordChange() {
+            const section = document.getElementById("passwordSection");
+            section.style.display = section.style.display === "none" ? "block" : "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            const newPassword = document.getElementById("newPassword");
+            const confirmPassword = document.getElementById("confirmPassword");
+
+            form.addEventListener("submit", function (event) {
+                if (newPassword.value !== confirmPassword.value) {
+                    event.preventDefault();
+                    alert("Las nuevas contraseñas no coinciden");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

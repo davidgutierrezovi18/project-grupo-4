@@ -230,13 +230,6 @@ public class TravelWebController {
         model.addAttribute("filledStars", filledStars);
         model.addAttribute("emptyStars", emptyStars);
 
-        // Colaborators
-        /* 
-        model.addAttribute("emailsColaborators",
-                travel.getEmailsColaborators() != null ? List.of(travel.getEmailsColaborators().split(","))
-                        : List.of());
-                        */
-
         // Get colaborator users by email
         List<User> collaborators = new ArrayList<>();
         String emails = travel.getEmailsColaborators();

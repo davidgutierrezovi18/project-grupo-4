@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+{{> header}}
+
+<body class="d-flex flex-column h-100">
+  <main class="flex-shrink-0">
+    {{> admin_nav_bar}}
+
+    <header class="bg-dark py-4">
+      <div class="container px-5">
+        <h1 class="h3 text-white mb-1">Gestion avanzada de usuario</h1>
+        <p class="text-white-50 mb-0">Puedes editar datos, rol, estado y revisar actividad</p>
+      </div>
+    </header>
+
+    <section class="py-5">
+      <div class="container px-5">
+        {{#msg}}
+        <div class="alert alert-info" role="alert">{{msg}}</div>
+        {{/msg}}
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h5 mb-0">Usuario #{{user.id}} - {{user.username}}</h2>
+          <a class="btn btn-outline-secondary btn-sm" href="/admin_users">Volver al listado</a>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+          <div class="card-header">Editar usuario</div>
+          <div class="card-body">
+            <form method="post" action="/admin_users/{{user.id}}/save">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Nombre</label>
+                  <input class="form-control" name="name" value="{{user.name}}" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Apellidos</label>
+                  <input class="form-control" name="lastName" value="{{user.lastName}}" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" name="email" value="{{user.email}}" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Nueva contrasena (opcional)</label>
+                  <input type="password" class="form-control" name="newPassword" placeholder="Solo si quieres cambiarla" />
+                </div>
+                <div class="col-md-6 d-flex align-items-end gap-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="isAdmin" id="isAdmin" {{#user.adminUser}}checked{{/user.adminUser}} />
+                    <label class="form-check-label" for="isAdmin">Rol ADMIN</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="blocked" id="blocked" {{#user.blocked}}checked{{/user.blocked}} />
+                    <label class="form-check-label" for="blocked">Usuario bloqueado</label>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Resenas del usuario</span>
+                <span class="badge text-bg-secondary">{{reviewsCount}}</span>
+              </div>
+              <div class="card-body">
+                {{#hasReviews}}
+                <ul class="list-group list-group-flush">
+                  {{#reviews}}
+                  <li class="list-group-item px-0">
+                    <div class="fw-semibold">{{createdAt}} - {{rating}}/5</div>
+                    <div class="small text-muted">{{reviewText}}</div>
+                  </li>
+                  {{/reviews}}
+                </ul>
+                {{/hasReviews}}
+                {{^hasReviews}}
+                <p class="text-muted mb-0">Este usuario no tiene resenas.</p>
+                {{/hasReviews}}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Viajes del usuario</span>
+                <span class="badge text-bg-secondary">{{travelsCount}}</span>
+              </div>
+              <div class="card-body">
+                {{#hasTravels}}
+                <ul class="list-group list-group-flush">
+                  {{#travels}}
+                  <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                    <div>
+                      <div class="fw-semibold">{{title}}</div>
+                      <div class="small text-muted">{{startDate}} - {{endDate}}</div>
+                    </div>
+                    <a class="btn btn-outline-primary btn-sm" href="/travel/{{id}}">Ver</a>
+                  </li>
+                  {{/travels}}
+                </ul>
+                {{/hasTravels}}
+                {{^hasTravels}}
+                <p class="text-muted mb-0">Este usuario no tiene viajes.</p>
+                {{/hasTravels}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {{> footer}}
+</body>
+
+</html>

@@ -26,7 +26,11 @@
 
 
                     <form class="row g-3" action="\register" method="post" enctype="multipart/form-data">
-
+                        {{#error}}
+                        <div class="alert alert-danger text-center">
+                            {{error}}
+                        </div>
+                        {{/error}}
                         <div class="text-center mb-4">
                             <!-- User Avatar -->
                             <img id="previewImage" src="https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar"

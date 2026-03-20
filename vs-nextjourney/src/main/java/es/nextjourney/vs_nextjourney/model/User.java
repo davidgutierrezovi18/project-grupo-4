@@ -16,6 +16,10 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity(name = "UsersTable")
 public class User {
@@ -42,9 +46,8 @@ public class User {
     // User lastname
     private String lastName;
 
-    // @Column(name = "username", length = 15, unique = true, nullable = false)
-    // @Size(min = 4 ,max = 15, message = "Debes introducir un nombre de usuario
-    // válido (entre 4 y 15 caracteres)")
+    @Column(name = "username", length = 15, unique = true, nullable = false)
+    @Size(min = 4 ,max = 15, message = "Debes introducir un nombre de usuario válido (entre 4 y 15 caracteres)")
     // User username
     private String username;
 
@@ -52,8 +55,8 @@ public class User {
     // User date birth
     private LocalDate dateOfBirth;
 
-    // @Column(name = "email", length = 50, nullable = false, unique = true)
-    // @Email(message = "Debes introducir un correo electrónico válido")
+    @Column(name = "email", length = 50, nullable = false, unique = true)
+    @Email(message = "Debes introducir un correo electrónico válido")
     // @Size(max = 50, message = "El correo electrónico no puede tener más de 50
     // caracteres")
     // User email

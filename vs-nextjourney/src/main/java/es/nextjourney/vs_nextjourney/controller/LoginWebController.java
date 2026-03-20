@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +32,9 @@ public class LoginWebController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @GetMapping("/sign_in") // quitar de webcontroler
     public String signIn(Principal principal) {
         if (principal != null) {
@@ -47,7 +55,17 @@ public class LoginWebController {
     }
 
     @PostMapping("/register")
-    public String newUser(User user, @RequestParam("imageFile") MultipartFile file) throws IOException, SQLException {
+    public String newUser(User user, @RequestParam("imageFile") MultipartFile file, Model model)
+            throws IOException, SQLException {
+
+        if (userService.usernameExists(user.getUsername())) {
+            model.addAttribute("error", "El nombre de usuario ya existe");
+            return "register";
+        }
+        if (userService.emailExists(user.getEmail())) {
+            model.addAttribute("error", "El correo electrónico ya está en uso");
+            return "register";
+        }
         user.setRoles(Arrays.asList("USER"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (file != null && !file.isEmpty()) {
@@ -94,10 +112,23 @@ public class LoginWebController {
             Principal principal,
             Model model) throws IOException, SQLException {
 
-        if (principal == null)
+        if (principal == null) {
             return "redirect:/sign_in";
+        }
 
         User user2 = userService.findByUserName(principal.getName());
+
+        if (!user2.getUsername().equals(user.getUsername()) && userService.usernameExists(user.getUsername())) {
+            model.addAttribute("user", user2);
+            model.addAttribute("error", "Ese nombre de usuario ya existe");
+            return "edit_profile";
+        }
+        if (!user2.getEmail().equals(user.getEmail()) && userService.emailExists(user.getEmail())) {
+            model.addAttribute("user", user2);
+            model.addAttribute("error", "Ese correo electrónico ya está en uso");
+            return "edit_profile";
+        }
+
         user2.setName(user.getName());
         user2.setLastName(user.getLastName());
         user2.setDateOfBirth(user.getDateOfBirth());
@@ -135,9 +166,14 @@ public class LoginWebController {
         }
 
         userService.modifyUser(user2);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user2.getUsername());
+        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
+            userDetails,
+            userDetails.getPassword(),
+            userDetails.getAuthorities()
+            );
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
 
         return "redirect:/user_profile";
     }
 }
-
-// añadir loginerror

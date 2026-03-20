@@ -52,4 +52,12 @@ public class UserService{
 		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 	}
 
+	public boolean usernameExists(String username) {
+    return userRepository.existsByUsername(username);
+}
+
+	public boolean emailExists(String email) {
+	return userRepository.existsByEmail(email);
+
+	}
 }

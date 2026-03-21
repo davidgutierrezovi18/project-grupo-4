@@ -21,6 +21,7 @@ import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.model.User;
 import es.nextjourney.vs_nextjourney.repository.ReviewRepository;
 import es.nextjourney.vs_nextjourney.service.DestinationService;
+import es.nextjourney.vs_nextjourney.service.ReviewService;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 import es.nextjourney.vs_nextjourney.service.UserService;
 
@@ -29,6 +30,9 @@ public class WebController {
 
     @Autowired
     private DestinationService destinationService;
+
+    @Autowired
+    private ReviewService reviewService;
 
 	private final UserService userService;
 	private final TravelService travelService;
@@ -43,27 +47,14 @@ public class WebController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@GetMapping("/")
-	public String index() {
-		return "index";
-	}
-
-
-	// All the travels of a specific user
-    @GetMapping("/mytravels")
-    public String myTravels(Model model, Principal principal) {
-        String username = principal.getName();
-        List<Travel> travels = travelService.findByOwnerName(username);
-        model.addAttribute("travels", travels);
-        return "mytravels";
-    }
-
-	@GetMapping("/index")
+	@GetMapping({"/", "/index"})
 	public String home(Model model) {
 		List<Destination> randomDestinations = destinationService.getRandomDestinations(3);
 		model.addAttribute("random_destinations", randomDestinations);
-		List<Review> betterReviews = reviewRepository.getBetterReviews(3);
+
+		List<Review> betterReviews = reviewService.getBetterReviews(3);
 		model.addAttribute("better_reviews", betterReviews);
+
 		return "index";
 	}
 

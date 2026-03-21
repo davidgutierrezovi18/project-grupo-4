@@ -43,7 +43,7 @@
                             nuestros usuarios.</p>
                     </div>
                 </div>
-                {{#random_reviews}}
+                {{#better_reviews}}
                 <div class="row gx-5">
                     <div class="col-lg-4 mb-5">
                         <div class="card h-100 shadow border-0">
@@ -54,7 +54,7 @@
                             {{/destination.coverImage}}
                             
                             {{^ destination.coverImage}}
-                            <img src="https://dummyimage.com/600x350/6c757d/343a40&text=Imagen no disponible" class="img-fluid rounded" alt="cover">
+                            <img src="https://dummyimage.com/300x175/6c757d/343a40&text=Imagen no disponible" class="img-fluid rounded" alt="cover">
                             {{/destination.coverImage}}
                             
                             <!--Name and description-->
@@ -66,12 +66,12 @@
                         </div>
                     </div>
                 </div>
-                {{/random_reviews}}
+                {{/better_reviews}}
 
                 <!--If there are not destinations created-->
-                {{^random_reviews}}
+                {{^better_reviews}}
                     <p class="card-text mb-2">No hay destinos recomendados disponibles.</p>
-                {{/random_reviews}}
+                {{/better_reviews}}
             </div>
         </section>
 
@@ -80,41 +80,37 @@
             <div class="container px-5 my-5">
                 <div class="row gx-5 justify-content-center">
                     <div class="col-lg-8 col-xl-6 text-center">
-                        <h2 class="fw-bolder">Reseñas recientes</h2>
+                        <h2 class="fw-bolder">Reseñas destadas</h2>
                         <p class="lead fw-normal text-muted mb-4">Opiniones breves de viajeros sobre sus experiencias.
                         </p>
                     </div>
                 </div>
 
-                {{#recent_reviews}}
+                {{#better_reviews}}
                 <div class="row gx-5">
                     <div class="col-lg-6 mb-4">
                         <div class="d-flex">
-                            <img class="rounded-circle me-3" src="https://dummyimage.com/64x64/ced4da/6c757d"
+                            <!--Profile image-->
+                            {{#image}}
+                            <img class="rounded-circle me-3" src="/images/{{image.id}}"
                                 alt="Avatar" width="64" height="64" style="object-fit: cover;" />
-                            <div>
-                                <div class="fw-bold">María López</div>
-                                <div class="small text-muted mb-2"><i class="bi bi-star-fill text-warning"></i> 5.0 ·
-                                    París</div>
-                                <div>Los museos y la gastronomía nos encantaron. Ideal para una escapada romántica.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 mb-4">
-                        <div class="d-flex">
-                            <img class="rounded-circle me-3" src="https://dummyimage.com/64x64/adb5bd/495057"
+                            {{/image}}
+                            {{^image}}
+                            <img class="rounded-circle me-3" src="https://dummyimage.com/64x64/ced4da/6c757d&text=Avatar"
                                 alt="Avatar" width="64" height="64" style="object-fit: cover;" />
+                            {{/image}}
+                            
                             <div>
-                                <div class="fw-bold">Luis Martínez</div>
-                                <div class="small text-muted mb-2"><i class="bi bi-star-fill text-warning"></i> 4.5 ·
-                                    Mallorca</div>
-                                <div>Playas cristalinas, buen clima y excelente oferta gastronómica local.</div>
+                                <!--Profile name-->
+                                <div class="fw-bold">{{user.username}}</div>
+                                <!--Review rating and destination-->
+                                <div class="small text-muted mb-2"><i class="bi bi-star-fill text-warning"></i> {{rating}}</div>
+                                <div>{{reviewText}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                {{/recent_reviews}}
+                {{/better_reviews}}
             </div>
         </section>
 

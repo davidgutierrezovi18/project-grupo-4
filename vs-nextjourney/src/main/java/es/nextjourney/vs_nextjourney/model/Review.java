@@ -53,6 +53,7 @@ public class Review {
     // Places relationship
     @ManyToOne()
     private Place place;
+    
 
 
     //CONSTRUCTORS

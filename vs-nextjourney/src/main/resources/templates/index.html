@@ -43,35 +43,36 @@
                             nuestros usuarios.</p>
                     </div>
                 </div>
-                {{#better_reviews}}
+
                 <div class="row gx-5">
+                    {{#random_destinations}}
                     <div class="col-lg-4 mb-5">
                         <div class="card h-100 shadow border-0">
                             
                             <!--Cover image-->
-                            {{#destination.coverImage}}
-                            <img src="/images/{{destination.coverImage.id}}" class="img-fluid rounded" alt="cover">
-                            {{/destination.coverImage}}
+                            {{#coverImage}}
+                            <img src="/images/{{coverImage.id}}" class="img-fluid rounded" alt="cover">
+                            {{/coverImage}}
                             
-                            {{^ destination.coverImage}}
+                            {{^coverImage}}
                             <img src="https://dummyimage.com/300x175/6c757d/343a40&text=Imagen no disponible" class="img-fluid rounded" alt="cover">
-                            {{/destination.coverImage}}
+                            {{/coverImage}}
                             
                             <!--Name and description-->
                             <div class="card-body p-4">
                                 <h5 class="card-title mb-2">{{name}}</h5>
                                 <p class="card-text mb-2">{{description}}</p>
-                                <a class="btn btn-outline-primary" href="/one_destination">Ver detalles</a>
+                                <a class="btn btn-outline-primary" href="/destinations/{{id}}">Ver detalles</a>
                             </div>
                         </div>
                     </div>
+                    {{/random_destinations}}
                 </div>
-                {{/better_reviews}}
 
                 <!--If there are not destinations created-->
-                {{^better_reviews}}
+                {{^random_destinations}}
                     <p class="card-text mb-2">No hay destinos recomendados disponibles.</p>
-                {{/better_reviews}}
+                {{/random_destinations}}
             </div>
         </section>
 
@@ -86,19 +87,19 @@
                     </div>
                 </div>
 
-                {{#better_reviews}}
                 <div class="row gx-5">
+                    {{#better_reviews}}
                     <div class="col-lg-6 mb-4">
                         <div class="d-flex">
                             <!--Profile image-->
-                            {{#image}}
-                            <img class="rounded-circle me-3" src="/images/{{image.id}}"
+                            {{#user.image}}
+                            <img class="rounded-circle me-3" src="/images/{{user.image.id}}"
                                 alt="Avatar" width="64" height="64" style="object-fit: cover;" />
-                            {{/image}}
-                            {{^image}}
+                            {{/user.image}}
+                            {{^user.image}}
                             <img class="rounded-circle me-3" src="https://dummyimage.com/64x64/ced4da/6c757d&text=Avatar"
                                 alt="Avatar" width="64" height="64" style="object-fit: cover;" />
-                            {{/image}}
+                            {{/user.image}}
                             
                             <div>
                                 <!--Profile name-->
@@ -109,7 +110,13 @@
                             </div>
                         </div>
                     </div>
+                    {{/better_reviews}}
                 </div>
+                
+
+                <!--If there are not reviews published-->
+                {{^better_reviews}}
+                    <p class="card-text mb-2">No hay reseñas disponibles.</p>
                 {{/better_reviews}}
             </div>
         </section>

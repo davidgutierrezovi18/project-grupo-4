@@ -46,6 +46,7 @@
                                     Más información
                                 </a>
 
+                                {{#isAdmin}}
                                 <div class="d-flex gap-1">
                                     <a href="/destinations/{{id}}/edit" class="btn btn-outline-secondary btn-sm" title="Editar">
                                         <i class="bi bi-pencil-square"></i>
@@ -58,6 +59,7 @@
                                         </button>
                                     </form>
                                 </div>
+                                {{/isAdmin}}
                             </div>
                         </div></div> </div>
                     {{/destinations}}

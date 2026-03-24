@@ -29,11 +29,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
 	private List<String> roles;
-
-    
 
     // @Column(name = "name", length = 15, nullable = false)
     // @Size(min = 1 ,max = 15, message = "Debes introducir un nombre de usuario

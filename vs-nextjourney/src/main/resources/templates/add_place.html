@@ -40,6 +40,13 @@
                                 <label for="placeName">Nombre del lugar</label>
                             </div>
 
+                            <!-- Descripción del Lugar -->
+                            <div class="form-floating mb-3">
+                                <textarea name="description" class="form-control" id="placeDescription" placeholder="Descripción"
+                                    style="height: 150px" required>{{#place.description}}{{place.description}}{{/place.description}}</textarea>
+                                <label for="placeDescription">Descripción</label>
+                            </div>
+
                             <!-- Categoría del Lugar (Selector dinámico) -->
                             <div class="form-floating mb-3">
                                 <select name="category" class="form-select" id="placeCategory" required>
@@ -52,13 +59,6 @@
                                     <option value="Otro" {{#place.category}}{{#Otro}}selected{{/Otro}}{{/place.category}}>Otro</option>
                                 </select>
                                 <label for="placeCategory">Categoría</label>
-                            </div>
-
-                            <!-- Descripción del Lugar -->
-                            <div class="form-floating mb-3">
-                                <textarea name="description" class="form-control" id="placeDescription" placeholder="Descripción"
-                                    style="height: 150px" required>{{#place.description}}{{place.description}}{{/place.description}}</textarea>
-                                <label for="placeDescription">Descripción</label>
                             </div>
 
                             <!-- Botones de Acción -->

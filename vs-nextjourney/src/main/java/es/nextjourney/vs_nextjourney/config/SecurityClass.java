@@ -34,7 +34,14 @@ public class SecurityClass {
                 .frameOptions(frame -> frame.sameOrigin())) 
             
             .authorizeHttpRequests(auth -> auth
+
+                .requestMatchers("/admin/**", "/admin_users", "/admin_users/**","/destinations/*/places/*/edit","/destinations/*/edit","/destinations/*/delete","/destinations/*/places/*/delete").hasRole("ADMIN")
                 
+                .requestMatchers(
+                    "/mytravels", "/travel/**", "/user_profile/**","/add_place","/add_destinstion","/add_place/**","/destinations/*/add_place","/add_destination/**",
+                    "/my_reviews", "/add-review", "/add-review/**"
+                ).authenticated()
+
                 .requestMatchers(
                     "/", "/index",
                     "/destinations", "/destinations/**", "/one_destination",
@@ -45,13 +52,10 @@ public class SecurityClass {
                 ).permitAll()
                 
                 
-                .requestMatchers("/admin/**", "/admin_users", "/admin_users/**").hasRole("ADMIN")
+                
                 
                
-                .requestMatchers(
-                    "/mytravels", "/travel/**", "/user_profile/**","/add_place","/add_destinstion","/add_place/**","/add_destination/**",
-                    "/my_reviews", "/add-review", "/add-review/**"
-                ).authenticated()
+                
                 
                 .anyRequest().permitAll()
             )

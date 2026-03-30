@@ -14,8 +14,6 @@ import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 @Entity
 public class Travel {
 
@@ -25,7 +23,7 @@ public class Travel {
     private Long id;
 
     //@Column(name = "owner_id", nullable = false)
-    // ownerName
+    // OwnerName
     private String ownerName;
 
     //@Column(name = "name", nullable = false)
@@ -107,7 +105,7 @@ public class Travel {
     }
 
 
-    //GETTERS Y SETTERS
+    //GETTERS AND SETTERS
 
     public Long getId() {
         return id;

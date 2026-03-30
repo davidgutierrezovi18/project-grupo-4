@@ -107,7 +107,7 @@ public class User {
         }
     }
     
-    //GETTERS Y SETTERS
+    //GETTERS AND SETTERS
     public List<String> getRoles() {
 		return roles;
 	}

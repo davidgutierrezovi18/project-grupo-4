@@ -21,7 +21,7 @@ public class VsNextjourneyApplication {
 
 	@Bean
 	CommandLineRunner createDefaultAdmin(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-		// TEMPORAL: eliminar este bloque cuando el admin por defecto ya exista en BD.
+		// TEMPORALY: delete this block when the default admin already exists in the database
 		return args -> {
 			if (userRepository.findByUsername("admin").isPresent()) {
 				return;

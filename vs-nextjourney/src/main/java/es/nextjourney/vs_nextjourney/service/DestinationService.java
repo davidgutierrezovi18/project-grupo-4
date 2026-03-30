@@ -21,8 +21,6 @@ public class DestinationService {
         return repository.findById(id);
     }
 
-    
-
     public List<Destination> findAll() {
         return repository.findAll();
     }
@@ -39,12 +37,12 @@ public class DestinationService {
         repository.deleteById(id);
     }
     
-    // Método adicional útil para cuando necesites buscar varios por una lista de IDs
+    // Aditional method for searching multiple destinations by a list of IDs
     public List<Destination> findAllById(List<Long> ids) {
         return repository.findAllById(ids);
     }
 
-    // Get random destinations
+    // Method for getting random destinations
     public List<Destination> getRandomDestinations(int limit) {
         List<Destination> allDestinations = repository.findAll();
         Collections.shuffle(allDestinations);

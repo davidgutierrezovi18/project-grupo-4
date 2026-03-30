@@ -72,7 +72,7 @@ public class Destination {
         }
     }
 
-    // GETTERS Y SETTERS
+    // GETTERS AND SETTERS
 
     public Long getId() {
         return id;

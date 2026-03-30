@@ -43,7 +43,7 @@ public class Image {
         this.imageFile = imageFile;
     }
 
-    // GETTERS Y SETTERS
+    // GETTERS AND SETTERS
     public Long getId() {
         return id;
     }

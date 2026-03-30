@@ -5,8 +5,6 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 
-//import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -72,7 +70,7 @@ public class Place {
         }
     }
 
-    // GETTERS Y SETTERS
+    // GETTERS AND SETTERS
 
     public Long getId() {
         return id;

@@ -8,7 +8,7 @@
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
 
-        <!-- Navigation-->
+        <!-- Navigation bar-->
         {{> nav_bar}}
 
         <!-- User Profile Section -->
@@ -37,7 +37,7 @@
                                     src="{{#user.image}}/images/{{user.image.id}}{{/user.image}}{{^user.image}}https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar{{/user.image}}"
                                     class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
 
-                                <!-- Input para cambiar foto -->
+                                <!-- Input for changing the profile image -->
                                 <div>
                                     <label for="profileImage" class="btn btn-outline-secondary">
                                         Cambiar foto de perfil
@@ -50,8 +50,6 @@
                                     Formatos permitidos: JPG, PNG
                                 </small>
                             </div>
-
-
 
                             <!-- Full Name -->
                             <div class="form-floating mb-3">
@@ -69,8 +67,6 @@
                                 </div>
                                 <label for="inputEmail4" class="form-label">Correo electrónico</label>
                             </div>
-
-
 
                             <!-- Username -->
                             <div class="form-floating mb-3">
@@ -91,21 +87,21 @@
                             </div>
                             <div id="passwordSection" style="display:none;">
 
-                                <!-- Contraseña actual -->
+                                <!-- Actual password -->
                                 <div class="form-floating mb-3">
                                     <input type="password" class="form-control" name="currentPassword"
                                         placeholder="Contraseña actual" required>
                                     <label>Contraseña actual</label>
                                 </div>
 
-                                <!-- Nueva contraseña -->
+                                <!-- New password -->
                                 <div class="form-floating mb-3">
                                     <input type="password" class="form-control" name="newPassword" minlength="8"
                                         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$" required>
                                     <label>Nueva contraseña</label>
                                 </div>
 
-                                <!-- Confirmación -->
+                                <!-- Confirmation -->
                                 <div class="form-floating mb-3">
                                     <input type="password" class="form-control" name="confirmPassword" required>
                                     <label>Confirmar nueva contraseña</label>

@@ -10,7 +10,7 @@
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
 
-        <!-- Navigation-->
+        <!-- Navigation bar-->
         {{#adminView}}
         {{> admin_nav_bar}}
         {{/adminView}}
@@ -71,7 +71,7 @@
                                 <label for="username">Usuario</label>
                             </div>
 
-                            <!-- Edit / Delete Profile + My Travels / My Reviews Buttons -->
+                            <!-- Edit/Delete Profile + My Travels/My Reviews Buttons -->
                             {{#adminView}}
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                 <a href="/admin_users/{{user.id}}" class="btn btn-outline-secondary btn-lg">Volver a gestionar</a>

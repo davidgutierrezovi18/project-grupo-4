@@ -45,7 +45,7 @@ public class LoginWebController {
     }
 
     //Login error
-    @GetMapping("/loginerror") // TODO: create loginerror page
+    @GetMapping("/loginerror")
     public String loginerror() {
         return "login_error";
     }

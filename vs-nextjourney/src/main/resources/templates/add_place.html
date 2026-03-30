@@ -33,21 +33,21 @@
                             <input type="hidden" name="id" value="{{place.id}}">
                             {{/isEditing}}
 
-                            <!-- Nombre del Lugar -->
+                            <!-- Place name -->
                             <div class="form-floating mb-3">
                                 <input type="text" name="name" class="form-control" id="placeName" placeholder="Nombre" required 
                                     value="{{#place.name}}{{place.name}}{{/place.name}}">
                                 <label for="placeName">Nombre del lugar</label>
                             </div>
 
-                            <!-- Descripción del Lugar -->
+                            <!-- Place description -->
                             <div class="form-floating mb-3">
                                 <textarea name="description" class="form-control" id="placeDescription" placeholder="Descripción"
                                     style="height: 150px" required>{{#place.description}}{{place.description}}{{/place.description}}</textarea>
                                 <label for="placeDescription">Descripción</label>
                             </div>
 
-                            <!-- Categoría del Lugar (Selector dinámico) -->
+                            <!-- Place category (dynamic selector) -->
                             <div class="form-floating mb-3">
                                 <select name="category" class="form-select" id="placeCategory" required>
                                     <option value="" disabled {{^place.category}}selected{{/place.category}}>Selecciona una categoría...</option>
@@ -61,7 +61,7 @@
                                 <label for="placeCategory">Categoría</label>
                             </div>
 
-                            <!-- Botones de Acción -->
+                            <!-- Action buttoms -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                 <a href="/destinations/{{destination.id}}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
                                 

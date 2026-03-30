@@ -77,7 +77,7 @@ public class User {
     private Image image;
 
     // TRAVELS
-    @ManyToMany(mappedBy = "userTravels")//
+    @ManyToMany(mappedBy = "userTravels")
     private List<Travel> travels;
 
     // REVIEWS

@@ -14,6 +14,8 @@ import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
 public class Travel {
 

@@ -35,7 +35,8 @@ public class LoginWebController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @GetMapping("/sign_in") // quitar de webcontroler
+    //Sign-in
+    @GetMapping("/sign_in") 
     public String signIn(Principal principal) {
         if (principal != null) {
             return "redirect:/user_profile";
@@ -43,17 +44,20 @@ public class LoginWebController {
         return "sign_in";
     }
 
-    @GetMapping("/loginerror") // hacer pagina loginerror
+    //Login error
+    @GetMapping("/loginerror") // TODO: create loginerror page
     public String loginerror() {
         return "login_error";
     }
 
-    @GetMapping("/register") // quitar de webcontroler
+    //Register (create account) - GET
+    @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("user", new User());
         return "register";
     }
 
+    //Register (create account) - POST
     @PostMapping("/register")
     public String newUser(User user, @RequestParam("imageFile") MultipartFile file, Model model)
             throws IOException, SQLException {
@@ -80,6 +84,7 @@ public class LoginWebController {
         return "redirect:/sign_in";
     }
 
+    // User profile
     @GetMapping("/user_profile")
     public String profile(Model model, Principal principal) {
         if (principal == null) {
@@ -93,6 +98,7 @@ public class LoginWebController {
         return "user_profile";
     }
 
+    // Edit profile - GET
     @GetMapping("/edit_profile")
     public String editProfile(Model model, Principal principal) {
         if (principal == null)
@@ -102,6 +108,7 @@ public class LoginWebController {
         return "edit_profile";
     }
 
+    // Edit profile - POST
     @PostMapping("/edit_profile")
     public String editProfile(
             User user,

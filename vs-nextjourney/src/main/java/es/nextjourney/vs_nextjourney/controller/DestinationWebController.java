@@ -35,7 +35,7 @@ public class DestinationWebController {
     @Autowired
         private PlaceService placeService;
 
-    // LISTAR TODOS LOS DESTINOS
+    // All the destinations
     @GetMapping("/destinations")
     public String showDestinations(Model model,HttpSession session) {
         model.addAttribute("destinations", destinationService.findAll());
@@ -47,7 +47,7 @@ public class DestinationWebController {
         return "destinations";
     }
 
-    // VER UN DESTINO DETALLADO (Y SUS LUGARES)
+    // One destination with its places
     @GetMapping("/destinations/{id}")
     public String showDestination(Model model, @PathVariable long id) {
         Optional<Destination> destination = destinationService.findById(id);
@@ -60,26 +60,14 @@ public class DestinationWebController {
         }
     }
 
-    // MOSTRAR FORMULARIO DE NUEVO DESTINO
+    // Create destination - GET
     @GetMapping("/add_destination")
     public String newDestination(Model model) {
         model.addAttribute("isEditing", false);
         return "add_destination";
     }
 
-    // MOSTRAR FORMULARIO DE EDICIÓN
-    @GetMapping("/destinations/{id}/edit")
-    public String editDestination(Model model, @PathVariable long id) {
-        Optional<Destination> destination = destinationService.findById(id);
-        if (destination.isPresent()) {
-            model.addAttribute("destination", destination.get());
-            model.addAttribute("isEditing", true); // Esto sirve para cambiar el título en el HTML
-            return "add_destination";
-        }
-        return "redirect:/destinations";
-    }
-
-    // --- CREACIÓN ---
+    // Create destination - POST
     @PostMapping("/add_destination")
     public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
         // Si no hay imagen en un registro nuevo, error
@@ -97,7 +85,19 @@ public class DestinationWebController {
         }
     }
 
-    // --- EDICIÓN ---
+    // Edit destination - GET
+    @GetMapping("/destinations/{id}/edit")
+    public String editDestination(Model model, @PathVariable long id) {
+        Optional<Destination> destination = destinationService.findById(id);
+        if (destination.isPresent()) {
+            model.addAttribute("destination", destination.get());
+            model.addAttribute("isEditing", true); // Esto sirve para cambiar el título en el HTML
+            return "add_destination";
+        }
+        return "redirect:/destinations";
+    }
+
+    // Edit destination - POST
     @PostMapping("/destinations/{id}/edit")
     public String editDestinationProcess(Model model, Destination destination, MultipartFile imageFile, @PathVariable long id) throws IOException {
         Optional<Destination> oldDestOpt = destinationService.findById(id);
@@ -125,7 +125,7 @@ public class DestinationWebController {
         return "redirect:/destinations";
     }
 
-    // Método auxiliar para no repetir código de error
+    // Auxiliar method for not repeating error code
     private String showErrorDestination(Model model, Destination destination, boolean isEditing) {
         model.addAttribute("imageError", true);
         model.addAttribute("destination", destination);
@@ -133,15 +133,14 @@ public class DestinationWebController {
         return "add_destination";
     }
 
-    // BORRAR DESTINO 
+    // Delete destination 
     @PostMapping("/destinations/{id}/delete")
     public String deleteDestination(@PathVariable long id) {
         destinationService.delete(id);
         return "redirect:/destinations";
     }
 
-
-    // MOSTRAR FORMULARIO PARA AÑADIR NUEVO LUGAR
+    // Add place to destination - GET
     @GetMapping("/destinations/{id}/add_place")
     public String showAddPlaceForm(Model model, @PathVariable long id) {
         Optional<Destination> destination = destinationService.findById(id);
@@ -154,7 +153,7 @@ public class DestinationWebController {
         return "redirect:/destinations";
     }
 
-    // PROCESAR EL GUARDADO DE UN NUEVO LUGAR
+    // Add place to destination - POST
     @PostMapping("/destinations/{id}/add_place")
     public String savePlace(Model model, @PathVariable long id, Place place) {
         Optional<Destination> destinationOpt = destinationService.findById(id);
@@ -175,7 +174,7 @@ public class DestinationWebController {
         return "redirect:/destinations";
     }
 
-    // MOSTRAR FORMULARIO DE EDICIÓN DE LUGAR
+    // Edit a place of a destination - GET
     @GetMapping("/destinations/{destId}/places/{placeId}/edit")
     public String editPlaceForm(Model model, @PathVariable long destId, @PathVariable long placeId) {
         Optional<Destination> destination = destinationService.findById(destId);
@@ -190,7 +189,7 @@ public class DestinationWebController {
         return "redirect:/destinations/" + destId;
     }
 
-    // PROCESAR LA EDICIÓN DEL LUGAR
+    // Edit a place of a destination - POST
     @PostMapping("/destinations/{destId}/places/{placeId}/edit")
     public String editPlaceProcess(Model model, @PathVariable long destId, @PathVariable long placeId, Place place) {
         Optional<Destination> destination = destinationService.findById(destId);
@@ -212,13 +211,13 @@ public class DestinationWebController {
         return "redirect:/destinations";
     }
 
-    // BORRAR LUGAR
+    // Delete place of a destination
     @PostMapping("/destinations/{destId}/places/{placeId}/delete")
     public String deletePlace(@PathVariable long destId, @PathVariable long placeId) {
         placeService.delete(placeId);
         return "redirect:/destinations/" + destId; 
     }
-    // Método auxiliar para lugares
+    // Aux method for places
     private String showErrorPlace(Model model, Destination destination, Place place, boolean isEditing) {
     model.addAttribute("destination", destination);
     model.addAttribute("place", place);

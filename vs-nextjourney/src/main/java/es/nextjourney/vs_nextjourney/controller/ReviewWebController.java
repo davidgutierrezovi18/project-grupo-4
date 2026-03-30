@@ -62,11 +62,13 @@ public class ReviewWebController {
 
 	private static final Pattern NON_ALNUM_PATTERN = Pattern.compile("[^a-z0-9]");
 
+	// Reviews page
 	@GetMapping("/reviews")
 	public String reviews(Model model) {
 		return "reviews";
 	}
 
+	// Reviews of an specific user
 	@GetMapping("/my_reviews")
 	public String myReviews(Model model, Principal principal) {
 		if (principal == null) {
@@ -79,6 +81,7 @@ public class ReviewWebController {
 		return "my_reviews";
 	}
 
+	// Edit review - GET
 	@GetMapping("/my_reviews/{reviewId}/edit")
 	public String editMyReviewForm(@PathVariable Long reviewId, Model model, Principal principal) {
 		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
@@ -107,6 +110,7 @@ public class ReviewWebController {
 		return "add-review";
 	}
 
+	// Edit review - POST
 	@PostMapping("/my_reviews/{reviewId}/edit")
 	public String editMyReview(
 			@PathVariable Long reviewId,
@@ -143,6 +147,7 @@ public class ReviewWebController {
 		return "redirect:/my_reviews";
 	}
 
+	// Delete review
 	@PostMapping("/my_reviews/{reviewId}/delete")
 	public String deleteMyReview(@PathVariable Long reviewId, Principal principal) {
 		Optional<Review> reviewOpt = getOwnedReview(reviewId, principal);
@@ -154,6 +159,7 @@ public class ReviewWebController {
 		return "redirect:/my_reviews";
 	}
 
+	// Add review - GET
 	@GetMapping("/add-review")
 	public String addReview(
 			@RequestParam(name = "placeId", required = false) Long placeId,
@@ -179,6 +185,7 @@ public class ReviewWebController {
 		return "add-review";
 	}
 
+	// Add review - POST
 	@PostMapping("/add-review")
 	public String createReview(
 			Principal principal,
@@ -240,6 +247,7 @@ public class ReviewWebController {
 		return "place_reviews";
 	}
 
+	// Reviews of an specific place
 	@GetMapping("/place_reviews")
 	public String placeReviewsByName(
 			@RequestParam(name = "placeId", required = false) Long placeId,

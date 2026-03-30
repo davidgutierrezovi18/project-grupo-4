@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-// Importamos TU servicio de imágenes
+// Import our images service
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.service.ImageService;
 
@@ -37,7 +37,7 @@ public class ImageController {
             mediaType = MediaType.IMAGE_JPEG;
         }
 
-        // Devolvemos la imagen con el tipo de contenido correcto
+        // Return image with the correct content type
         return ResponseEntity
                 .ok()
                 .contentType(mediaType)

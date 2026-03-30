@@ -50,6 +50,7 @@ public class WebController {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	// Home page
 	@GetMapping({"/", "/index"})
 	public String home(Model model) {
 		List<Destination> randomDestinations = destinationService.getRandomDestinations(3);
@@ -61,22 +62,13 @@ public class WebController {
 		return "index";
 	}
 
+	// FAQ page
 	@GetMapping("/faq")
 	public String faq() {
 		return "faq";
 	}
 
-
-	@GetMapping("/add_place")
-	public String addPlace() {
-		return "add_place";
-	}
-
-	@GetMapping("/one_destination")
-	public String oneDestination(Model model) {
-		return "one_destination";
-	}
-
+	// Admin pannel
 	@GetMapping("/admin_users")
 	public String adminUsers(Model model, Principal principal,
 			@RequestParam(name = "msg", required = false) String msg) {
@@ -99,6 +91,7 @@ public class WebController {
 		return "admin_users";
 	}
 
+	// User detail page - only for admins
 	@GetMapping("/admin_users/{id}")
 	public String adminUserDetail(@PathVariable long id, Model model, Principal principal,
 			@RequestParam(name = "msg", required = false) String msg) {
@@ -112,7 +105,7 @@ public class WebController {
 		}
 		userTravels.addAll(travelService.findByUserId(id));
 
-		// Remove duplicates when a travel appears both as owner and collaborator.
+		// Remove duplicates when a travel appears both as owner and collaborator
 		Map<Long, Travel> uniqueTravels = userTravels.stream()
 				.filter(travel -> travel != null && travel.getId() != null)
 				.collect(Collectors.toMap(Travel::getId, travel -> travel, (first, second) -> first));
@@ -129,6 +122,7 @@ public class WebController {
 		return "admin_user_detail";
 	}
 
+	// User profile page
 	@GetMapping("/admin_users/{id}/profile")
 	public String adminUserProfile(@PathVariable long id, Model model, Principal principal) {
 		requireAdmin(principal);
@@ -138,6 +132,7 @@ public class WebController {
 		return "user_profile";
 	}
 
+	// Edit user - only for admins
 	@PostMapping("/admin_users/{id}/save")
 	public String adminSaveUser(@PathVariable long id,
 			@RequestParam("name") String name,
@@ -204,16 +199,19 @@ public class WebController {
 		return "redirect:/admin_users?msg=Estado de bloqueo actualizado";
 	}
 
+	// 403 error page
 	@GetMapping("/error403")
 	public String showError403(Model model) {
 		return "error403";
 	}
 
+	// 404 error page
 	@GetMapping("/error404")
 	public String showError404(Model model) {
 		return "error404";
 	}
 
+	// 500 error page
 	@GetMapping("/error500")
 	public String showError500(Model model) {
 		return "error500";

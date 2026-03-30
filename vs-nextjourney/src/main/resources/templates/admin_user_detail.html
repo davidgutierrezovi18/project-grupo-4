@@ -22,7 +22,10 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h2 class="h5 mb-0">Usuario #{{user.id}} - {{user.username}}</h2>
-          <a class="btn btn-outline-secondary btn-sm" href="/admin_users">Volver al listado</a>
+          <div class="d-flex gap-2">
+            <a class="btn btn-outline-info btn-sm" href="/admin_users/{{user.id}}/profile">Ver perfil</a>
+            <a class="btn btn-outline-secondary btn-sm" href="/admin_users">Volver al listado</a>
+          </div>
         </div>
 
         <div class="card shadow-sm mb-4">

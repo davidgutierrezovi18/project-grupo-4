@@ -11,7 +11,12 @@
     <main class="flex-shrink-0">
 
         <!-- Navigation-->
+        {{#adminView}}
+        {{> admin_nav_bar}}
+        {{/adminView}}
+        {{^adminView}}
         {{> nav_bar}}
+        {{/adminView}}
 
 
         <!-- User Profile Section -->
@@ -19,9 +24,16 @@
             <div class="container px-5">
                 <div class="text-center mb-5">
                     <h1 class="fw-bolder">Perfil de Usuario</h1>
+                    {{#adminView}}
+                    <p class="lead fw-normal text-muted mb-0">
+                        Vista de perfil en modo administrador.
+                    </p>
+                    {{/adminView}}
+                    {{^adminView}}
                     <p class="lead fw-normal text-muted mb-0">
                         Visualiza tu información personal.
                     </p>
+                    {{/adminView}}
                 </div>
 
                 <div class="row justify-content-center">
@@ -60,12 +72,19 @@
                             </div>
 
                             <!-- Edit / Delete Profile + My Travels / My Reviews Buttons -->
+                            {{#adminView}}
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                <a href="/admin_users/{{user.id}}" class="btn btn-outline-secondary btn-lg">Volver a gestionar</a>
+                            </div>
+                            {{/adminView}}
+                            {{^adminView}}
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                 <a href="/edit_profile" class="btn btn-primary btn-lg">Editar perfil</a>
                                 <button type="button" class="btn btn-danger btn-lg">Borrar perfil</button>
                                 <a href="/mytravels" class="btn btn-primary btn-lg">Mis viajes</a>
                                 <a href="/my_reviews" class="btn btn-primary btn-lg">Mis reseñas</a>
                             </div>
+                            {{/adminView}}
 
                         </form>
                     </div>

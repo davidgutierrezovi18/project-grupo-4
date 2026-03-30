@@ -1,7 +1,10 @@
 package es.nextjourney.vs_nextjourney.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -102,17 +105,37 @@ public class WebController {
 		requireAdmin(principal);
 		User user = userService.findById(id);
 		List<Review> userReviews = reviewRepository.findByUserReviewsIdOrderByCreatedAtDesc(id);
-		List<Travel> userTravels = travelService.findByUserId(id);
+
+		List<Travel> userTravels = new ArrayList<>();
+		if (user.getUsername() != null) {
+			userTravels.addAll(travelService.findByOwnerName(user.getUsername()));
+		}
+		userTravels.addAll(travelService.findByUserId(id));
+
+		// Remove duplicates when a travel appears both as owner and collaborator.
+		Map<Long, Travel> uniqueTravels = userTravels.stream()
+				.filter(travel -> travel != null && travel.getId() != null)
+				.collect(Collectors.toMap(Travel::getId, travel -> travel, (first, second) -> first));
+		List<Travel> mergedTravels = new ArrayList<>(uniqueTravels.values());
 
 		model.addAttribute("user", user);
 		model.addAttribute("reviews", userReviews);
-		model.addAttribute("travels", userTravels);
+		model.addAttribute("travels", mergedTravels);
 		model.addAttribute("reviewsCount", userReviews.size());
-		model.addAttribute("travelsCount", userTravels.size());
+		model.addAttribute("travelsCount", mergedTravels.size());
 		model.addAttribute("hasReviews", !userReviews.isEmpty());
-		model.addAttribute("hasTravels", !userTravels.isEmpty());
+		model.addAttribute("hasTravels", !mergedTravels.isEmpty());
 		model.addAttribute("msg", msg);
 		return "admin_user_detail";
+	}
+
+	@GetMapping("/admin_users/{id}/profile")
+	public String adminUserProfile(@PathVariable long id, Model model, Principal principal) {
+		requireAdmin(principal);
+		User user = userService.findById(id);
+		model.addAttribute("user", user);
+		model.addAttribute("adminView", true);
+		return "user_profile";
 	}
 
 	@PostMapping("/admin_users/{id}/save")

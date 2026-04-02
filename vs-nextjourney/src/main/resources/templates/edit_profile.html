@@ -9,19 +9,29 @@
     <main class="flex-shrink-0">
 
         <!-- Navigation bar-->
+        {{#adminView}}
+        {{> admin_nav_bar}}
+        {{/adminView}}
+        {{^adminView}}
         {{> nav_bar}}
+        {{/adminView}}
 
         <!-- User Profile Section -->
         <section class="py-5">
             <div class="container px-5">
                 <div class="text-center mb-5">
-                    <h1 class="fw-bolder">Perfil de Usuario</h1>
+                    <h1 class="fw-bolder">{{#adminView}}Editar perfil de usuario{{/adminView}}{{^adminView}}Perfil de Usuario{{/adminView}}</h1>
                     <p class="lead fw-normal text-muted mb-0">
-                        Edita tu información personal.
+                        {{#adminView}}Modifica los datos y permisos del usuario.{{/adminView}}{{^adminView}}Edita tu información personal.{{/adminView}}
                     </p>
                 </div>
-                <form class="row g-3 needs-validation" action="/edit_profile" method="post"
+                <form class="row g-3 needs-validation" action="{{#adminView}}/admin_users/{{user.id}}/edit{{/adminView}}{{^adminView}}/edit_profile{{/adminView}}" method="post"
                     enctype="multipart/form-data" novalidate>
+                    {{#msg}}
+                    <div class="alert alert-info text-center">
+                        {{msg}}
+                    </div>
+                    {{/msg}}
                     {{#error}}
                     <div class="alert alert-danger text-center">
                         {{error}}
@@ -51,11 +61,24 @@
                                 </small>
                             </div>
 
-                            <!-- Full Name -->
+                            <!-- Name -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="fullName" placeholder="Nombre completo"
                                     value="{{user.name}}" name="name">
-                                <label for="fullName">Nombre completo</label>
+                                <label for="fullName">Nombre</label>
+                            </div>
+
+                            <!-- Last Name -->
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="lastName" placeholder="Apellidos"
+                                    value="{{user.lastName}}" name="lastName">
+                                <label for="lastName">Apellidos</label>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="form-floating mb-3">
+                                <input type="date" class="form-control" id="dateOfBirth" value="{{user.dateOfBirth}}" name="dateOfBirth">
+                                <label for="dateOfBirth">Fecha de nacimiento</label>
                             </div>
 
                             <!-- Email -->
@@ -79,6 +102,34 @@
                                 <label for="username">Usuario</label>
                             </div>
 
+                            {{#adminView}}
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" id="newPassword" name="newPassword" minlength="8" placeholder="Nueva contraseña">
+                                        <label for="newPassword">Nueva contraseña</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirmar nueva contraseña">
+                                        <label for="confirmPassword">Confirmar nueva contraseña</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 d-flex align-items-end gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="isAdmin" id="isAdmin" {{#user.adminUser}}checked{{/user.adminUser}} />
+                                        <label class="form-check-label" for="isAdmin">Rol ADMIN</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="blocked" id="blocked" {{#user.blocked}}checked{{/user.blocked}} />
+                                        <label class="form-check-label" for="blocked">Usuario bloqueado</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {{/adminView}}
+
+                            {{^adminView}}
                             <!-- Change Password -->
                             <div class="text-center mb-3">
                                 <button type="button" class="btn btn-warning" onclick="togglePasswordChange()">
@@ -89,29 +140,30 @@
 
                                 <!-- Actual password -->
                                 <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" name="currentPassword"
-                                        placeholder="Contraseña actual" required>
-                                    <label>Contraseña actual</label>
+                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword"
+                                        placeholder="Contraseña actual">
+                                    <label for="currentPassword">Contraseña actual</label>
                                 </div>
 
                                 <!-- New password -->
                                 <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" name="newPassword" minlength="8"
-                                        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$" required>
-                                    <label>Nueva contraseña</label>
+                                    <input type="password" class="form-control" id="newPassword" name="newPassword" minlength="8"
+                                        pattern="^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&]).+$">
+                                    <label for="newPassword">Nueva contraseña</label>
                                 </div>
 
                                 <!-- Confirmation -->
                                 <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" name="confirmPassword" required>
-                                    <label>Confirmar nueva contraseña</label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                                    <label for="confirmPassword">Confirmar nueva contraseña</label>
                                 </div>
 
                             </div>
+                            {{/adminView}}
 
                             <!-- Buttons -->
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                                <a href="/user_profile" class="btn btn-outline-secondary btn-lg">
+                                <a href="{{#adminView}}/admin_users/{{user.id}}/profile{{/adminView}}{{^adminView}}/user_profile{{/adminView}}" class="btn btn-outline-secondary btn-lg">
                                     Cancelar
                                 </a>
                                 <button type="submit" class="btn btn-primary btn-lg">

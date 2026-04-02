@@ -22,6 +22,10 @@
         <!-- User Profile Section -->
         <section class="py-5">
             <div class="container px-5">
+                {{#msg}}
+                <div class="alert alert-info" role="alert">{{msg}}</div>
+                {{/msg}}
+
                 <div class="text-center mb-5">
                     <h1 class="fw-bolder">Perfil de Usuario</h1>
                     {{#adminView}}
@@ -74,7 +78,8 @@
                             <!-- Edit/Delete Profile + My Travels/My Reviews Buttons -->
                             {{#adminView}}
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                                <a href="/admin_users/{{user.id}}" class="btn btn-outline-secondary btn-lg">Volver a gestionar</a>
+                                <a href="/admin_users/{{user.id}}/edit" class="btn btn-primary btn-lg">Editar perfil</a>
+                                <a href="/admin_users" class="btn btn-outline-secondary btn-lg">Volver al listado</a>
                             </div>
                             {{/adminView}}
                             {{^adminView}}

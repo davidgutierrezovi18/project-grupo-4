@@ -1,6 +1,9 @@
 package es.nextjourney.vs_nextjourney.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +11,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +23,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import es.nextjourney.vs_nextjourney.model.Destination;
+import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Review;
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.model.User;
@@ -41,13 +50,15 @@ public class WebController {
 	private final TravelService travelService;
 	private final ReviewRepository reviewRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final UserDetailsService userDetailsService;
 
 	public WebController(UserService userService, TravelService travelService, ReviewRepository reviewRepository,
-			PasswordEncoder passwordEncoder) {
+			PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
 		this.userService = userService;
 		this.travelService = travelService;
 		this.reviewRepository = reviewRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.userDetailsService = userDetailsService;
 	}
 
 	// Home page
@@ -91,78 +102,103 @@ public class WebController {
 		return "admin_users";
 	}
 
-	// User detail page - only for admins
-	@GetMapping("/admin_users/{id}")
-	public String adminUserDetail(@PathVariable long id, Model model, Principal principal,
-			@RequestParam(name = "msg", required = false) String msg) {
-		requireAdmin(principal);
-		User user = userService.findById(id);
-		List<Review> userReviews = reviewRepository.findByUserReviewsIdOrderByCreatedAtDesc(id);
-
-		List<Travel> userTravels = new ArrayList<>();
-		if (user.getUsername() != null) {
-			userTravels.addAll(travelService.findByOwnerName(user.getUsername()));
-		}
-		userTravels.addAll(travelService.findByUserId(id));
-
-		// Remove duplicates when a travel appears both as owner and collaborator
-		Map<Long, Travel> uniqueTravels = userTravels.stream()
-				.filter(travel -> travel != null && travel.getId() != null)
-				.collect(Collectors.toMap(Travel::getId, travel -> travel, (first, second) -> first));
-		List<Travel> mergedTravels = new ArrayList<>(uniqueTravels.values());
-
-		model.addAttribute("user", user);
-		model.addAttribute("reviews", userReviews);
-		model.addAttribute("travels", mergedTravels);
-		model.addAttribute("reviewsCount", userReviews.size());
-		model.addAttribute("travelsCount", mergedTravels.size());
-		model.addAttribute("hasReviews", !userReviews.isEmpty());
-		model.addAttribute("hasTravels", !mergedTravels.isEmpty());
-		model.addAttribute("msg", msg);
-		return "admin_user_detail";
-	}
-
 	// User profile page
 	@GetMapping("/admin_users/{id}/profile")
-	public String adminUserProfile(@PathVariable long id, Model model, Principal principal) {
+	public String adminUserProfile(@PathVariable long id, Model model, Principal principal,
+			@RequestParam(name = "msg", required = false) String msg) {
 		requireAdmin(principal);
 		User user = userService.findById(id);
 		model.addAttribute("user", user);
 		model.addAttribute("adminView", true);
+		model.addAttribute("msg", msg);
 		return "user_profile";
 	}
 
+	@GetMapping("/admin_users/{id}/edit")
+	public String adminEditUser(@PathVariable long id, Model model, Principal principal,
+			@RequestParam(name = "msg", required = false) String msg) {
+		requireAdmin(principal);
+		User user = userService.findById(id);
+		model.addAttribute("user", user);
+		model.addAttribute("adminView", true);
+		model.addAttribute("msg", msg);
+		return "edit_profile";
+	}
+
 	// Edit user - only for admins
-	@PostMapping("/admin_users/{id}/save")
+	@PostMapping("/admin_users/{id}/edit")
 	public String adminSaveUser(@PathVariable long id,
 			@RequestParam("name") String name,
 			@RequestParam("lastName") String lastName,
+			@RequestParam("dateOfBirth") LocalDate dateOfBirth,
 			@RequestParam("email") String email,
+			@RequestParam("username") String username,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
+			@RequestParam(value = "confirmPassword", required = false) String confirmPassword,
 			@RequestParam(value = "isAdmin", defaultValue = "false") boolean isAdmin,
 			@RequestParam(value = "blocked", defaultValue = "false") boolean blocked,
-			Principal principal) {
+			@RequestParam("imageFile") MultipartFile file,
+			Principal principal,
+			Model model) throws IOException, SQLException {
 		requireAdmin(principal);
 		User user = userService.findById(id);
-
 		String currentUser = principal != null ? principal.getName() : "";
 		boolean isSelf = user.getUsername() != null && user.getUsername().equals(currentUser);
+
 		if (isSelf) {
 			isAdmin = true;
 			blocked = false;
 		}
 
+		if (!user.getUsername().equals(username) && userService.usernameExists(username)) {
+			model.addAttribute("user", user);
+			model.addAttribute("adminView", true);
+			model.addAttribute("error", "Ese nombre de usuario ya existe");
+			return "edit_profile";
+		}
+		if (!user.getEmail().equals(email) && userService.emailExists(email)) {
+			model.addAttribute("user", user);
+			model.addAttribute("adminView", true);
+			model.addAttribute("error", "Ese correo electrónico ya está en uso");
+			return "edit_profile";
+		}
+
 		user.setName(name);
 		user.setLastName(lastName);
+		user.setDateOfBirth(dateOfBirth);
 		user.setEmail(email);
+		user.setUsername(username);
+		if (file != null && !file.isEmpty()) {
+			Image image = new Image();
+			image.setImageFile(new javax.sql.rowset.serial.SerialBlob(file.getBytes()));
+			image.setContentType(file.getContentType());
+			user.setImage(image);
+		}
+
 		if (newPassword != null && !newPassword.isBlank()) {
+			if (confirmPassword == null || !newPassword.equals(confirmPassword)) {
+				model.addAttribute("user", user);
+				model.addAttribute("adminView", true);
+				model.addAttribute("error", "Las contraseñas no coinciden");
+				return "edit_profile";
+			}
 			user.setPassword(passwordEncoder.encode(newPassword));
 		}
 		user.setRoles(isAdmin ? List.of("USER", "ADMIN") : List.of("USER"));
 		user.setBlocked(blocked);
 		userService.modifyUser(user);
 
-		return "redirect:/admin_users/" + id + "?msg=Usuario actualizado";
+		if (isSelf) {
+			UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+			UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
+				userDetails,
+				userDetails.getPassword(),
+				userDetails.getAuthorities()
+			);
+			SecurityContextHolder.getContext().setAuthentication(newAuth);
+		}
+
+		return "redirect:/admin_users/" + id + "/profile?msg=Usuario actualizado";
 	}
 
 	@PostMapping("/admin_users/{id}/toggle-admin")

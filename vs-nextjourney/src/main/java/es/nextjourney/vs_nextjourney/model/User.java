@@ -89,7 +89,10 @@ public class User {
     
     public User(String name ,String lastName, String username, LocalDate dateOfBirth, String email, String password, Image image, List<Travel> travels, List<Review> reviews, String... roles) {
         this.name = name;
-        this.roles = Arrays.asList(roles);
+        this.roles = new ArrayList<>();
+        if (roles != null) {
+            this.roles.addAll(Arrays.asList(roles));
+        }
         this.lastName = lastName;
         this.username = username;
         this.dateOfBirth = dateOfBirth;
@@ -163,7 +166,7 @@ public class User {
     }
 
     public void setRoles(List<String> roles) {
-		this.roles = roles;
+		this.roles = roles == null ? null : new ArrayList<>(roles);
 	}
 
     public void setName(String name) {

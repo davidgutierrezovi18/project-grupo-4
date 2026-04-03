@@ -57,8 +57,14 @@
                             <!-- Full Name -->
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="fullName" placeholder="Nombre completo"
-                                    value="{{user.name}}" readonly>
+                                    value="{{user.name}} {{user.lastName}}" readonly>
                                 <label for="fullName">Nombre completo</label>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="form-floating mb-3">
+                                <input type="date" class="form-control" id="dateOfBirth" value="{{user.dateOfBirth}}" name="dateOfBirth" readonly>
+                                <label for="dateOfBirth">Fecha de nacimiento</label>
                             </div>
 
                             <!-- Email -->

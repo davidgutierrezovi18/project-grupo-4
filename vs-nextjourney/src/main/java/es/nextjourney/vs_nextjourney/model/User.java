@@ -31,13 +31,13 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
 	private List<String> roles;
 
-    // @Column(name = "name", length = 15, nullable = false)
+    @Column(name = "name", length = 15, nullable = false)
     // @Size(min = 1 ,max = 15, message = "Debes introducir un nombre de usuario
     // válido")
     // User name
     private String name;
 
-    // @Column(name = "lastName", length = 15, nullable = false)
+    @Column(name = "lastName", length = 15, nullable = false)
     // @Size(min = 1 ,max = 15, message = "Debes introducir un apellido válido")
     // User lastname
     private String lastName;
@@ -47,7 +47,7 @@ public class User {
     // User username
     private String username;
 
-    // @Column(name = "dateOfBirth", nullable = false)
+    @Column(name = "dateOfBirth", nullable = false)
     // User date birth
     private LocalDate dateOfBirth;
 
@@ -121,6 +121,7 @@ public class User {
     public String getName() {
         return name;
     }
+
 
     public String getLastName() {
         return lastName;

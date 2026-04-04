@@ -31,7 +31,8 @@
 
         <div class="row mb-4 g-2">
           <div class="col-md-8">
-            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre, usuario o email..." />
+            <input type="text" id="searchInput" class="form-control"
+              placeholder="Buscar por nombre, usuario o email..." />
           </div>
           <div class="col-md-4">
             <select id="roleFilter" class="form-select">
@@ -74,10 +75,16 @@
                         <a class="btn btn-sm btn-outline-primary" href="/admin_users/{{id}}/edit">Editar perfil</a>
                         <a class="btn btn-sm btn-outline-info" href="/admin_users/{{id}}/profile">Ver perfil</a>
                         <form method="post" action="/admin_users/{{id}}/toggle-admin" class="d-inline">
-                          <button type="submit" class="btn btn-sm btn-outline-warning">{{#adminUser}}Quitar admin{{/adminUser}}{{^adminUser}}Dar admin{{/adminUser}}</button>
+                          <button type="submit" class="btn btn-sm btn-outline-warning">{{#adminUser}}Quitar
+                            admin{{/adminUser}}{{^adminUser}}Dar admin{{/adminUser}}</button>
                         </form>
                         <form method="post" action="/admin_users/{{id}}/toggle-block" class="d-inline">
-                          <button type="submit" class="btn btn-sm btn-outline-dark">{{#blocked}}Desbloquear{{/blocked}}{{^blocked}}Bloquear{{/blocked}}</button>
+                          <button type="submit"
+                            class="btn btn-sm btn-outline-dark">{{#blocked}}Desbloquear{{/blocked}}{{^blocked}}Bloquear{{/blocked}}</button>
+                        </form>
+                        <form method="post" action="/admin_users/{{id}}/delete" class="d-inline"
+                          onsubmit="return confirm('¿Estás seguro de que quieres eliminar a este usuario?');">
+                          <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                         </form>
                       </div>
                     </td>

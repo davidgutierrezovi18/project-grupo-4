@@ -45,14 +45,14 @@
 
                         <!-- User Avatar -->
                         <div class="text-center mb-4">
-                            
+
                             <img id="previewImage"
-                                 src="{{#user.image}}/images/{{user.image.id}}{{/user.image}}{{^user.image}}https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar{{/user.image}}"
-                                 class="rounded-circle mb-3" alt="Avatar" width="150" height="150"/>
-                    
+                                src="{{#user.image}}/images/{{user.image.id}}{{/user.image}}{{^user.image}}https://dummyimage.com/150x150/6c757d/ffffff&text=Avatar{{/user.image}}"
+                                class="rounded-circle mb-3" alt="Avatar" width="150" height="150" />
+
                         </div>
 
-                        
+
                         <form>
                             <!-- Full Name -->
                             <div class="form-floating mb-3">
@@ -63,7 +63,8 @@
 
                             <!-- Date of Birth -->
                             <div class="form-floating mb-3">
-                                <input type="date" class="form-control" id="dateOfBirth" value="{{user.dateOfBirth}}" name="dateOfBirth" readonly>
+                                <input type="date" class="form-control" id="dateOfBirth" value="{{user.dateOfBirth}}"
+                                    name="dateOfBirth" readonly>
                                 <label for="dateOfBirth">Fecha de nacimiento</label>
                             </div>
 
@@ -80,6 +81,7 @@
                                     value="{{user.username}}" readonly>
                                 <label for="username">Usuario</label>
                             </div>
+                        </form>
 
                             <!-- Edit/Delete Profile + My Travels/My Reviews Buttons -->
                             {{#adminView}}
@@ -91,7 +93,9 @@
                             {{^adminView}}
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                 <a href="/edit_profile" class="btn btn-primary btn-lg">Editar perfil</a>
-                                <button type="button" class="btn btn-danger btn-lg">Borrar perfil</button>
+                                <form action="/delete_profile" method="post">
+                                    <button type="submit" class="btn btn-danger btn-lg">Borrar perfil</button>
+                                </form>
                                 <a href="/mytravels" class="btn btn-primary btn-lg">Mis viajes</a>
                                 <a href="/my_reviews" class="btn btn-primary btn-lg">Mis reseñas</a>
                             </div>

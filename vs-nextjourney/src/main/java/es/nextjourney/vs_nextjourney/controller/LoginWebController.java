@@ -20,6 +20,9 @@ import org.springframework.ui.Model;
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.User;
 import es.nextjourney.vs_nextjourney.service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -182,5 +185,15 @@ public class LoginWebController {
         SecurityContextHolder.getContext().setAuthentication(newAuth);
 
         return "redirect:/user_profile";
+    }
+
+    @PostMapping("/delete_profile")
+    public String deleteProfile(Principal principal, HttpServletRequest request) throws ServletException {
+    if (principal != null) {
+        User user = userService.findByUserName(principal.getName());
+        userService.deleteById(user.getId());
+        request.logout(); 
+    }
+    return "redirect:/"; 
     }
 }

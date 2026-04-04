@@ -264,5 +264,12 @@ public class WebController {
 		}
 	}
 
+	@PostMapping("/admin_users/{id}/delete")
+	public String deleteUser(@PathVariable Long id) {
+    	userService.deleteById(id);
+    	return "redirect:/admin_users";
+}
+
 	
 }
+ 

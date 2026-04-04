@@ -37,7 +37,7 @@ public class User {
     // User name
     private String name;
 
-    @Column(name = "lastName", length = 15, nullable = false)
+    @Column(name = "last_name", length = 15, nullable = false)
     // @Size(min = 1 ,max = 15, message = "Debes introducir un apellido válido")
     // User lastname
     private String lastName;

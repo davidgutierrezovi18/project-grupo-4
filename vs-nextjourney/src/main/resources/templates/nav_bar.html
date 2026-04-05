@@ -37,15 +37,25 @@
                                     <a class="dropdown-item" href="/user_profile">Ver mi perfil</a>
                                 </li>
                                 <li><hr class="dropdown-divider" /></li>
+                                <!--
                                 <li>
                                     <a class="dropdown-item" href="/logout">Cerrar sesión</a>
                                 </li>
+                                -->
+                                <li>
+                                    <form action="/logout" method="post" style="margin: 0;">
+                                        <input type="hidden" name="_csrf" value="{{token}}"/>
+                                        <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                                    </form>
+                                </li>
+            
                                 {{/isLogged}}
 
                                 {{^isLogged}}
                                 <li>
                                     <a class="dropdown-item" href="/sign_in">Iniciar sesión</a>
                                 </li>
+                                <li><hr class="dropdown-divider" /></li>
                                 <li>
                                     <a class="dropdown-item" href="/register">Registrarse</a>
                                 </li>

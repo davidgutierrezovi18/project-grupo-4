@@ -30,6 +30,9 @@
                 <!-- Form for creating a net trip-->
                 <form action="/travel/{{id}}/edit" method="post" enctype="multipart/form-data">
 
+                    <!-- CSRF token-->
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                    
                     <!-- Title-->
                     <div class="mb-3">
                         <label class="form-label">Título del viaje</label>

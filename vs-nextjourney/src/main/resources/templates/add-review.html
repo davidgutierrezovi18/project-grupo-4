@@ -30,6 +30,8 @@
               <div class="card-body">
                 <h5 class="card-title">Tu reseña</h5>
                 <form id="add-review-form" action="{{formAction}}" method="post" enctype="multipart/form-data">
+                  <!-- CSRF token-->
+                  <input type="hidden" name="_csrf" value="{{token}}"/>
                   <input type="hidden" id="place-id" name="place-id" value="{{placeId}}" />
 
                   <div class="mb-3">

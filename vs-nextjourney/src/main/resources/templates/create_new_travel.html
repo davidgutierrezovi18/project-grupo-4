@@ -27,6 +27,9 @@
 
                 <!-- Form for creating a new trip-->
                 <form action="/travel/new" method="post" enctype="multipart/form-data">
+
+                    <!-- CSRF token-->
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
                     
                     <!-- Title-->
                     <div class="mb-3">

@@ -2,12 +2,16 @@ package es.nextjourney.vs_nextjourney.config;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,22 +30,33 @@ public class SecurityClass {
         this.userRepository = userRepository;
     }
 
+
+    // Used to encode passwords
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+        
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) 
             .headers(headers -> headers
                 .frameOptions(frame -> frame.sameOrigin())) 
             
             .authorizeHttpRequests(auth -> auth
 
-                .requestMatchers("/admin/**", "/admin_users", "/admin_users/**","/destinations/*/places/*/edit","/destinations/*/edit","/destinations/*/delete","/destinations/*/places/*/delete").hasRole("ADMIN")
+                // Admin-only pages
+                .requestMatchers("/admin/**", "/admin_users", "/admin_users/**","/destinations/*/places/*/edit","/destinations/*/edit","/destinations/*/delete","/destinations/*/places/*/delete")
+                .hasRole("ADMIN")
                 
+                // Authenticated users pages
                 .requestMatchers(
                     "/mytravels", "/travel/**", "/user_profile/**","/add_place","/add_destinstion","/add_place/**","/destinations/*/add_place","/add_destination/**",
                     "/my_reviews", "/add-review", "/add-review/**"
                 ).authenticated()
 
+                // Public pages
                 .requestMatchers(
                     "/", "/index",
                     "/destinations", "/destinations/**", "/one_destination",
@@ -50,13 +65,7 @@ public class SecurityClass {
                     "/css/**", "/js/**", "/images/**", "/assets/**",
                     "/reviews", "/review/**", "/place_reviews"
                 ).permitAll()
-                
-                
-                
-                
-               
-                
-                
+
                 .anyRequest().permitAll()
             )
             
@@ -104,8 +113,4 @@ public class SecurityClass {
             .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

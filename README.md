@@ -254,8 +254,22 @@ Creación y desarrollo de las paginas de iniciar sesión y registrarse, de desti
 Solo si ha cambiado.
 
 #### **Capturas de Pantalla Actualizadas**
+#### **1. Pagina de error al iniciar sesión (login_error.html)**
+![Login-error](images/login_error.png)
+>Página al introducir credenciales erroneas
 
-Solo si han cambiado.
+#### **2. Página de admin (admin_users.html)**
+![Página admin](images/admin_users.png)
+>Página en la cual el admin puede gestionar a los demás usuarios, editarlos, ver su perfil, eliminarlos y añadir nuevos usuarios. Contiene barras de búsqueda por nombre, email o Id, por roles y por estados. En la pagina también se puede ver el total de Usuarios, los activos los inactivos y los bloqueados. Incluye barra de navegación para poder volver al inicio y cerrar sesión admin.
+
+#### **3. Página de ver perfil (user_profile.html)**
+![Perfil de usuario](images/user_profile.png)
+>Página en la que se muestra el perfil del usuario, nombre, correo y nombre de usuario. Incluye barra de navegación, botón para editar perfil, botón para borrar perfil, botón para volver a mis viajes y botón para ver las reseñas de usuario.
+
+#### **4. Página de editar perfil de usuario (edit_profile.html)**
+![Editar perfil](images/edit_profile.png)
+![Editar perfil](images/edit_profile2.png)
+>Página que permite editar los distintos campos asociados a un perfil de usuario. Incluye barra de navegación, botón de cancelar, y de guardar cambios.
 
 ### **Instrucciones de Ejecución**
 

@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.Optional;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,10 +68,15 @@ public class DestinationWebController {
 
     // Create destination - POST
     @PostMapping("/add_destination")
-    public String newDestinationProcess(Model model, Destination destination, MultipartFile imageFile) throws IOException {
-        // Si no hay imagen en un registro nuevo, error
+    public String newDestinationProcess(Model model, @Valid Destination destination, BindingResult bindingResult,
+            MultipartFile imageFile) throws IOException {
+
+        if (bindingResult.hasErrors()) {
+            return showErrorDestination(model, destination, false, firstValidationError(bindingResult), false);
+        }
+
         if (imageFile == null || imageFile.isEmpty()) {
-            return showErrorDestination(model, destination, false);
+            return showErrorDestination(model, destination, false, "La imagen del destino es obligatoria.", true);
         }
 
         try {
@@ -78,7 +85,8 @@ public class DestinationWebController {
             destinationService.save(destination);
             return "redirect:/destinations";
         } catch (Exception e) {
-            return showErrorDestination(model, destination, false);
+            return showErrorDestination(model, destination, false,
+                    "No se ha podido guardar el destino. Revisa los datos e intentalo de nuevo.", false);
         }
     }
 
@@ -96,11 +104,20 @@ public class DestinationWebController {
 
     // Edit destination - POST
     @PostMapping("/destinations/{id}/edit")
-    public String editDestinationProcess(Model model, Destination destination, MultipartFile imageFile, @PathVariable long id) throws IOException {
+    public String editDestinationProcess(Model model, @Valid Destination destination, BindingResult bindingResult,
+            MultipartFile imageFile, @PathVariable long id) throws IOException {
         Optional<Destination> oldDestOpt = destinationService.findById(id);
         
         if (oldDestOpt.isPresent()) {
             Destination oldDest = oldDestOpt.get();
+
+            if (bindingResult.hasErrors()) {
+                destination.setId(id);
+                destination.setCoverImage(oldDest.getCoverImage());
+                destination.setPlaces(oldDest.getPlaces());
+                destination.setReviews(oldDest.getReviews());
+                return showErrorDestination(model, destination, true, firstValidationError(bindingResult), false);
+            }
             
             // Mantenemos la identidad y las listas
             destination.setId(id);
@@ -123,8 +140,10 @@ public class DestinationWebController {
     }
 
     // Auxiliar method for not repeating error code
-    private String showErrorDestination(Model model, Destination destination, boolean isEditing) {
-        model.addAttribute("imageError", true);
+    private String showErrorDestination(Model model, Destination destination, boolean isEditing, String errorMessage,
+            boolean imageError) {
+        model.addAttribute("imageError", imageError);
+        model.addAttribute("error", errorMessage);
         model.addAttribute("destination", destination);
         model.addAttribute("isEditing", isEditing);
         return "add_destination";
@@ -152,17 +171,16 @@ public class DestinationWebController {
 
     // Add place to destination - POST
     @PostMapping("/destinations/{id}/add_place")
-    public String savePlace(Model model, @PathVariable long id, Place place) {
+    public String savePlace(Model model, @PathVariable long id, @Valid Place place, BindingResult bindingResult) {
         Optional<Destination> destinationOpt = destinationService.findById(id);
         
         if (destinationOpt.isPresent()) {
             // Forzamos que sea un registro nuevo para evitar errores de persistencia
             place.setId(null); 
             place.setDestination(destinationOpt.get());
-            
-            // Validación básica de nombre
-            if (place.getName() == null || place.getName().isBlank()) {
-                return showErrorPlace(model, destinationOpt.get(), place, false);
+
+            if (bindingResult.hasErrors()) {
+                return showErrorPlace(model, destinationOpt.get(), place, false, firstValidationError(bindingResult));
             }
 
             placeService.save(place); 
@@ -188,22 +206,22 @@ public class DestinationWebController {
 
     // Edit a place of a destination - POST
     @PostMapping("/destinations/{destId}/places/{placeId}/edit")
-    public String editPlaceProcess(Model model, @PathVariable long destId, @PathVariable long placeId, Place place) {
+    public String editPlaceProcess(Model model, @PathVariable long destId, @PathVariable long placeId,
+            @Valid Place place, BindingResult bindingResult) {
         Optional<Destination> destination = destinationService.findById(destId);
         Optional<Place> oldPlaceOpt = placeService.findById(placeId);
 
         if (destination.isPresent() && oldPlaceOpt.isPresent()) {
-            try {
-                // Mantenemos la identidad (ID) y vinculamos al destino padre
-                place.setId(placeId); 
-                place.setDestination(destination.get()); 
-                
-                placeService.save(place);
-                return "redirect:/destinations/" + destId;
-                
-            } catch (Exception e) {
-                return showErrorPlace(model, destination.get(), place, true);
+            // Mantenemos la identidad (ID) y vinculamos al destino padre
+            place.setId(placeId);
+            place.setDestination(destination.get());
+
+            if (bindingResult.hasErrors()) {
+                return showErrorPlace(model, destination.get(), place, true, firstValidationError(bindingResult));
             }
+
+            placeService.save(place);
+            return "redirect:/destinations/" + destId;
         }
         return "redirect:/destinations";
     }
@@ -214,11 +232,21 @@ public class DestinationWebController {
         placeService.delete(placeId);
         return "redirect:/destinations/" + destId; 
     }
+
     // Aux method for places
-    private String showErrorPlace(Model model, Destination destination, Place place, boolean isEditing) {
-    model.addAttribute("destination", destination);
-    model.addAttribute("place", place);
-    model.addAttribute("isEditing", isEditing);
-    return "add_place";
+    private String showErrorPlace(Model model, Destination destination, Place place, boolean isEditing,
+            String errorMessage) {
+        model.addAttribute("destination", destination);
+        model.addAttribute("place", place);
+        model.addAttribute("isEditing", isEditing);
+        model.addAttribute("error", errorMessage);
+        return "add_place";
+    }
+
+    private String firstValidationError(BindingResult bindingResult) {
+        if (!bindingResult.hasErrors() || bindingResult.getAllErrors().isEmpty()) {
+            return "Hay datos invalidos en el formulario.";
+        }
+        return bindingResult.getAllErrors().get(0).getDefaultMessage();
     }
 }

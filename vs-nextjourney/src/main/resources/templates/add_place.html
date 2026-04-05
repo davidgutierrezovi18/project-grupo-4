@@ -26,6 +26,13 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
 
+                        {{#error}}
+                        <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>{{error}}</div>
+                        </div>
+                        {{/error}}
+
                         <form action="{{#isEditing}}/destinations/{{destination.id}}/places/{{place.id}}/edit{{/isEditing}}{{^isEditing}}/destinations/{{destination.id}}/add_place{{/isEditing}}" 
                               method="post">
 

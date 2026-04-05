@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,15 +58,32 @@ public class TravelWebController {
 
     // Create travel - POST
     @PostMapping("/travel/new")
-    public String newTravelPost(@ModelAttribute Travel travel,
+    public String newTravelPost(@Valid @ModelAttribute("travel") Travel travel, BindingResult bindingResult,
             @RequestParam("coverImageFile") MultipartFile coverImage,
             @RequestParam("carouselImageFiles") MultipartFile[] carouselImages,
             @RequestParam("itineraryFile") MultipartFile itinerary,
-            Principal principal) throws IOException {
+            Principal principal,
+            Model model) throws IOException {
         if (principal == null) {
             return "redirect:/sign_in";
         }
         travel.setOwnerName(principal.getName());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("error", firstValidationError(bindingResult));
+            return "create_new_travel";
+        }
+
+        if (travel.getStartDate() != null && travel.getEndDate() != null
+                && travel.getEndDate().isBefore(travel.getStartDate())) {
+            model.addAttribute("error", "La fecha de fin no puede ser anterior a la fecha de inicio");
+            return "create_new_travel";
+        }
+
+        if (coverImage == null || coverImage.isEmpty()) {
+            model.addAttribute("error", "La imagen de portada es obligatoria");
+            return "create_new_travel";
+        }
 
         // Cover image
         if (!coverImage.isEmpty()) {
@@ -96,55 +116,28 @@ public class TravelWebController {
     @GetMapping("/travel/{id}/edit")
     public String editTravel(@PathVariable Long id, Model model) {
         Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt == null) {
+        if (travelOpt.isEmpty()) {
             return "redirect:/mytravels";
         }
         Travel travel = travelOpt.get();
-        model.addAttribute("travel", travel);
-
-        // Countries
-        String countriesList = travel.getCountries();
-        model.addAttribute("countries", (countriesList != null && !countriesList.isEmpty())
-                ? String.join(", ", countriesList)
-                : "");
-
-        // Cities
-        String citiesList = travel.getCities();
-        model.addAttribute("cities",
-                (citiesList != null && !citiesList.isEmpty()) ? String.join(", ", citiesList) : "");
-
-        // Places
-        String placesList = travel.getPlaces();
-        model.addAttribute("places",
-                (placesList != null && !placesList.isEmpty()) ? String.join(", ", placesList) : "");
-
-        // Rating
-        Integer ratingObj = travel.getRating();
-        int rating = (ratingObj != null) ? ratingObj : 0;
-        model.addAttribute("rating1", rating == 1);
-        model.addAttribute("rating2", rating == 2);
-        model.addAttribute("rating3", rating == 3);
-        model.addAttribute("rating4", rating == 4);
-        model.addAttribute("rating5", rating == 5);
-
-        // Comments
-        model.addAttribute("comment", travel.getComment() != null ? travel.getComment() : "");
-
-        // Members
-        String membersList = travel.getEmailsColaborators();
-        model.addAttribute("members",
-                (membersList != null && !membersList.isEmpty()) ? String.join(", ", membersList) : "");
+        populateEditTravelModel(model, travel);
 
         return "edit_travel";
     }
 
     // Edit travel - POST
     @PostMapping("/travel/{id}/edit")
-    public String editTravelSubmit(@PathVariable Long id, @ModelAttribute Travel travel,
+    public String editTravelSubmit(@PathVariable Long id, @Valid @ModelAttribute("travel") Travel travel,
+            BindingResult bindingResult,
             @RequestParam(value = "coverImageFile", required = false) MultipartFile coverImage,
             @RequestParam(value = "carouselImageFiles", required = false) MultipartFile[] carouselImages,
             @RequestParam(value = "itineraryFile", required = false) MultipartFile itinerary,
-            Principal principal) throws IOException {
+            Principal principal,
+            Model model) throws IOException {
+        if (principal == null) {
+            return "redirect:/sign_in";
+        }
+
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
             return "error404";
@@ -155,6 +148,25 @@ public class TravelWebController {
         }
         travel.setId(existingTravel.getId());
         travel.setOwnerName(existingTravel.getOwnerName());
+
+        if (bindingResult.hasErrors()) {
+            travel.setCoverImage(existingTravel.getCoverImage());
+            travel.setCarouselImagesUrls(existingTravel.getCarouselImages());
+            travel.setItineraryUrl(existingTravel.getItineraryUrl());
+            model.addAttribute("error", firstValidationError(bindingResult));
+            populateEditTravelModel(model, travel);
+            return "edit_travel";
+        }
+
+        if (travel.getStartDate() != null && travel.getEndDate() != null
+                && travel.getEndDate().isBefore(travel.getStartDate())) {
+            travel.setCoverImage(existingTravel.getCoverImage());
+            travel.setCarouselImagesUrls(existingTravel.getCarouselImages());
+            travel.setItineraryUrl(existingTravel.getItineraryUrl());
+            model.addAttribute("error", "La fecha de fin no puede ser anterior a la fecha de inicio");
+            populateEditTravelModel(model, travel);
+            return "edit_travel";
+        }
 
         // Update cover image if provided
         if (coverImage != null && !coverImage.isEmpty()) {
@@ -206,15 +218,6 @@ public class TravelWebController {
         model.addAttribute("travel", travel);
 
         // Countries, cities and places lists
-        /* 
-        model.addAttribute("countriesList",
-                travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
-        model.addAttribute("citiesList",
-                travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
-        model.addAttribute("placesList",
-                travel.getPlaces() != null ? List.of(travel.getPlaces().split(",")) : List.of());
-        */
-
         List<String> countriesList = travel.getCountries() != null && !travel.getCountries().isEmpty()
             ? List.of(travel.getCountries().split(","))
             : List.of();
@@ -290,6 +293,27 @@ public class TravelWebController {
         }
         travelService.deleteById(id);
         return "redirect:/mytravels";
+    }
+
+    private void populateEditTravelModel(Model model, Travel travel) {
+        model.addAttribute("travel", travel);
+
+        int rating = travel.getRating();
+        model.addAttribute("rating1", rating == 1);
+        model.addAttribute("rating2", rating == 2);
+        model.addAttribute("rating3", rating == 3);
+        model.addAttribute("rating4", rating == 4);
+        model.addAttribute("rating5", rating == 5);
+
+        model.addAttribute("members",
+                travel.getEmailsColaborators() != null ? travel.getEmailsColaborators() : "");
+    }
+
+    private String firstValidationError(BindingResult bindingResult) {
+        if (!bindingResult.hasErrors() || bindingResult.getAllErrors().isEmpty()) {
+            return "Hay datos invalidos en el formulario.";
+        }
+        return bindingResult.getAllErrors().get(0).getDefaultMessage();
     }
 
 }

@@ -3,6 +3,7 @@ package es.nextjourney.vs_nextjourney.model;
 import java.time.LocalDate;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,51 +28,58 @@ public class Travel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@Column(name = "owner_id", nullable = false)
-    // OwnerName
+    @Column(name = "owner_name", nullable = false)
     private String ownerName;
 
-    //@Column(name = "name", nullable = false)
-    // Travel title
+    @Column(name = "title", nullable = false)
+    @NotBlank(message = "El titulo del viaje es obligatorio")
+    @Size(max = 150, message = "El titulo del viaje no puede superar 150 caracteres")
     private String title;
 
     //COVER IMAGE
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     private Image coverImage;
 
-    //Dates
+    @NotNull(message = "La fecha de inicio es obligatoria")
     private LocalDate startDate;
+
+    @NotNull(message = "La fecha de fin es obligatoria")
     private LocalDate endDate;
 
-    //@Column(name = "description", nullable = false, columnDefinition = "TEXT")
-    // Travel description
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    @NotBlank(message = "La descripcion del viaje es obligatoria")
+    @Size(max = 3000, message = "La descripcion no puede superar 3000 caracteres")
     private String description;
 
     // Travel countries, cities and places
+    @Size(max = 500, message = "El campo de paises no puede superar 500 caracteres")
     private String countries;
+
+    @Size(max = 500, message = "El campo de ciudades no puede superar 500 caracteres")
     private String cities;
+
+    @Size(max = 500, message = "El campo de lugares no puede superar 500 caracteres")
     private String places;
 
-    //@Column(name = "rating", nullable = false)
-    //@Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
-    //@Max(value = 5, message = "La puntuación debe estar entre 0 y 5")
-    // Star rating
+    @Column(name = "rating", nullable = false)
+    @Min(value = 1, message = "La puntuacion debe estar entre 1 y 5")
+    @Max(value = 5, message = "La puntuacion debe estar entre 1 y 5")
     private int rating;
 
-    //@Column(name = "comment")
-    // Travel comment
+    @Column(name = "comment")
+    @Size(max = 3000, message = "El comentario no puede superar 3000 caracteres")
     private String comment;
 
     //CAROUSEL IMAGE
     @OneToMany(mappedBy="travelImage", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Image> carouselImages;
 
-    //@Column(name = "itinerary_url")
-    // Travel itinerary
+    @Column(name = "itinerary_url")
+    @Size(max = 255, message = "El nombre del itinerario no puede superar 255 caracteres")
     private String itineraryUrl;
 
-    //@Column(name = "emails_colaborators")
-    // Travel colaborators (emails)
+    @Column(name = "emails_colaborators")
+    @Size(max = 500, message = "El listado de colaboradores no puede superar 500 caracteres")
     private String emailsColaborators;
 
     // USERS
@@ -213,6 +226,9 @@ public class Travel {
     }
 
     public void setRating(int rating) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("La puntuacion debe estar entre 1 y 5");
+        }
         this.rating = rating;
     }
 

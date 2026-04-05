@@ -28,6 +28,12 @@
                 <!-- Form for creating a new trip-->
                 <form action="/travel/new" method="post" enctype="multipart/form-data">
 
+                    {{#error}}
+                    <div class="alert alert-danger text-center mb-4">
+                        {{error}}
+                    </div>
+                    {{/error}}
+
                     <!-- CSRF token-->
                     <input type="hidden" name="_csrf" value="{{token}}"/>
                     

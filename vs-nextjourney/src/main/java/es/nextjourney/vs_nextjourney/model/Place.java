@@ -11,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Place {
@@ -29,20 +32,17 @@ public class Place {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @Column(name = "name", nullable = false)
-    // Place name
+    @NotBlank(message = "El nombre del lugar es obligatorio")
+    @Size(max = 120, message = "El nombre del lugar no puede superar 120 caracteres")
     private String name;
 
-    // @Column(name = "description", columnDefinition = "TEXT")
-    // Place description
+    @NotBlank(message = "La descripción del lugar es obligatoria")
+    @Size(max = 3000, message = "La descripción del lugar no puede superar 3000 caracteres")
     private String description;
 
-    // @Column(name = "category", nullable = false)
-    // Category
+    @NotNull(message = "La categoría es obligatoria")
     private Category category;
 
-    // @Column (name="reviews")
-    // REVIEWS
     @OneToMany(mappedBy="place", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Review> reviews;
 

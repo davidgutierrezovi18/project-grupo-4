@@ -39,6 +39,8 @@ import es.nextjourney.vs_nextjourney.service.ReviewService;
 @Controller
 public class ReviewWebController {
 
+	private static final int MAX_REVIEW_LENGTH = 3000;
+
 	@Autowired
 	private ReviewService reviewService;
 
@@ -124,9 +126,13 @@ public class ReviewWebController {
 			return "redirect:/my_reviews";
 		}
 
+		if (!isValidRating(rating) || !isValidReviewText(reviewText)) {
+			return "redirect:/my_reviews/" + reviewId + "/edit";
+		}
+
 		Review review = reviewOpt.get();
 		review.setRating(rating);
-		review.setReviewText(reviewText);
+		review.setReviewText(reviewText.trim());
 
 		if (deleteImageIds != null && review.getImages() != null) {
 			review.getImages().removeIf(image -> image.getId() != null && deleteImageIds.contains(image.getId()));
@@ -199,6 +205,10 @@ public class ReviewWebController {
 		if (userOpt.isEmpty()) {
 			return "redirect:/sign_in";
 		}
+
+		if (!isValidRating(rating) || !isValidReviewText(reviewText)) {
+			return "redirect:/add-review";
+		}
 		User user = userOpt.get();
 
 		Optional<Place> placeOpt = resolveOrCreatePlace(placeId, placeName, placeType);
@@ -210,7 +220,7 @@ public class ReviewWebController {
 		review.setUser(user);
 		review.setPlace(placeOpt.get());
 		review.setRating(rating);
-		review.setReviewText(reviewText);
+		review.setReviewText(reviewText.trim());
 		review.setCreatedAt(LocalDate.now());
 		Review savedReview = reviewService.createReview(review);
 
@@ -370,7 +380,7 @@ public class ReviewWebController {
 			return placeService.findById(placeId);
 		}
 
-		if (placeName == null || placeName.isBlank()) {
+		if (placeName == null || placeName.isBlank() || placeName.length() > 120) {
 			return Optional.empty();
 		}
 
@@ -413,9 +423,21 @@ public class ReviewWebController {
 	private String buildGeneratedDescription(String placeType) {
 		StringBuilder builder = new StringBuilder("Lugar creado automaticamente desde una reseña");
 		if (placeType != null && !placeType.isBlank()) {
-			builder.append(". Tipo: ").append(placeType.trim());
+			builder.append(". Tipo: ").append(placeType.trim(), 0, Math.min(placeType.trim().length(), 50));
 		}
 		return builder.toString();
+	}
+
+	private boolean isValidRating(int rating) {
+		return rating >= 1 && rating <= 5;
+	}
+
+	private boolean isValidReviewText(String reviewText) {
+		if (reviewText == null) {
+			return false;
+		}
+		String normalized = reviewText.trim();
+		return !normalized.isBlank() && normalized.length() <= MAX_REVIEW_LENGTH;
 	}
 
 	public static class PlaceMetricResponse {

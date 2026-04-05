@@ -14,6 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Review {
@@ -23,23 +28,24 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @Column(name = "rating", nullable = false)
-    // @Min(value = 0, message = "La puntuación debe estar entre 0 y 5")
-    // @Max(value = 5, message = "La puntuación debe estar entre 0 y 5")
-    // Review stars
+    @Column(name = "rating", nullable = false)
+    @Min(value = 1, message = "La puntuacion debe estar entre 1 y 5")
+    @Max(value = 5, message = "La puntuacion debe estar entre 1 y 5")
     private int rating;
 
     // Review content
     @Lob
     @Column(name = "review_text", columnDefinition = "TEXT")
+    @NotBlank(message = "El texto de la reseña es obligatorio")
+    @Size(max = 3000, message = "La reseña no puede superar 3000 caracteres")
     private String reviewText;
 
     // REVIEW IMAGES
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Image> images;
 
-    // @Column(name = "created_at", nullable = false)
-    // Creation date
+    @Column(name = "created_at", nullable = false)
+    @NotNull(message = "La fecha de creación es obligatoria")
     private LocalDate createdAt;
 
     // User relationship
@@ -82,9 +88,10 @@ public class Review {
     }
 
     public void setRating(int rating) {
-        if (rating >= 1 && rating <= 5) {
-            this.rating = rating;
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("La puntuacion debe estar entre 1 y 5");
         }
+        this.rating = rating;
     }
 
     public String getReviewText() {
@@ -131,7 +138,7 @@ public class Review {
         return destination;
     }
 
-    public void setDescription(Destination destination){
+    public void setDestination(Destination destination){
         this.destination = destination;
     }
 

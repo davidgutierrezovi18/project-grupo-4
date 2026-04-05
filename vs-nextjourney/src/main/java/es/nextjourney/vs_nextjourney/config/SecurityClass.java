@@ -52,7 +52,7 @@ public class SecurityClass {
                 
                 // Authenticated users pages
                 .requestMatchers(
-                    "/mytravels", "/travel/**", "/user_profile/**","/add_place","/add_destinstion","/add_place/**","/destinations/*/add_place","/add_destination/**",
+                    "/mytravels", "/travel/**", "/user_profile/**", "/add_place", "/add_place/**", "/destinations/*/add_place", "/add_destination/**",
                     "/my_reviews", "/add-review", "/add-review/**"
                 ).authenticated()
 

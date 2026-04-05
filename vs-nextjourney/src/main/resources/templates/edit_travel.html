@@ -27,6 +27,12 @@
 
                 {{#travel}}
 
+                {{#error}}
+                <div class="alert alert-danger text-center mb-4">
+                    {{error}}
+                </div>
+                {{/error}}
+
                 <!-- Form for creating a net trip-->
                 <form action="/travel/{{id}}/edit" method="post" enctype="multipart/form-data">
 

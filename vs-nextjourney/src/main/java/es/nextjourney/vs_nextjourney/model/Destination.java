@@ -11,9 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-
-//import java.util.List;
-//import java.util.ArrayList;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Destination {
@@ -25,12 +24,18 @@ public class Destination {
 
     // Destination name
     @Column(name = "name", nullable = false)
+    @NotBlank(message = "El nombre del destino es obligatorio")
+    @Size(max = 120, message = "El nombre del destino no puede superar 120 caracteres")
     private String name;
 
     // Destination description
+    @NotBlank(message = "La descripción del destino es obligatoria")
+    @Size(max = 3000, message = "La descripción no puede superar 3000 caracteres")
     private String description;
 
     // Destination country
+    @NotBlank(message = "El país es obligatorio")
+    @Size(max = 80, message = "El país no puede superar 80 caracteres")
     private String country;
 
     // COVER IMAGE

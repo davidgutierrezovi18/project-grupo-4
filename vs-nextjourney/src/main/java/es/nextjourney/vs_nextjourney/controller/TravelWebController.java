@@ -71,6 +71,8 @@ public class TravelWebController {
             travel.setCoverImage(cover);
         }
 
+        travelService.save(travel);
+
         // Carrousel images
         List<Image> images = new ArrayList<>();
         for (MultipartFile file : carouselImages) {
@@ -157,6 +159,7 @@ public class TravelWebController {
         // Update cover image if provided
         if (coverImage != null && !coverImage.isEmpty()) {
             Image cover = imageService.createImage(coverImage);
+            imageService.save(cover);
             travel.setCoverImage(cover);
         } else {
             // Keep existing cover image
@@ -170,6 +173,7 @@ public class TravelWebController {
                 if (!file.isEmpty()) {
                     Image img = imageService.createImage(file);
                     img.setTravelImage(travel);
+                    imageService.save(img);
                     images.add(img);
                 }
             }

@@ -14,7 +14,8 @@
                     <div class="col-lg-6">
                         <div class="text-center mb-5">
                             <h1 class="fw-bolder">Inicia sesión</h1>
-                            <p class="lead fw-normal text-muted mb-0">Algo no ha ido bien. Por favor, inténtalo de nuevo.</p>
+                            <p class="lead fw-normal text-muted mb-0">Algo no ha ido bien. Por favor, inténtalo de
+                                nuevo.</p>
                         </div>
 
                         <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
@@ -25,6 +26,9 @@
                         </div>
 
                         <form class="row g-3 justify-content-center" action="/login" method="post">
+                            <!-- CSRF token-->
+                            <input type="hidden" name="_csrf" value="{{token}}" />
+
                             <div class="col-md-12">
                                 <label for="floatingInput">Nombre de usuario</label>
                                 <input type="text" name="username" class="form-control" id="floatingInput"
@@ -57,4 +61,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

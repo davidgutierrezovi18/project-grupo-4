@@ -29,6 +29,9 @@
                         <form action="{{#isEditing}}/destinations/{{destination.id}}/places/{{place.id}}/edit{{/isEditing}}{{^isEditing}}/destinations/{{destination.id}}/add_place{{/isEditing}}" 
                               method="post">
 
+                            <!-- CSRF token-->
+                            <input type="hidden" name="_csrf" value="{{token}}"/>
+
                             {{#isEditing}}
                             <input type="hidden" name="id" value="{{place.id}}">
                             {{/isEditing}}

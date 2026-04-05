@@ -27,6 +27,8 @@
                 </div>
                 <form class="row g-3 needs-validation" action="{{#adminView}}/admin_users/{{user.id}}/edit{{/adminView}}{{^adminView}}/edit_profile{{/adminView}}" method="post"
                     enctype="multipart/form-data" novalidate>
+                    <!-- CSRF token-->
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
                     {{#msg}}
                     <div class="alert alert-info text-center">
                         {{msg}}

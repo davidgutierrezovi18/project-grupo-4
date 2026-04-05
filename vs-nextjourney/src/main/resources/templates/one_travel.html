@@ -38,6 +38,8 @@
                             Editar
                         </a>
                         <form action="/travel/{{id}}/delete" method="post" style="display:inline;">
+                            <!-- CSRF token-->
+                            <input type="hidden" name="_csrf" value="{{token}}"/>
                             <button class="btn btn-outline-danger"
                                 onclick="return confirm('¿Seguro que quieres eliminar este viaje?');">
                                 <i class="bi bi-trash"></i>
@@ -66,9 +68,10 @@
             <div class="container px-5 my-5">
 
                 <!-- Image above the description -->
-                <div class="text-center mb-4">
+                <div class="text-center mb-4" style="width:100%; height:600px; overflow:hidden; border-radius:0.5rem;">
                     {{#travel.coverImage}}
-                    <img src="/images/{{travel.coverImage.id}}" class="img-fluid rounded" alt="cover">
+                    <img src="/images/{{travel.coverImage.id}}" alt="cover"
+                        style="width:100%; height:100%; object-fit:cover;">
                     {{/travel.coverImage}}
                 </div>
             </div>
@@ -90,6 +93,7 @@
 
         <section class="py-5 bg">
             <!-- Countries -->
+            {{#hasCountries}}
             <div class="container px-5 my-5">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
                     <div>
@@ -112,8 +116,10 @@
                     {{/countriesList}}
                 </div>
             </div>
+            {{/hasCountries}}
 
             <!-- Cities -->
+            {{#hasCities}}
             <div class="container px-5 my-5">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
                     <div>
@@ -135,10 +141,11 @@
                     </div>
                     {{/citiesList}}
                 </div>
-
             </div>
+            {{/hasCities}}
 
             <!-- Other places -->
+            {{#hasPlaces}}
             <div class="container px-5 my-5">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
                     <div>
@@ -161,9 +168,11 @@
                     {{/placesList}}
                 </div>
             </div>
+            {{/hasPlaces}}
         </section>
 
         <!-- Images carousel -->
+        {{#hasCarouselImages}}
         <section class="py-5">
             <div class="container px-5">
                 <h2 class="fw-bolder mb-4">Galería de fotos</h2>
@@ -171,10 +180,10 @@
                     <div class="carousel-inner rounded-3">
                         {{#carouselImages}}
                         <div class="carousel-item {{#active}}active{{/active}}">
-                            <img src="/images/{{id}}" class="d-block w-100" alt="Foto del viaje">
+                            <img src="/images/{{id}}" alt="Foto del viaje"
+                                style="width:100%; height:600px; object-fit:cover;">
                         </div>
                         {{/carouselImages}}
-
                     </div>
 
                     <button class="carousel-control-prev" type="button" data-bs-target="#tripCarousel"
@@ -190,6 +199,7 @@
                 </div>
             </div>
         </section>
+        {{/hasCarouselImages}}
 
         <!-- Calification and trip comment -->
         <section class="py-5">

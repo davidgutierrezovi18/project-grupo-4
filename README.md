@@ -283,9 +283,9 @@ Solo si han cambiado.
 
 Diagrama mostrando las entidades, sus campos y relaciones:
 
-![Diagrama Entidad-Relación](images/database-diagram.png)
+![Diagrama Entidad-Relación](images/diagrama_de_entidades.png)
 
-> [Descripción opcional: Ej: "El diagrama muestra las 4 entidades principales: Usuario, Producto, Pedido y Categoría, con sus respectivos atributos y relaciones 1:N y N:M."]
+> [Diagrama en el que se pueden observar las distintas entidades y relaciones de nuestra página web. Estas entidades son: User, Travel, Destination, Place, Image y Review.]
 
 ### **Diagrama de Clases y Templates**
 
@@ -297,7 +297,35 @@ Diagrama de clases de la aplicación con diferenciación por colores o secciones
 
 ### **Participación de Miembros en la Práctica 2**
 
-#### **Alumno 1 - [Nombre Completo]**
+#### **Alumno 1 - David Gutiérrez Oviedo**
+
+Creación de la logica para la gestion de las reseñas así como el panel de administrador
+
+| Nº    | Commits      | Files      |
+|:------------: |:------------:| :------------:|
+|1| [Create travel Class](https://github.com/DWS-2026/dws-2026-project-base/commit/7820f114e5beea61435b4a44652c7b861e52f56d)  | [travel.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/javaClass/travel.java)   |
+|2| [Review Logic](https://github.com/DWS-2026/dws-2026-project-base/commit/57eee0d7963064da3c238cbb99ee32382bc1b46f)  | [ReviewWebController.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/ReviewWebController.java)   |
+|3| [Encoder Password](https://github.com/DWS-2026/dws-2026-project-base/commit/6361ff2823f1724457840f2e4bb02828f91a9ad2)  | [SecurityClass.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/config/SecurityClass.java)   |
+|4| [SpringBoot Security](https://github.com/DWS-2026/dws-2026-project-base/commit/2b704be2f8b001ce5f9e5d26bacbadcdcfc3837a)  | [SecurityClass.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/config/SecurityClass.java)   |
+|5| [Create Admin Panel](https://github.com/DWS-2026/dws-2026-project-base/commit/dee367829d0a20c1833edc2001639132b08024ad)  | [WebController.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/WebController.java)   |
+
+---
+
+#### **Alumno 2 - Mari Luz Charfolé Maestro**
+
+Principalmente he realizado la separación de la barra de navegación, la creación de la clase Travel.java, la programación de las relaciones entre entidades y su visibilidad en la base de datos, la dinamizaión de las páginas relaciones con los viajes (travel), la dinamización de la página principal y la implementación de protección CSRF.
+
+| Nº    | Commits      | Files      |
+|:------------: |:------------:| :------------:|
+|1| [Creation travel java file](https://github.com/DWS-2026/project-grupo-4/commit/dc982161f546310aada1f16a507e1f34f700e553)  | [Travel.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Travel.java)   |
+|2| [Travel-Image relationships](https://github.com/DWS-2026/project-grupo-4/commit/3393f36e1e72838f7d76b3c188d0566a4ee9af47), [Images relationships](https://github.com/DWS-2026/project-grupo-4/commit/f8975e1d946a3ccbaad4cf389359102f3ef4dd43), [More relationships added](https://github.com/DWS-2026/project-grupo-4/commit/60bf71e03519aad04722df81c95b4ea4c0987778), [Destination-Review and Place-Review relationships](https://github.com/DWS-2026/project-grupo-4/commit/f374710859442c78f0893b0e20d21f813513bb74)  | [Destination.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Destination.java), [Image.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Image.java), [Place.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Place.java), [Review.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Review.java), [Travel.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Travel.java), [User.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/User.java)   |
+|3| [dynamic travel html files](https://github.com/DWS-2026/project-grupo-4/commit/b78116b085df261af164e6aed2052b8c22e08755#diff-c80d1590766977f2298404739cbdd8abfa5d922bdc023f9480dc7b8eaf3930ee), [Dynamic logic for travels](https://github.com/DWS-2026/project-grupo-4/commit/df1062445d1efd63a721918426f2f8bd406100a4)  | [TravelWebController.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/TravelWebController.java), [Travel.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Travel.java), [TravelRepository.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/repository/TravelRepository.java), [TravelService.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/service/TravelService.java), [create_new_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/create_new_travel.html), [mytravels.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/mytravels.html), [one_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/one_travel.html), [edit_travel.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/edit_travel.html)   |
+|4| [Making dynamic the index](https://github.com/DWS-2026/project-grupo-4/commit/ecbf858b3c303bf1c8924af1125459e53c41373f), [Dynamic index.html and principal page logic](https://github.com/DWS-2026/project-grupo-4/commit/a52600371d9af5d85e9d9e34b90ff3c83cf9ea29)  | [WebController.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/WebController.java), [index.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/index.html)   |
+|5| [CSRF protection](https://github.com/DWS-2026/project-grupo-4/commit/20b5245ba8d85a05d90fbce6c1503f018899bc25), [CSRF updtae](https://github.com/DWS-2026/project-grupo-4/commit/31cec9cde09ab3038d18a88bc664e7268bc70a3c)  | [CSRFHandlerConfiguration.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/config/CSRFHandlerConfiguration.java), [SecurityClass.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/config/SecurityClass.java) and some html files   |
+
+---
+
+#### **Alumno 3 - Nerea Sanz Sobrados**
 
 [Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
 
@@ -311,35 +339,7 @@ Diagrama de clases de la aplicación con diferenciación por colores o secciones
 
 ---
 
-#### **Alumno 2 - [Nombre Completo]**
-
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
-
-| Nº    | Commits      | Files      |
-|:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
-
----
-
-#### **Alumno 3 - [Nombre Completo]**
-
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
-
-| Nº    | Commits      | Files      |
-|:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
-
----
-
-#### **Alumno 4 - [Nombre Completo]**
+#### **Alumno 4 - Hugo Rus González**
 
 [Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
 

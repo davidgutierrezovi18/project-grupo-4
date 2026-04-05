@@ -71,6 +71,8 @@ public class TravelWebController {
             travel.setCoverImage(cover);
         }
 
+        travelService.save(travel);
+
         // Carrousel images
         List<Image> images = new ArrayList<>();
         for (MultipartFile file : carouselImages) {
@@ -157,6 +159,7 @@ public class TravelWebController {
         // Update cover image if provided
         if (coverImage != null && !coverImage.isEmpty()) {
             Image cover = imageService.createImage(coverImage);
+            imageService.save(cover);
             travel.setCoverImage(cover);
         } else {
             // Keep existing cover image
@@ -170,6 +173,7 @@ public class TravelWebController {
                 if (!file.isEmpty()) {
                     Image img = imageService.createImage(file);
                     img.setTravelImage(travel);
+                    imageService.save(img);
                     images.add(img);
                 }
             }
@@ -202,12 +206,33 @@ public class TravelWebController {
         model.addAttribute("travel", travel);
 
         // Countries, cities and places lists
+        /* 
         model.addAttribute("countriesList",
                 travel.getCountries() != null ? List.of(travel.getCountries().split(",")) : List.of());
         model.addAttribute("citiesList",
                 travel.getCities() != null ? List.of(travel.getCities().split(",")) : List.of());
         model.addAttribute("placesList",
                 travel.getPlaces() != null ? List.of(travel.getPlaces().split(",")) : List.of());
+        */
+
+        List<String> countriesList = travel.getCountries() != null && !travel.getCountries().isEmpty()
+            ? List.of(travel.getCountries().split(","))
+            : List.of();
+        List<String> citiesList = travel.getCities() != null && !travel.getCities().isEmpty()
+                ? List.of(travel.getCities().split(","))
+                : List.of();
+        List<String> placesList = travel.getPlaces() != null && !travel.getPlaces().isEmpty()
+                ? List.of(travel.getPlaces().split(","))
+                : List.of();
+
+        model.addAttribute("countriesList", countriesList);
+        model.addAttribute("citiesList", citiesList);
+        model.addAttribute("placesList", placesList);
+
+        // Booleans to check if there are countries, cities or places
+        model.addAttribute("hasCountries", !countriesList.isEmpty());
+        model.addAttribute("hasCities", !citiesList.isEmpty());
+        model.addAttribute("hasPlaces", !placesList.isEmpty());
 
         // First carousel image
         List<Image> carouselImages = travel.getCarouselImages();
@@ -215,6 +240,8 @@ public class TravelWebController {
             carouselImages.get(i).setActive(i == 0);
         }
         model.addAttribute("carouselImages", carouselImages);
+        // Boolean to check if there are carousel images
+        model.addAttribute("hasCarouselImages", !carouselImages.isEmpty());
 
         // Star ratig
         List<Integer> filledStars = new ArrayList<>();

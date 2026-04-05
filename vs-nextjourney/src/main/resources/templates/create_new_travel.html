@@ -27,6 +27,9 @@
 
                 <!-- Form for creating a new trip-->
                 <form action="/travel/new" method="post" enctype="multipart/form-data">
+
+                    <!-- CSRF token-->
+                    <input type="hidden" name="_csrf" value="{{token}}"/>
                     
                     <!-- Title-->
                     <div class="mb-3">
@@ -38,7 +41,7 @@
                     <!-- Cover Image -->
                     <div class="mb-3">
                         <label class="form-label">Imagen de portada</label>
-                        <input type="file" class="form-control" name="coverImageFile" required>
+                        <input type="file" class="form-control" name="coverImageFile" required accept="image/jpeg, image/png">
                     </div>
 
                     <!-- Dates -->
@@ -106,14 +109,14 @@
                     <!-- Images carousel-->
                     <div class="mb-3">
                         <label class="form-label">Imágenes del viaje</label>
-                        <input type="file" class="form-control" name="carouselImageFiles" multiple>
+                        <input type="file" class="form-control" name="carouselImageFiles" multiple accept="image/jpeg, image/png">
                         <div class="form-text">Puedes subir varias imágenes</div>
                     </div>
                     
                     <!-- PDF-->
                     <div class="mb-3">
                         <label class="form-label">PDF con itinerario del viaje</label>
-                        <input type="file" class="form-control" name="itineraryFile">
+                        <input type="file" class="form-control" name="itineraryFile" accept="application/pdf">
                         <div class="form-text">Formato permitido: pdf</div>
                     </div>
                     
@@ -122,7 +125,7 @@
                         <label class="form-label">Miembros del viaje</label>
                         <input type="text" class="form-control" name="emailsColaborators"
                             placeholder="Ej: correo1@email.com, correo2@email.com">
-                        <div class="form-text">Correos separados por comas</div>
+                        <div class="form-text">Correos separados por comas. Los correos introducidos deben ser de usuarios registrados</div>
                     </div>
                     
                     <!-- Buttons -->

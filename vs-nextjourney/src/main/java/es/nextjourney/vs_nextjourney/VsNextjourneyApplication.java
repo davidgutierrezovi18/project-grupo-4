@@ -37,6 +37,7 @@ public class VsNextjourneyApplication {
 			admin.setRoles(List.of("ADMIN"));
 
 			userRepository.save(admin);
+
 		};
 	}
 

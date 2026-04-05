@@ -297,17 +297,17 @@ Diagrama de clases de la aplicación con diferenciación por colores o secciones
 
 ### **Participación de Miembros en la Práctica 2**
 
-#### **Alumno 1 - [Nombre Completo]**
+#### **Alumno 1 - David Gutiérrez Oviedo**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+Creación de la logica para la gestion de las reseñas así como el panel de administrador
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+|1| [Create travel Class](https://github.com/DWS-2026/dws-2026-project-base/commit/7820f114e5beea61435b4a44652c7b861e52f56d)  | [travel.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/javaClass/travel.java)   |
+|2| [Review Logic](https://github.com/DWS-2026/dws-2026-project-base/commit/57eee0d7963064da3c238cbb99ee32382bc1b46f)  | [ReviewWebController.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/ReviewWebController.java)   |
+|3| [Encoder Password](https://github.com/DWS-2026/dws-2026-project-base/commit/6361ff2823f1724457840f2e4bb02828f91a9ad2)  | [SecurityClass.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/config/SecurityClass.java)   |
+|4| [SpringBoot Security](https://github.com/DWS-2026/dws-2026-project-base/commit/2b704be2f8b001ce5f9e5d26bacbadcdcfc3837a)  | [SecurityClass.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/config/SecurityClass.java)   |
+|5| [Create Admin Panel](https://github.com/DWS-2026/dws-2026-project-base/commit/dee367829d0a20c1833edc2001639132b08024ad)  | [WebController.java](vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/WebController.java)   |
 
 ---
 

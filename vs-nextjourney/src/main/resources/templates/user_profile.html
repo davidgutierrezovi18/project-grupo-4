@@ -94,7 +94,9 @@
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                 <a href="/edit_profile" class="btn btn-primary btn-lg">Editar perfil</a>
                                 <form action="/delete_profile" method="post">
-                                    <button type="submit" class="btn btn-danger btn-lg">Borrar perfil</button>
+                                    <!-- CSRF token-->
+                                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                                    <button type="submit" class="btn btn-danger btn-lg" onclick="return confirm('¿Seguro que quieres eliminar el perfil?');">Borrar perfil</button>
                                 </form>
                                 <a href="/mytravels" class="btn btn-primary btn-lg">Mis viajes</a>
                                 <a href="/my_reviews" class="btn btn-primary btn-lg">Mis reseñas</a>

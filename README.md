@@ -311,7 +311,21 @@ Creación de la logica para la gestion de las reseñas así como el panel de adm
 
 ---
 
-#### **Alumno 2 - [Nombre Completo]**
+#### **Alumno 2 - Mari Luz Charfolé Maestro**
+
+[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+
+| Nº    | Commits      | Files      |
+|:------------: |:------------:| :------------:|
+|1| [Creation travel java file](https://github.com/DWS-2026/project-grupo-4/commit/dc982161f546310aada1f16a507e1f34f700e553)  | [Travel.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/Travel.java)   |
+|2| [Travel-Image relationships](https://github.com/DWS-2026/project-grupo-4/commit/3393f36e1e72838f7d76b3c188d0566a4ee9af47), [Images relationships](https://github.com/DWS-2026/project-grupo-4/commit/f8975e1d946a3ccbaad4cf389359102f3ef4dd43), [More relationships added](https://github.com/DWS-2026/project-grupo-4/commit/60bf71e03519aad04722df81c95b4ea4c0987778), [Destination-Review and Place-Review relationships](https://github.com/DWS-2026/project-grupo-4/commit/f374710859442c78f0893b0e20d21f813513bb74)  | [Archivo2](URL_archivo_2)   |
+|3| [Make travel pages dynamic](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
+|4| [Make principal page dynamic](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
+|5| [Include CSRF security](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+
+---
+
+#### **Alumno 3 - Nerea Sanz Sobrados**
 
 [Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
 
@@ -325,21 +339,7 @@ Creación de la logica para la gestion de las reseñas así como el panel de adm
 
 ---
 
-#### **Alumno 3 - [Nombre Completo]**
-
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
-
-| Nº    | Commits      | Files      |
-|:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
-
----
-
-#### **Alumno 4 - [Nombre Completo]**
+#### **Alumno 4 - Hugo Rus González**
 
 [Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
 

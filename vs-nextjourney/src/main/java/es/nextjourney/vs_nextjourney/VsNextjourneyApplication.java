@@ -40,4 +40,25 @@ public class VsNextjourneyApplication {
 		};
 	}
 
+	@Bean
+	CommandLineRunner createDefaultUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+		// TEMPORALY: delete this block when the default user already exists in the database
+		return args -> {
+			if (userRepository.findByUsername("user1").isPresent()) {
+				return;
+			}
+
+			User user1 = new User();
+			user1.setName("user1");
+			user1.setLastName("Sistema");
+			user1.setUsername("user1");
+			user1.setEmail("user1@nextjourney.local");
+			user1.setDateOfBirth(LocalDate.of(2000, 1, 1));
+			user1.setPassword(passwordEncoder.encode("grupo4"));
+			user1.setRoles(List.of("USER"));
+
+			userRepository.save(user1);
+		};
+	}
+
 }

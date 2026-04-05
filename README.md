@@ -354,15 +354,15 @@ Principalmente he realizado la separación de la barra de navegación, la creaci
 
 #### **Alumno 3 - Nerea Sanz Sobrados**
 
-[Descripción de las tareas y responsabilidades principales del alumno en el proyecto]
+He desarrollado principalmente la clase Usuario junto con su repositorio y servicio, incluyendo una tabla que relaciona usuarios con sus roles (usuario o admin). Además, implementé el LoginWebController, la página de error 403, y he añadido o modificado funcionalidades en edit_profile.html, register.html, login.html y user_profile.html
 
 | Nº    | Commits      | Files      |
 |:------------: |:------------:| :------------:|
-|1| [Descripción commit 1](URL_commit_1)  | [Archivo1](URL_archivo_1)   |
-|2| [Descripción commit 2](URL_commit_2)  | [Archivo2](URL_archivo_2)   |
-|3| [Descripción commit 3](URL_commit_3)  | [Archivo3](URL_archivo_3)   |
-|4| [Descripción commit 4](URL_commit_4)  | [Archivo4](URL_archivo_4)   |
-|5| [Descripción commit 5](URL_commit_5)  | [Archivo5](URL_archivo_5)   |
+|1| [Fixed password change funcionality](https://github.com/DWS-2026/project-grupo-4/commit/b787dbcd2c0e3bea6272770aff908c6c9e3508e3)  | [LoginWebController.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/LoginWebController.java), [edit_profile.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/edit_profile.html)   |
+|2| [Create User class](https://github.com/DWS-2026/project-grupo-4/commit/9d94c3543b14717489adf10ebe75cb2685d1a54b)  | [User.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/User.java)   |
+|3| [Modify User funcionability](https://github.com/DWS-2026/project-grupo-4/commit/3103cd5ef3bc1b11d056547e6ec583e0a136b49f)  | [LoginWebController.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/LoginWebController.java), [edit_profile.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/edit_profile.html), [user_profile.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/user_profile.html), [register.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/register.html), [sign_in.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/sign_in.html)   |
+|4| [unique username and Gmail](https://github.com/DWS-2026/project-grupo-4/commit/f42179d4154eb32dbbf2dedf94bcff58a7144472)  | [LoginWebController.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/LoginWebController.java), [User.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/model/User.java), [UserRepository.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/repository/UserRepository.java), [UserService.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/service/UserService.java), [register.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/register.html) |
+|5| [Image User](https://github.com/DWS-2026/project-grupo-4/commit/4830182aaf2941d6e5e40562b306669467caaa4b)  | [LoginWebController.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/controller/LoginWebController.java), [Profile-preview.js](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/static/js/profile-preview.js), [UserService.java](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/java/es/nextjourney/vs_nextjourney/service/UserService.java), [register.html](https://github.com/DWS-2026/project-grupo-4/blob/main/vs-nextjourney/src/main/resources/templates/register.html)   |
 
 ---
 

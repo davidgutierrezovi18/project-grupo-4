@@ -269,7 +269,20 @@ Solo si ha cambiado.
 #### **4. Página de editar perfil de usuario (edit_profile.html)**
 ![Editar perfil](images/edit_profile.png)
 ![Editar perfil](images/edit_profile2.png)
->Página que permite editar los distintos campos asociados a un perfil de usuario. Incluye barra de navegación, botón de cancelar, y de guardar cambios.
+>Página que permite editar los distintos campos asociados a un perfil de usuario. Incluye barra de navegación, botón de cancelar, de guardar cambios y para cambiar la contraseña.
+
+#### **5. Pagina de error 403 (403.html)**
+![403](images/403.png)
+>Página 403 – Acceso Prohibido. Incluye un botón para volver al inicio.
+>
+#### **6. Pagina de error 404 (404.html)**
+![404](images/404.png)
+>Página 404 – Recurso no encontrado. Incluye un botón para volver al inicio
+
+#### **5. Pagina de error 500 (500.html)**
+![500](images/500.png)
+>Página 500 – Error interno del servidor. Incluye un botón para volver al inicio.
+
 
 ### **Instrucciones de Ejecución**
 
@@ -290,8 +303,8 @@ Solo si ha cambiado.
 2. **AQUÍ INDICAR LO SIGUIENTES PASOS**
 
 #### **Credenciales de prueba**
-- **Usuario Admin**: usuario: `admin`, contraseña: `admin`
-- **Usuario Registrado**: usuario: `user`, contraseña: `user`
+- **Usuario Admin**: usuario: `admin`, contraseña: `grupo4`
+- **Usuario Registrado**: usuario: `user1`, contraseña: `grupo4`
 
 ### **Diagrama de Entidades de Base de Datos**
 

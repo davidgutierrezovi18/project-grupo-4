@@ -285,7 +285,7 @@ Diagrama mostrando las entidades, sus campos y relaciones:
 
 ![Diagrama Entidad-Relación](images/diagrama_de_entidades.png)
 
-> [Descripción opcional: Ej: "El diagrama muestra las 4 entidades principales: Usuario, Producto, Pedido y Categoría, con sus respectivos atributos y relaciones 1:N y N:M."]
+> [Diagrama en el que se pueden observar las distintas entidades y relaciones de nuestra página web. Estas entidades son: User, Travel, Destination, Place, Image y Review.]
 
 ### **Diagrama de Clases y Templates**
 

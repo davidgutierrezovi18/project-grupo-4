@@ -250,8 +250,9 @@ Creación y desarrollo de las paginas de iniciar sesión y registrarse, de desti
 ### **Navegación y Capturas de Pantalla**
 
 #### **Diagrama de Navegación**
+Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicación:
 
-Solo si ha cambiado.
+![Diagrama de Navegación](images/Diagrama_de_navegacion.drawio.svg)
 
 #### **Capturas de Pantalla Actualizadas**
 #### **1. Pagina de error al iniciar sesión (login_error.html)**

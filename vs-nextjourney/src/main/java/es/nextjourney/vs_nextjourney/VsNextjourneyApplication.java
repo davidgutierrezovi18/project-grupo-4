@@ -79,9 +79,8 @@ public class VsNextjourneyApplication {
 	@Bean
 	CommandLineRunner createDefaultDestinations(DestinationRepository destinationRepository) {
 		return args -> {
-			if (destinationRepository.count() > 0) {
+			if (destinationRepository.findByName("París").isPresent())
 				return;
-			}
 
 			Image image1 = new Image();
 			image1.setContentType("image/jpeg");
@@ -103,18 +102,21 @@ public class VsNextjourneyApplication {
 			PlaceRepository placeRepository) {
 		return args -> {
 
-			if (placeRepository.count() > 0) {
-				return;
-			}
-
 			Destination paris = destinationRepository.findByName("París").orElse(null);
+			if (paris == null)
+				return;
+
 			if (paris != null) {
+				if (placeRepository.findFirstByNameIgnoreCase("Torre Eiffel").isPresent())
+					return;
 				Place eiffel = new Place();
 				eiffel.setName("Torre Eiffel");
 				eiffel.setDescription("Icono de París con vistas impresionantes.");
 				eiffel.setCategory(Place.Category.Mirador);
 				eiffel.setDestination(paris);
 
+				if (placeRepository.findFirstByNameIgnoreCase("Museo del Louvre").isPresent())
+					return;
 				Place louvre = new Place();
 				louvre.setName("Museo del Louvre");
 				louvre.setDescription("Uno de los museos más importantes del mundo.");
@@ -134,11 +136,12 @@ public class VsNextjourneyApplication {
 			UserRepository userRepository) {
 		return args -> {
 
-			if (travelRepository.count() > 0) {
-				return;
-			}
-
 			User user1 = userRepository.findByUsername("user1").orElse(null);
+			if (user1 == null)
+				return;
+
+			if (travelRepository.findByTitle("Viaje a París").isPresent())
+				return;
 
 			Image image1 = new Image();
 			image1.setContentType("image/jpeg");
@@ -173,16 +176,16 @@ public class VsNextjourneyApplication {
 			PlaceRepository placeRepository,
 			DestinationRepository destinationRepository) {
 		return args -> {
-
-			if (reviewRepository.count() > 0) {
-				return;
-			}
 			User user1 = userRepository.findByUsername("user1").orElse(null);
 			Place eiffel = placeRepository.findFirstByNameIgnoreCase("Torre Eiffel").orElse(null);
 			Destination paris = destinationRepository.findByName("París").orElse(null);
 
-			if (user1 == null)
+			if (user1 == null || eiffel == null || paris == null)
 				return;
+
+			boolean exists = reviewRepository.findAll().stream()
+					.anyMatch(r -> r.getReviewText().equals("Impresionante lugar, totalmente recomendable."));
+			if (exists) return;
 
 			Review review1 = new Review();
 			review1.setUser(user1);

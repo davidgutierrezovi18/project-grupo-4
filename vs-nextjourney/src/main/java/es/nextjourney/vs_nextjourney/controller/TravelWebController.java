@@ -159,11 +159,11 @@ public class TravelWebController {
 
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
-            return "error404";
+            return "error/404";
         }
         Travel existingTravel = travelOpt.get();
         if (!existingTravel.getOwnerName().equals(principal.getName())) {
-            return "error403";
+            return "error/403";
         }
         travel.setId(existingTravel.getId());
         travel.setOwnerName(existingTravel.getOwnerName());
@@ -235,7 +235,7 @@ public class TravelWebController {
     public String oneTravel(@PathVariable Long id, Model model, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
-            return "error404";
+            return "error/404";
         }
         Travel travel = travelOpt.get();
         model.addAttribute("travel", travel);
@@ -311,11 +311,11 @@ public class TravelWebController {
     public String deleteTravel(@PathVariable Long id, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
-            return "error404";
+            return "error/404";
         }
         Travel travel = travelOpt.get();
         if (!travel.getOwnerName().equals(principal.getName())) {
-            return "error403";
+            return "error/403";
         }
         travelService.deleteById(id);
         return "redirect:/mytravels";

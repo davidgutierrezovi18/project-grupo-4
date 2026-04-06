@@ -61,7 +61,7 @@ public class SecurityClass {
                     "/", "/index",
                     "/destinations", "/destinations/**", "/one_destination",
                     "/sign_in", "/register", "/login", "/loginerror",
-                    "/error403", "/error404", "/error500",
+                    "/error/403", "/error/404", "/error/500",
                     "/css/**", "/js/**", "/images/**", "/assets/**",
                     "/reviews", "/review/**", "/place_reviews"
                 ).permitAll()
@@ -85,7 +85,7 @@ public class SecurityClass {
                 .permitAll()
             )
             .exceptionHandling(exception -> exception
-                .accessDeniedPage("/error403")
+                .accessDeniedPage("/error/403")
             );
 
         return http.build();

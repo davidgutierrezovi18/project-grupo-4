@@ -238,19 +238,19 @@ public class WebController {
 	// 403 error page
 	@GetMapping("/error403")
 	public String showError403(Model model) {
-		return "error403";
+		return "error/403";
 	}
 
 	// 404 error page
 	@GetMapping("/error404")
 	public String showError404(Model model) {
-		return "error404";
+		return "error/404";
 	}
 
 	// 500 error page
 	@GetMapping("/error500")
 	public String showError500(Model model) {
-		return "error500";
+		return "error/500";
 	}
 
 	private void requireAdmin(Principal principal) {
@@ -268,7 +268,7 @@ public class WebController {
 	public String deleteUser(@PathVariable Long id) {
     	userService.deleteById(id);
     	return "redirect:/admin_users";
-}
+	}
 
 	
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import es.nextjourney.vs_nextjourney.model.Image;
@@ -29,6 +30,7 @@ public class VsNextjourneyApplication {
 	}
 
 	// ADMIN
+	@Order(1)
 	@Bean
 	CommandLineRunner createDefaultAdmin(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		// TEMPORALY: delete this block when the default admin already exists in the
@@ -53,6 +55,7 @@ public class VsNextjourneyApplication {
 	}
 
 	// USER
+	@Order(2)
 	@Bean
 	CommandLineRunner createDefaultUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		// TEMPORALY: delete this block when the default user already exists in the
@@ -76,6 +79,7 @@ public class VsNextjourneyApplication {
 	}
 
 	// Destination
+	@Order(3)
 	@Bean
 	CommandLineRunner createDefaultDestinations(DestinationRepository destinationRepository) {
 		return args -> {
@@ -95,9 +99,10 @@ public class VsNextjourneyApplication {
 
 		};
 	}
-	// Place
 
+	// Place
 	@Bean
+	@Order(4)
 	CommandLineRunner createDefaultPlaces(DestinationRepository destinationRepository,
 			PlaceRepository placeRepository) {
 		return args -> {
@@ -132,6 +137,7 @@ public class VsNextjourneyApplication {
 
 	// Travel
 	@Bean
+	@Order(5)
 	CommandLineRunner createDefaultTravels(TravelRepository travelRepository,
 			UserRepository userRepository) {
 		return args -> {
@@ -171,6 +177,7 @@ public class VsNextjourneyApplication {
 
 	// Review
 	@Bean
+	@Order(6)
 	CommandLineRunner createDefaultReviews(ReviewRepository reviewRepository,
 			UserRepository userRepository,
 			PlaceRepository placeRepository,

@@ -296,8 +296,8 @@ Solo si ha cambiado.
 
 1. **Clonar el repositorio**
    ```bash
-   git clone https://github.com/[usuario]/[nombre-repositorio].git
-   cd [nombre-repositorio]
+   git clone https://github.com/DWS-2026/project-grupo-4.git
+   cd project-grupo-4
    ```
 
 2. **AQUÍ INDICAR LO SIGUIENTES PASOS**

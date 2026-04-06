@@ -320,7 +320,7 @@ Diagrama de clases de la aplicación con diferenciación por colores o secciones
 
 ![Diagrama de Clases](images/diagrama_de_clases_y_templates.drawio.png)
 
-> [Descripción opcional del diagrama y relaciones principales]
+> [Diagrama de clases y templates que muestra la arquitectura en capas de una aplicación web: seis controladores (en verde) conectados a sus respectivas vistas HTML (en morado), servicios (en naranja), repositorios (en azul) y entidades del modelo (en blanco), con líneas que indican flujo de datos y dependencias entre componentes.]
 
 ### **Participación de Miembros en la Práctica 2**
 

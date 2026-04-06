@@ -255,7 +255,8 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 ![Diagrama de Navegación](images/Diagrama_de_navegacion.drawio.svg)
 
 #### **Capturas de Pantalla Actualizadas**
-#### **1. Pagina de error al iniciar sesión (login_error.html)**
+A continuación se muestran las capturas de pantalla de las principales páginas que han cambiado o son nuevas.
+#### **1. Página de error al iniciar sesión (login_error.html)**
 ![Login-error](images/login_error.png)
 >Página al introducir credenciales erroneas
 
@@ -272,15 +273,15 @@ Diagrama que muestra cómo se navega entre las diferentes páginas de la aplicac
 ![Editar perfil](images/edit_profile2.png)
 >Página que permite editar los distintos campos asociados a un perfil de usuario. Incluye barra de navegación, botón de cancelar, de guardar cambios y para cambiar la contraseña.
 
-#### **5. Pagina de error 403 (403.html)**
+#### **5. Página de error 403 (403.html)**
 ![403](images/403.png)
 >Página 403 – Acceso Prohibido. Incluye un botón para volver al inicio.
 >
-#### **6. Pagina de error 404 (404.html)**
+#### **6. Página de error 404 (404.html)**
 ![404](images/404.png)
 >Página 404 – Recurso no encontrado. Incluye un botón para volver al inicio
 
-#### **5. Pagina de error 500 (500.html)**
+#### **5. Página de error 500 (500.html)**
 ![500](images/500.png)
 >Página 500 – Error interno del servidor. Incluye un botón para volver al inicio.
 

@@ -299,8 +299,15 @@ Solo si ha cambiado.
    git clone https://github.com/DWS-2026/project-grupo-4.git
    cd project-grupo-4
    ```
-
-2. **AQUÍ INDICAR LO SIGUIENTES PASOS**
+2. **Compilar el proyecto**
+   ```bash
+   mvn clean install
+   ```
+3. **Ejecutar la aplicación**
+   ```bash
+   mvn spring-boot:run
+   ```
+4. **Acceder a la aplicación**
 
 #### **Credenciales de prueba**
 - **Usuario Admin**: usuario: `admin`, contraseña: `grupo4`

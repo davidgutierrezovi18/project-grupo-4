@@ -41,7 +41,7 @@ public class TravelWebController {
     @GetMapping("/mytravels")
     public String myTravels(Model model, Principal principal) {
         String username = principal.getName();
-        List<Travel> travels = travelService.findByOwnerName(username);
+        List<Travel> travels = travelService.findAllByUser(username);
         model.addAttribute("travels", travels);
         return "mytravels";
     }
@@ -67,8 +67,22 @@ public class TravelWebController {
         if (principal == null) {
             return "redirect:/sign_in";
         }
-        travel.setOwnerName(principal.getName());
 
+        User owner = userRepository.findByUsername(principal.getName()).orElseThrow();
+        travel.setOwnerName(owner.getUsername());
+
+        // Make sure userTravels and owner travels lists are initialized
+        if (travel.getUserTravels() == null){
+            travel.setUserTravels(new ArrayList<>());
+        }
+        if (owner.getTravels() == null){
+            owner.setTravels(new ArrayList<>());
+        }
+
+        // Add travel owner
+        travel.getUserTravels().add(owner);
+
+        // Validate form
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", firstValidationError(bindingResult));
             return "create_new_travel";
@@ -108,7 +122,12 @@ public class TravelWebController {
         if (!itinerary.isEmpty()) {
             travel.setItineraryUrl(itinerary.getOriginalFilename());
         }
+
+        // Collaborators
+        addCollaborators(travel);
+
         travelService.save(travel);
+
         return "redirect:/mytravels";
     }
 
@@ -149,6 +168,7 @@ public class TravelWebController {
         travel.setId(existingTravel.getId());
         travel.setOwnerName(existingTravel.getOwnerName());
 
+        // Validate form
         if (bindingResult.hasErrors()) {
             travel.setCoverImage(existingTravel.getCoverImage());
             travel.setCarouselImagesUrls(existingTravel.getCarouselImages());
@@ -202,6 +222,9 @@ public class TravelWebController {
             // Keep existing itinerary
             travel.setItineraryUrl(existingTravel.getItineraryUrl());
         }
+        
+        // Collaborators
+        syncUsers(travel, principal);
 
         travelService.save(travel);
         return "redirect:/travel/" + id;
@@ -216,6 +239,9 @@ public class TravelWebController {
         }
         Travel travel = travelOpt.get();
         model.addAttribute("travel", travel);
+        
+        boolean isOwner = principal != null && travel.getOwnerName().equals(principal.getName());
+        model.addAttribute("isOwner", isOwner);
 
         // Countries, cities and places lists
         List<String> countriesList = travel.getCountries() != null && !travel.getCountries().isEmpty()
@@ -295,6 +321,7 @@ public class TravelWebController {
         return "redirect:/mytravels";
     }
 
+    // AUXILIARY METHODS
     private void populateEditTravelModel(Model model, Travel travel) {
         model.addAttribute("travel", travel);
 
@@ -315,5 +342,39 @@ public class TravelWebController {
         }
         return bindingResult.getAllErrors().get(0).getDefaultMessage();
     }
+
+    private void addCollaborators(Travel travel) {
+        String emails = travel.getEmailsColaborators();
+
+        if (emails == null || emails.trim().isEmpty()) return;
+
+        for (String email : emails.split(",")) {
+            userRepository.findByEmail(email.trim()).ifPresent(user -> {
+                if (!travel.getUserTravels().contains(user)) {
+                    travel.getUserTravels().add(user);
+                }
+            });
+        }
+    }
+
+    private void syncUsers(Travel travel, Principal principal) {
+
+        List<User> users = new ArrayList<>();
+
+        // Owner
+        User owner = userRepository.findByUsername(principal.getName()).orElseThrow();
+        users.add(owner);
+
+        // Collaborators
+        String emails = travel.getEmailsColaborators();
+
+        if (emails != null && !emails.trim().isEmpty()) {
+            for (String email : emails.split(",")) {
+                userRepository.findByEmail(email.trim()).ifPresent(users::add);
+            }
+        }
+
+        travel.setUserTravels(users);
+    }  
 
 }

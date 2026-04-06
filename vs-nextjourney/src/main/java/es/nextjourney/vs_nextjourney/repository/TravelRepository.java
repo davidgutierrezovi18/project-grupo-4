@@ -12,4 +12,6 @@ public interface TravelRepository extends JpaRepository<Travel, Long> {
 
     List<Travel> findByUserTravels_Id(Long userId);
 
+    List<Travel> findByUserTravels_Username(String username);
+
 }

@@ -33,6 +33,7 @@
 
                     <!-- Actions -->
                     <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                        {{#isOwner}}
                         <a href="/travel/{{id}}/edit" class="btn btn-outline-light me-2">
                             <i class="bi bi-pencil-square"></i>
                             Editar
@@ -46,6 +47,7 @@
                                 Eliminar
                             </button>
                         </form>
+                        {{/isOwner}}
 
                         <!-- Button for going back to my travels -->
                         <div class="d-flex justify-content-end mt-3">

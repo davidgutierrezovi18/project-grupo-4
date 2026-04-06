@@ -5,8 +5,11 @@ import org.springframework.stereotype.Service;
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.repository.TravelRepository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,6 +50,18 @@ public class TravelService {
 
     public List<Travel> findByUserId(long userId) {
         return travelRepository.findByUserTravels_Id(userId);
+    }
+
+    public List<Travel> findAllByUser(String username) {
+        List<Travel> owned = travelRepository.findByOwnerName(username);
+        List<Travel> collaborated = travelRepository.findByUserTravels_Username(username);
+
+        // Join without duplicates
+        Set<Travel> result = new HashSet<>();
+        result.addAll(owned);
+        result.addAll(collaborated);
+
+        return new ArrayList<>(result);
     }
 
 }

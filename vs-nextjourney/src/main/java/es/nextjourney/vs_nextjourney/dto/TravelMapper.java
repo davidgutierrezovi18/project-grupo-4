@@ -1,4 +1,4 @@
-package es.nextjourney.dto;
+package es.nextjourney.vs_nextjourney.dto;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,4 +1,4 @@
-package es.nextjourney.dto;
+package es.nextjourney.vs_nextjourney.dto;
 
 import java.util.List;
 

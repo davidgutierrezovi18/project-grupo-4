@@ -1,4 +1,4 @@
-package es.nextjourney.dto;
+package es.nextjourney.vs_nextjourney.dto;
 
 public record ReviewDTO(
     Long id,

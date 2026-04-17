@@ -2,25 +2,22 @@ package es.nextjourney.vs_nextjourney.config;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
 
@@ -28,7 +25,6 @@ import es.nextjourney.vs_nextjourney.repository.UserRepository;
 @EnableWebSecurity
 public class SecurityClass {
 
-    //REVISAR MUY BIEN ESTA CLASE, FALTAN MUCHAS COSAS
 
 
 	private final UserRepository userRepository;
@@ -43,11 +39,25 @@ public class SecurityClass {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
         
 
     @Bean
     @Order(2)
     SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
+        http.authenticationProvider(authenticationProvider());
+
         http
             .headers(headers -> headers
                 .frameOptions(frame -> frame.sameOrigin())) 
@@ -128,26 +138,10 @@ public class SecurityClass {
 
 		http.authenticationProvider(authenticationProvider());
 
-		http
-				.securityMatcher("/api/**");
-				//.exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+		http.securityMatcher("/api/**");
+				
 
-		http
-				.authorizeHttpRequests(authorize -> authorize
-						// PRIVATE ENDPOINTS
-						// Images
-						//.requestMatchers(HttpMethod.PUT, "/api/images/*/media").hasRole("USER")
-						//.requestMatchers(HttpMethod.DELETE, "/api/books/*/images/*").hasRole("USER")
-						// Books
-						//.requestMatchers(HttpMethod.POST, "/api/books/**").hasRole("USER")
-						//.requestMatchers(HttpMethod.PUT, "/api/books/**").hasRole("USER")
-						//.requestMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("ADMIN")
-						// Shops
-						//.requestMatchers(HttpMethod.PUT, "/api/shops/**").hasRole("ADMIN")
-						//.requestMatchers(HttpMethod.PUT, "/api/shops/**").hasRole("ADMIN")
-						//.requestMatchers(HttpMethod.DELETE, "/api/shops/**").hasRole("ADMIN")
-						// PUBLIC ENDPOINTS
-						.anyRequest().permitAll());
+		http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
 
 		// Disable Form login Authentication
 		http.formLogin(formLogin -> formLogin.disable());
@@ -161,8 +155,7 @@ public class SecurityClass {
 		// Stateless session
 		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-		// Add JWT Token filter
-		//http.addFilterBefore(new JwtRequestFilter(userDetailService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+		
 
 		return http.build();
 	}

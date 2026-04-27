@@ -1,0 +1,1060 @@
+openapi: 3.1.0
+info:
+  title: NextJourney Web Application API
+  version: 1.0.0
+  description: |
+    Documentacion adaptada a la aplicacion NextJourney.
+
+    Esta especificacion incluye:
+    - Rutas web (HTML) de la aplicacion.
+    - Endpoints JSON usados por el frontend.
+    - Endpoint de media para imagenes.
+
+    Nota de seguridad:
+    - La aplicacion usa autenticacion por sesion (cookie `JSESSIONID`).
+    - Las operaciones `POST` en entorno real pueden requerir token CSRF.
+servers:
+  - url: http://localhost:8080
+    description: Servidor local Spring Boot
+tags:
+  - name: Public
+  - name: Auth
+  - name: Profile
+  - name: Admin
+  - name: Destinations
+  - name: Places
+  - name: Travels
+  - name: Reviews
+  - name: Media
+  - name: Metrics API
+paths:
+  /:
+    get:
+      tags: [Public]
+      summary: Home
+      responses:
+        '200':
+          description: Pagina principal
+          content:
+            text/html:
+              schema:
+                type: string
+  /index:
+    get:
+      tags: [Public]
+      summary: Home (alias)
+      responses:
+        '200':
+          description: Pagina principal
+          content:
+            text/html:
+              schema:
+                type: string
+  /faq:
+    get:
+      tags: [Public]
+      summary: FAQ
+      responses:
+        '200':
+          description: Pagina FAQ
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /sign_in:
+    get:
+      tags: [Auth]
+      summary: Formulario de inicio de sesion
+      responses:
+        '200':
+          description: Formulario login
+          content:
+            text/html:
+              schema:
+                type: string
+        '302':
+          description: Si ya hay sesion activa, redirige a perfil
+  /loginerror:
+    get:
+      tags: [Auth]
+      summary: Error de login
+      responses:
+        '200':
+          description: Vista de error de login
+          content:
+            text/html:
+              schema:
+                type: string
+  /logout:
+    post:
+      tags: [Auth]
+      summary: Cierre de sesion
+      responses:
+        '302':
+          description: Redireccion tras logout
+
+  /register:
+    get:
+      tags: [Auth]
+      summary: Formulario de registro
+      responses:
+        '200':
+          description: Vista de registro
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Auth]
+      summary: Crear cuenta de usuario
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, lastName, username, email, password]
+              properties:
+                name:
+                  type: string
+                lastName:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                imageFile:
+                  type: string
+                  format: binary
+      responses:
+        '302':
+          description: Registro correcto, redirige a login
+        '200':
+          description: Error de validacion, vuelve al formulario
+
+  /user_profile:
+    get:
+      tags: [Profile]
+      summary: Perfil del usuario autenticado
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Vista de perfil
+          content:
+            text/html:
+              schema:
+                type: string
+        '302':
+          description: Redirige a login si no hay sesion
+  /edit_profile:
+    get:
+      tags: [Profile]
+      summary: Formulario de edicion de perfil
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Vista de edicion
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Profile]
+      summary: Actualizar perfil
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                currentPassword:
+                  type: string
+                  format: password
+                newPassword:
+                  type: string
+                  format: password
+                confirmPassword:
+                  type: string
+                  format: password
+                imageFile:
+                  type: string
+                  format: binary
+      responses:
+        '302':
+          description: Perfil actualizado
+        '200':
+          description: Error de validacion
+  /delete_profile:
+    post:
+      tags: [Profile]
+      summary: Eliminar cuenta propia
+      security:
+        - cookieAuth: []
+      responses:
+        '302':
+          description: Redirige a home
+
+  /admin_users:
+    get:
+      tags: [Admin]
+      summary: Panel de usuarios
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Vista de administracion
+          content:
+            text/html:
+              schema:
+                type: string
+        '403':
+          description: Solo administradores
+  /admin_users/{id}/profile:
+    get:
+      tags: [Admin]
+      summary: Ver perfil de usuario (admin)
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Perfil de usuario
+          content:
+            text/html:
+              schema:
+                type: string
+        '403':
+          description: Solo administradores
+  /admin_users/{id}/edit:
+    get:
+      tags: [Admin]
+      summary: Formulario de edicion de usuario (admin)
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Formulario de edicion
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Admin]
+      summary: Guardar cambios de usuario (admin)
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, lastName, dateOfBirth, email, username]
+              properties:
+                name:
+                  type: string
+                lastName:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+                isAdmin:
+                  type: boolean
+                blocked:
+                  type: boolean
+                imageFile:
+                  type: string
+                  format: binary
+      responses:
+        '302':
+          description: Usuario actualizado
+        '200':
+          description: Error de validacion
+  /admin_users/{id}/toggle-admin:
+    post:
+      tags: [Admin]
+      summary: Conmutar rol admin
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '302':
+          description: Operacion completada
+  /admin_users/{id}/toggle-block:
+    post:
+      tags: [Admin]
+      summary: Bloquear o desbloquear usuario
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '302':
+          description: Operacion completada
+  /admin_users/{id}/delete:
+    post:
+      tags: [Admin]
+      summary: Eliminar usuario
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '302':
+          description: Usuario eliminado
+
+  /destinations:
+    get:
+      tags: [Destinations]
+      summary: Listar destinos
+      responses:
+        '200':
+          description: Vista de destinos
+          content:
+            text/html:
+              schema:
+                type: string
+  /destinations/{id}:
+    get:
+      tags: [Destinations]
+      summary: Ver detalle de destino
+      parameters:
+        - $ref: '#/components/parameters/DestinationId'
+      responses:
+        '200':
+          description: Vista de destino
+          content:
+            text/html:
+              schema:
+                type: string
+        '302':
+          description: Redirige si no existe
+  /add_destination:
+    get:
+      tags: [Destinations]
+      summary: Formulario para crear destino
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Formulario destino
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Destinations]
+      summary: Crear destino
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, description, imageFile]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                imageFile:
+                  type: string
+                  format: binary
+      responses:
+        '302':
+          description: Destino creado
+        '200':
+          description: Error de validacion
+  /destinations/{id}/edit:
+    get:
+      tags: [Destinations]
+      summary: Formulario para editar destino
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationId'
+      responses:
+        '200':
+          description: Formulario de edicion
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Destinations]
+      summary: Guardar cambios de destino
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                imageFile:
+                  type: string
+                  format: binary
+      responses:
+        '302':
+          description: Destino actualizado
+        '200':
+          description: Error de validacion
+  /destinations/{id}/delete:
+    post:
+      tags: [Destinations]
+      summary: Eliminar destino
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationId'
+      responses:
+        '302':
+          description: Destino eliminado
+
+  /destinations/{id}/add_place:
+    get:
+      tags: [Places]
+      summary: Formulario para anadir lugar
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationId'
+      responses:
+        '200':
+          description: Formulario lugar
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Places]
+      summary: Crear lugar en destino
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationId'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [name, category, description]
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '302':
+          description: Lugar creado
+        '200':
+          description: Error de validacion
+  /destinations/{destId}/places/{placeId}/edit:
+    get:
+      tags: [Places]
+      summary: Formulario para editar lugar
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationIdNamed'
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '200':
+          description: Formulario lugar
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Places]
+      summary: Guardar cambios de lugar
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationIdNamed'
+        - $ref: '#/components/parameters/PlaceId'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '302':
+          description: Lugar actualizado
+        '200':
+          description: Error de validacion
+  /destinations/{destId}/places/{placeId}/delete:
+    post:
+      tags: [Places]
+      summary: Eliminar lugar
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DestinationIdNamed'
+        - $ref: '#/components/parameters/PlaceId'
+      responses:
+        '302':
+          description: Lugar eliminado
+
+  /mytravels:
+    get:
+      tags: [Travels]
+      summary: Viajes del usuario autenticado
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Lista de viajes
+          content:
+            text/html:
+              schema:
+                type: string
+  /travel/new:
+    get:
+      tags: [Travels]
+      summary: Formulario para crear viaje
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Formulario viaje
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Travels]
+      summary: Crear viaje
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, startDate, endDate, coverImageFile]
+              properties:
+                name:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                countries:
+                  type: string
+                cities:
+                  type: string
+                places:
+                  type: string
+                emailsColaborators:
+                  type: string
+                coverImageFile:
+                  type: string
+                  format: binary
+                carouselImageFiles:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                itineraryFile:
+                  type: string
+                  format: binary
+      responses:
+        '302':
+          description: Viaje creado
+        '200':
+          description: Error de validacion
+  /travel/{id}:
+    get:
+      tags: [Travels]
+      summary: Detalle de viaje
+      parameters:
+        - $ref: '#/components/parameters/TravelId'
+      responses:
+        '200':
+          description: Vista de viaje
+          content:
+            text/html:
+              schema:
+                type: string
+        '404':
+          description: Viaje no encontrado
+  /travel/{id}/edit:
+    get:
+      tags: [Travels]
+      summary: Formulario para editar viaje
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TravelId'
+      responses:
+        '200':
+          description: Formulario de edicion
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Travels]
+      summary: Guardar cambios de viaje
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TravelId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                startDate:
+                  type: string
+                  format: date
+                endDate:
+                  type: string
+                  format: date
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                countries:
+                  type: string
+                cities:
+                  type: string
+                places:
+                  type: string
+                emailsColaborators:
+                  type: string
+                coverImageFile:
+                  type: string
+                  format: binary
+                carouselImageFiles:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                itineraryFile:
+                  type: string
+                  format: binary
+      responses:
+        '302':
+          description: Viaje actualizado
+        '200':
+          description: Error de validacion
+        '403':
+          description: Solo propietario
+        '404':
+          description: Viaje no encontrado
+  /travel/{id}/delete:
+    post:
+      tags: [Travels]
+      summary: Eliminar viaje
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/TravelId'
+      responses:
+        '302':
+          description: Viaje eliminado
+        '403':
+          description: Solo propietario
+        '404':
+          description: Viaje no encontrado
+
+  /reviews:
+    get:
+      tags: [Reviews]
+      summary: Pagina general de reseñas
+      responses:
+        '200':
+          description: Vista reviews
+          content:
+            text/html:
+              schema:
+                type: string
+  /my_reviews:
+    get:
+      tags: [Reviews]
+      summary: Reseñas del usuario autenticado
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Lista de reseñas del usuario
+          content:
+            text/html:
+              schema:
+                type: string
+  /my_reviews/{reviewId}/edit:
+    get:
+      tags: [Reviews]
+      summary: Formulario para editar reseña propia
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ReviewId'
+      responses:
+        '200':
+          description: Formulario de edicion
+          content:
+            text/html:
+              schema:
+                type: string
+        '302':
+          description: Redireccion si no es propietario o no existe
+    post:
+      tags: [Reviews]
+      summary: Guardar cambios de reseña propia
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ReviewId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [rating, review-text]
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                review-text:
+                  type: string
+                  maxLength: 3000
+                deleteImageIds:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                photo:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '302':
+          description: Reseña actualizada o redirigida por error
+  /my_reviews/{reviewId}/delete:
+    post:
+      tags: [Reviews]
+      summary: Eliminar reseña propia
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ReviewId'
+      responses:
+        '302':
+          description: Reseña eliminada o redirigida
+  /add-review:
+    get:
+      tags: [Reviews]
+      summary: Formulario para crear reseña
+      parameters:
+        - in: query
+          name: placeId
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: placeName
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: placeType
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Formulario de nueva reseña
+          content:
+            text/html:
+              schema:
+                type: string
+    post:
+      tags: [Reviews]
+      summary: Crear reseña
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [rating, review-text]
+              properties:
+                place-id:
+                  type: integer
+                  format: int64
+                place-name:
+                  type: string
+                place-type:
+                  type: string
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                review-text:
+                  type: string
+                  maxLength: 3000
+                photo:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '302':
+          description: Reseña creada o redirigida por error
+  /review/{placeId}:
+    get:
+      tags: [Reviews]
+      summary: Ver reseñas por ID de lugar
+      parameters:
+        - $ref: '#/components/parameters/PlaceIdNamed'
+      responses:
+        '200':
+          description: Vista de reseñas del lugar
+          content:
+            text/html:
+              schema:
+                type: string
+  /place_reviews:
+    get:
+      tags: [Reviews]
+      summary: Ver reseñas por datos de lugar
+      parameters:
+        - in: query
+          name: placeId
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: placeName
+          schema:
+            type: string
+        - in: query
+          name: placeType
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vista de reseñas del lugar
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /api/reviews/place-metrics:
+    get:
+      tags: [Metrics API]
+      summary: Obtener metricas por nombre de lugar
+      description: Devuelve para cada nombre el `placeId`, numero de reseñas y media de valoraciones.
+      parameters:
+        - in: query
+          name: names
+          required: true
+          description: Lista de nombres de lugar. Ejemplo: `?names=Museo&names=Retiro`
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: Mapa de metricas por nombre solicitado
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/PlaceMetricResponse'
+
+  /images/{id}:
+    get:
+      tags: [Media]
+      summary: Descargar/visualizar imagen por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Binario de imagen
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/*:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Imagen no encontrada
+
+  /error403:
+    get:
+      tags: [Public]
+      summary: Pagina de error 403
+      responses:
+        '200':
+          description: Vista de error 403
+  /error404:
+    get:
+      tags: [Public]
+      summary: Pagina de error 404
+      responses:
+        '200':
+          description: Vista de error 404
+  /error500:
+    get:
+      tags: [Public]
+      summary: Pagina de error 500
+      responses:
+        '200':
+          description: Vista de error 500
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: JSESSIONID
+  parameters:
+    UserId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    DestinationId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    DestinationIdNamed:
+      in: path
+      name: destId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    PlaceId:
+      in: path
+      name: placeId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    PlaceIdNamed:
+      in: path
+      name: placeId
+      required: true
+      schema:
+        type: integer
+        format: int64
+    TravelId:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ReviewId:
+      in: path
+      name: reviewId
+      required: true
+      schema:
+        type: integer
+        format: int64
+  schemas:
+    PlaceMetricResponse:
+      type: object
+      properties:
+        placeId:
+          type: integer
+          format: int64
+          nullable: true
+        reviewCount:
+          type: integer
+        averageRating:
+          type: number
+          format: double
+      required: [reviewCount, averageRating]

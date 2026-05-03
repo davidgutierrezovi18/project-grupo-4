@@ -1,164 +1,157 @@
 package es.nextjourney.vs_nextjourney.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import es.nextjourney.vs_nextjourney.dto.TravelDTO;
 import es.nextjourney.vs_nextjourney.dto.TravelMapper;
+import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.http.HttpStatus;
-
-
 @RestController
 @RequestMapping("/api/v1/travels")
 public class TravelRestController {
+
     @Autowired
     private TravelService travelService;
 
     @Autowired
     private TravelMapper travelMapper;
 
-    // GET all travels of the authenticated user
+    // GET my travels
     @GetMapping("/")
-    public ResponseEntity<?> getTravels(Principal principal) {
+    public ResponseEntity<List<TravelDTO>> getMyTravels(Principal principal) {
+
+        // check if is logged in
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Usuario no autenticado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String username = principal.getName();
-        List<Travel> travels = travelService.findAllByUser(username);
+        List<Travel> travels = travelService.findAllByUser(principal.getName());
         return ResponseEntity.ok(travelMapper.toDTOs(travels));
     }
 
-    // GET one travel by id (verifies that the user is the owner or collaborator)
+    // GET one travel
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTravel(@PathVariable long id, Principal principal) {
-        Optional<Travel> travelOptional = travelService.findById(id);
-        if (travelOptional.isEmpty()) {
+    public ResponseEntity<TravelDTO> getOneTravel(@PathVariable Long id, Principal principal) {
+
+        // check if is logged in
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // check if the travel is empty or exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        
-        Travel travel = travelOptional.get();
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body("No tienes permisos para acceder a este viaje");
+
+        Travel travel = travelOpt.get();
+        if (!isAuthorizedForTravel(travel, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        
-        String username = principal.getName();
-        boolean isOwner = travel.getOwnerName().equals(username);
-        boolean isCollaborator = isUserCollaborator(travel, username);
-        
-        if (!isOwner && !isCollaborator) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body("No tienes permisos para acceder a este viaje");
-        }
-        
+
         return ResponseEntity.ok(travelMapper.toDTO(travel));
     }
 
-    // POST - Create travel
-    @PostMapping("/")
-    public ResponseEntity<?> createTravel(@RequestBody TravelDTO travelDTO, Principal principal) {
+    // POST create travel
+    @PostMapping
+    public ResponseEntity<TravelDTO> createTravel(@RequestBody TravelDTO travelDTO, Principal principal) {
+        
+        // check if is logged in
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Usuario no autenticado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        
-        // Validar fechas
-        if (travelDTO.startDate() != null && travelDTO.endDate() != null
-                && travelDTO.endDate().isBefore(travelDTO.startDate())) {
-            return ResponseEntity.badRequest()
-                .body("La fecha de fin no puede ser anterior a la fecha de inicio");
-        }
-        
+
         Travel travel = travelMapper.toDomain(travelDTO);
         travel.setOwnerName(principal.getName());
-        travelService.createTravel(travel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(travelMapper.toDTO(travel));
+
+        if (travel.getCoverImage() == null) {
+            Image coverImage = new Image();
+            coverImage.setContentType("application/octet-stream");
+            travel.setCoverImage(coverImage);
+        }
+
+        travelService.save(travel);
+        TravelDTO createdDto = travelMapper.toDTO(travel);
+        return ResponseEntity.created(URI.create("/api/v1/travels/" + travel.getId()))
+                .body(createdDto);
     }
 
-    // PUT - Update travel
+    // PUT update travel
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTravel(@PathVariable long id, @RequestBody TravelDTO travelDTO, Principal principal) {
+    public ResponseEntity<TravelDTO> updateTravel(@PathVariable Long id, @RequestBody TravelDTO travelDTO, Principal principal) {
+
+        // check if is logged in
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Usuario no autenticado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        
-        Optional<Travel> travelOptional = travelService.findById(id);
-        if (travelOptional.isEmpty()) {
+
+        // check if the travel is empty or exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        
-        Travel existingTravel = travelOptional.get();
-        
-        // Validar que el usuario sea el propietario
+ 
+        // check if the user is the owner (collaborator can not update)
+        Travel existingTravel = travelOpt.get();
         if (!existingTravel.getOwnerName().equals(principal.getName())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body("Solo el propietario puede editar este viaje");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        
-        // Validar fechas
-        if (travelDTO.startDate() != null && travelDTO.endDate() != null
-                && travelDTO.endDate().isBefore(travelDTO.startDate())) {
-            return ResponseEntity.badRequest()
-                .body("La fecha de fin no puede ser anterior a la fecha de inicio");
-        }
-        
-        Travel travel = travelMapper.toDomain(travelDTO);
-        travel.setId(id);
-        travel.setOwnerName(existingTravel.getOwnerName());
-        travelService.modifyTravel(travel);
-        return ResponseEntity.ok(travelMapper.toDTO(travel));
+
+        // new informartion to update teh travel
+        // TODO: REVISAR
+        Travel updatedTravel = travelMapper.toDomain(travelDTO);
+        updatedTravel.setId(existingTravel.getId());
+        updatedTravel.setOwnerName(existingTravel.getOwnerName());
+        updatedTravel.setCoverImage(existingTravel.getCoverImage());
+        updatedTravel.setCarouselImagesUrls(existingTravel.getCarouselImages());
+        updatedTravel.setItineraryUrl(existingTravel.getItineraryUrl());
+        updatedTravel.setItineraryPath(existingTravel.getItineraryPath());
+        updatedTravel.setEmailsColaborators(existingTravel.getEmailsColaborators());
+        updatedTravel.setUserTravels(existingTravel.getUserTravels());
+
+        travelService.save(updatedTravel);
+        return ResponseEntity.ok(travelMapper.toDTO(updatedTravel));
     }
 
-    // DELETE - Delete travel
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTravel(@PathVariable long id, Principal principal) {
+    public ResponseEntity<Void> deleteTravel(@PathVariable Long id, Principal principal) {
+
+        // check if is logged in
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body("Usuario no autenticado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        
-        Optional<Travel> travelOptional = travelService.findById(id);
-        if (travelOptional.isEmpty()) {
+
+        // check if the travel is empty or exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        
-        Travel travel = travelOptional.get();
-        
-        // Validar que el usuario sea el propietario
+
+        // check if the user is the owner (collaborator can not delete)
+        Travel travel = travelOpt.get();
         if (!travel.getOwnerName().equals(principal.getName())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body("Solo el propietario puede eliminar este viaje");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        
+
         travelService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     // AUXILIARY METHODS
-    private boolean isUserCollaborator(Travel travel, String username) {
-        // Verificar en la lista de usuarios colaboradores
-        if (travel.getUserTravels() != null) {
-            return travel.getUserTravels().stream()
-                .anyMatch(user -> user.getUsername().equals(username));
+    private boolean isAuthorizedForTravel(Travel travel, String username) {
+        if (travel.getOwnerName().equals(username)) {
+            return true;
         }
-        return false;
+        return travel.getUserTravels() != null && travel.getUserTravels().stream()
+                .anyMatch(user -> username.equals(user.getUsername()));
     }
-    
 }

@@ -13,36 +13,35 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 @Service
 public class TravelService {
-    
-    @Autowired
-	private TravelRepository travelRepository;
 
-    public void modifyTravel(Travel travel){
+    @Autowired
+    private TravelRepository travelRepository;
+
+    public void modifyTravel(Travel travel) {
         travelRepository.save(travel);
     }
 
     public void createTravel(Travel travel) {
-		travelRepository.save(travel);
-	}
+        travelRepository.save(travel);
+    }
 
     public List<Travel> findAll() {
-		return travelRepository.findAll();
-	}
+        return travelRepository.findAll();
+    }
 
     public Optional<Travel> findById(long id) {
-		return travelRepository.findById(id);
-	}
+        return travelRepository.findById(id);
+    }
 
     public void deleteById(long id) {
-		travelRepository.deleteById(id);
-	}
+        travelRepository.deleteById(id);
+    }
 
     public void save(Travel travel) {
-		travelRepository.save(travel);
-	}
+        travelRepository.save(travel);
+    }
 
     public List<Travel> findByOwnerName(String ownerName) {
         return travelRepository.findByOwnerName(ownerName);
@@ -62,6 +61,18 @@ public class TravelService {
         result.addAll(collaborated);
 
         return new ArrayList<>(result);
+    }
+
+    public void checkUserCanAccess(Travel travel, String username) {
+        boolean isOwner = travel.getOwnerName().equals(username);
+
+        boolean isCollaborator = travel.getUserTravels() != null &&
+                travel.getUserTravels().stream()
+                        .anyMatch(user -> user.getUsername().equals(username));
+
+        if (!isOwner && !isCollaborator) {
+            throw new RuntimeException("No tienes permisos para acceder a este viaje");
+        }
     }
 
 }

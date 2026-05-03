@@ -51,10 +51,12 @@
                             </div>
 
                             <!-- Place description -->
-                            <div class="form-floating mb-3">
-                                <textarea name="description" class="form-control" id="placeDescription" placeholder="Descripción"
-                                    style="height: 150px" required>{{#place.description}}{{place.description}}{{/place.description}}</textarea>
-                                <label for="placeDescription">Descripción</label>
+                            <div class="mb-3">
+                                <label class="form-label" for="placeDescription">Descripción</label>
+                                <div id="quill-editor-place" style="height: 150px;"></div>
+                                <input type="hidden" name="description" class="form-control" id="placeDescription" placeholder="Descripción"
+                                    style="height: 150px" value="{{#place.description}}{{place.description}}{{/place.description}}" required>
+                                
                             </div>
 
                             <!-- Place category (dynamic selector) -->
@@ -88,7 +90,40 @@
     </main>
 
     {{> footer}}
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            //Quill
+            const quillContainer = document.getElementById('quill-editor-place');
 
+            if (quillContainer) {
+                const quill = new Quill('#quill-editor-place', { theme: 'snow' });
+
+                const hiddenInput = document.getElementById('placeDescription');
+                if (hiddenInput.value) {
+                    quill.root.innerHTML = hiddenInput.value;
+                }
+
+                quill.on('text-change', function () {
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+                document.querySelector('form').addEventListener('submit', function (e) {
+                    const textoPlano = quill.getText().trim();
+
+                    if (!textoPlano) {
+                        e.preventDefault();
+                        alert('La descripción es obligatoria');
+                        return;
+                    }
+
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+            } else {
+                console.error("No se encontró el contenedor de Quill");
+            }
+
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -15,7 +15,7 @@
                 <div class="row gx-5 align-items-center">
                     <div class="col-lg-8">
                         <h1 class="display-6 fw-bolder text-white">{{destination.name}}, {{destination.country}}</h1>
-                        <p class="text-white-50 mb-2">{{destination.description}}</p>
+                        <div class="text-white-50 mb-2">{{{destination.description}}}</div>
                     </div>
                     <div class="col-lg-4 text-lg-end">
                         <a class="btn btn-outline-light mt-3" href="/destinations">
@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                                 
-                                <p class="card-text text-muted small mb-4">{{description}}</p>
+                                <p class="card-text text-muted small mb-4">{{{description}}}</p>
                                 
                                 <div class="mt-auto d-flex justify-content-between align-items-center">
                                     <!-- Badge of category corrected to avoid Error 500 -->

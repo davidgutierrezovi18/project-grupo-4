@@ -31,7 +31,7 @@
                 <h5 class="card-title">Tu reseña</h5>
                 <form id="add-review-form" action="{{formAction}}" method="post" enctype="multipart/form-data">
                   <!-- CSRF token-->
-                  <input type="hidden" name="_csrf" value="{{token}}"/>
+                  <input type="hidden" name="_csrf" value="{{token}}" />
                   <input type="hidden" id="place-id" name="place-id" value="{{placeId}}" />
 
                   <div class="mb-3">
@@ -48,23 +48,28 @@
                   <div class="mb-3">
                     <label class="form-label">Puntuación</label>
                     <div class="star-rating" role="radiogroup" aria-label="Puntuación">
-                      <input type="radio" name="rating" id="r5" value="5" autocomplete="off" {{#rating5}}checked{{/rating5}}>
+                      <input type="radio" name="rating" id="r5" value="5" autocomplete="off"
+                        {{#rating5}}checked{{/rating5}}>
                       <label for="r5" data-value="5" aria-label="5 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r4" value="4" autocomplete="off" {{#rating4}}checked{{/rating4}}>
+                      <input type="radio" name="rating" id="r4" value="4" autocomplete="off"
+                        {{#rating4}}checked{{/rating4}}>
                       <label for="r4" data-value="4" aria-label="4 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r3" value="3" autocomplete="off" {{#rating3}}checked{{/rating3}}>
+                      <input type="radio" name="rating" id="r3" value="3" autocomplete="off"
+                        {{#rating3}}checked{{/rating3}}>
                       <label for="r3" data-value="3" aria-label="3 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r2" value="2" autocomplete="off" {{#rating2}}checked{{/rating2}}>
+                      <input type="radio" name="rating" id="r2" value="2" autocomplete="off"
+                        {{#rating2}}checked{{/rating2}}>
                       <label for="r2" data-value="2" aria-label="2 estrellas"><i class="bi bi-star-fill"></i></label>
-                      <input type="radio" name="rating" id="r1" value="1" autocomplete="off" {{#rating1}}checked{{/rating1}}>
+                      <input type="radio" name="rating" id="r1" value="1" autocomplete="off"
+                        {{#rating1}}checked{{/rating1}}>
                       <label for="r1" data-value="1" aria-label="1 estrella"><i class="bi bi-star-fill"></i></label>
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label class="form-label">Tu reseña</label>
-                    <textarea id="review-text" name="review-text" class="form-control" rows="5"
-                      placeholder="Cuenta tu experiencia...">{{reviewText}}</textarea>
-                  </div>
+    <label class="form-label">Tu reseña</label>
+    <div id="quill-review" style="height: 150px;"></div>
+    <input type="hidden" name="review-text" id="review-text" value="{{reviewText}}">
+</div>
                   <div class="mb-3">
                     <label class="form-label">Fotos (opcional)</label>
                     <input id="photo" name="photo" class="form-control" type="file" accept="image/*" multiple />
@@ -79,10 +84,12 @@
                       {{#existingImages}}
                       <div class="col-md-4 col-sm-6">
                         <div class="card h-100">
-                          <img src="/images/{{id}}" alt="Foto de reseña" class="card-img-top" style="height: 160px; object-fit: cover;" />
+                          <img src="/images/{{id}}" alt="Foto de reseña" class="card-img-top"
+                            style="height: 160px; object-fit: cover;" />
                           <div class="card-body py-2">
                             <div class="form-check">
-                              <input class="form-check-input" type="checkbox" name="deleteImageIds" value="{{id}}" id="delete-image-{{id}}" />
+                              <input class="form-check-input" type="checkbox" name="deleteImageIds" value="{{id}}"
+                                id="delete-image-{{id}}" />
                               <label class="form-check-label" for="delete-image-{{id}}">Eliminar</label>
                             </div>
                           </div>
@@ -111,8 +118,40 @@
 
   <!-- Footer-->
   {{> footer}}
+  <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      //Quill
+      const quillContainer = document.getElementById('quill-review');
 
+      if (quillContainer) {
+        const quill = new Quill('#quill-review', { theme: 'snow' });
 
+        const hiddenInput = document.getElementById('review-text');
+        if (hiddenInput.value) {
+          quill.root.innerHTML = hiddenInput.value;
+        }
+
+        quill.on('text-change', function () {
+          hiddenInput.value = quill.root.innerHTML;
+        });
+        document.querySelector('form').addEventListener('submit', function (e) {
+          const textoPlano = quill.getText().trim();
+
+          if (!textoPlano) {
+            e.preventDefault();
+            alert('La descripción es obligatoria');
+            return;
+          }
+
+          hiddenInput.value = quill.root.innerHTML;
+        });
+      } else {
+        console.error("No se encontró el contenedor de Quill");
+      }
+
+    });
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

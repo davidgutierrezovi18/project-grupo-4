@@ -34,37 +34,44 @@
                         </div>
                         {{/error}}
 
-                        <form action="{{#isEditing}}/destinations/{{destination.id}}/edit{{/isEditing}}{{^isEditing}}/add_destination{{/isEditing}}" 
-                            method="post" 
-                            enctype="multipart/form-data">
-
+                        <form
+                            action="{{#isEditing}}/destinations/{{destination.id}}/edit{{/isEditing}}{{^isEditing}}/add_destination{{/isEditing}}"
+                            method="post" enctype="multipart/form-data">
                             <!-- CSRF token-->
-                            <input type="hidden" name="_csrf" value="{{token}}"/>
+                            <input type="hidden" name="_csrf" value="{{token}}" />
 
                             <div class="form-floating mb-3">
-                                <input type="text" name="name" class="form-control" id="destinationName" placeholder="Nombre" required 
+                                <input type="text" name="name" class="form-control" id="destinationName"
+                                    placeholder="Nombre" required
                                     value="{{#destination.name}}{{destination.name}}{{/destination.name}}">
                                 <label for="destinationName">Nombre del destino</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input type="text" name="country" class="form-control" id="destinationCountry" placeholder="País" required 
+                                <input type="text" name="country" class="form-control" id="destinationCountry"
+                                    placeholder="País" required
                                     value="{{#destination.country}}{{destination.country}}{{/destination.country}}">
                                 <label for="destinationCountry">País</label>
                             </div>
 
-                            <div class="form-floating mb-3">
-                                <textarea name="description" class="form-control" id="destinationDescription" placeholder="Descripción"
-                                    style="height: 150px" required>{{#destination.description}}{{destination.description}}{{/destination.description}}</textarea>
-                                <label for="destinationDescription">Descripción</label>
+                            <div class="mb-3">
+                                <label class="form-label">Descripción</label>
+                                <div id="quill-editor" style="height: 150px;"></div>
+                                <input type="hidden" name="description" id="destinationDescription"
+                                    value="{{#destination.description}}{{destination.description}}{{/destination.description}}">
                             </div>
+
+
 
                             <div class="text mb-4">
                                 {{#destination.coverImage.id}}
-                                    <img id="previewImage" src="/images/{{destination.coverImage.id}}" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                <img id="previewImage" src="/images/{{destination.coverImage.id}}" alt="Preview Image"
+                                    class="img-fluid rounded mb-2" style="max-height: 200px;">
                                 {{/destination.coverImage.id}}
                                 {{^destination.coverImage.id}}
-                                    <img id="previewImage" src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa" alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                                <img id="previewImage"
+                                    src="https://dummyimage.com/300x200/6c757d/ffffff&text=Vista+previa"
+                                    alt="Preview Image" class="img-fluid rounded mb-2" style="max-height: 200px;">
                                 {{/destination.coverImage.id}}
 
                                 <div>
@@ -72,7 +79,8 @@
                                         {{#isEditing}}Cambiar imagen{{/isEditing}}
                                         {{^isEditing}}Seleccione imagen del destino{{/isEditing}}
                                     </label>
-                                    <input type="file" id="destinationImage" name="imageFile" accept="image/jpeg, image/png" hidden onchange="previewSelectedImage(event)">
+                                    <input type="file" id="destinationImage" name="imageFile"
+                                        accept="image/jpeg, image/png" hidden onchange="previewSelectedImage(event)">
                                 </div>
                             </div>
 
@@ -91,17 +99,50 @@
     </main>
 
     {{> footer}}
-
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
     <script>
-        function previewSelectedImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = document.getElementById('previewImage');
-                output.src = reader.result;
+        document.addEventListener('DOMContentLoaded', function () {
+            window.previewSelectedImage = function (event) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    const output = document.getElementById('previewImage');
+                    output.src = reader.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
             };
-            reader.readAsDataURL(event.target.files[0]);
-        }
+
+            //Quill
+            const quillContainer = document.getElementById('quill-editor');
+
+            if (quillContainer) {
+                const quill = new Quill('#quill-editor', { theme: 'snow' });
+
+                const hiddenInput = document.getElementById('destinationDescription');
+                if (hiddenInput.value) {
+                    quill.root.innerHTML = hiddenInput.value;
+                }
+
+                quill.on('text-change', function () {
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+                document.querySelector('form').addEventListener('submit', function (e) {
+                    const textoPlano = quill.getText().trim();
+
+                    if (!textoPlano) {
+                        e.preventDefault();
+                        alert('La descripción es obligatoria');
+                        return;
+                    }
+
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+            } else {
+                console.error("No se encontró el contenedor de Quill");
+            }
+
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

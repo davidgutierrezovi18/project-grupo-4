@@ -5,13 +5,20 @@ import java.util.List;
 
 public record TravelDTO(
     Long id,
+    String ownerName,
     String title,
-    String description,
-    String destination,
+    // String cover image,
     LocalDate startDate,
     LocalDate endDate,
-    String ownerName,
+    String description,
     List<String> countries,
     List<String> cities,
-    int rating
+    List<String> places,
+    int rating,
+    String comment,
+    // List<String> carouselImageUrls,
+    String itineraryUrl,
+    String itineraryPath,
+    List<String> emailsColaborators
+
 ) {}

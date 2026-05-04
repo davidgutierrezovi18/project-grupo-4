@@ -1,11 +1,18 @@
 package es.nextjourney.vs_nextjourney.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +30,7 @@ import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.model.User;
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
+import es.nextjourney.vs_nextjourney.service.FileStorageImageService;
 import es.nextjourney.vs_nextjourney.service.ImageService;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 
@@ -36,6 +44,9 @@ public class TravelWebController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FileStorageImageService fileStorageService;
 
     // All the travels of a specific user
     @GetMapping("/mytravels")
@@ -118,8 +129,12 @@ public class TravelWebController {
         }
         travel.setCarouselImagesUrls(images);
 
-        // Itinerary PDF
+        // Itinerary PDF - save in disk
         if (!itinerary.isEmpty()) {
+            // Save file to disk and store path in DB
+            String filePath = fileStorageService.storeFile(itinerary);
+            travel.setItineraryPath(filePath);
+            // Mantein the original filename for display purposes
             travel.setItineraryUrl(itinerary.getOriginalFilename());
         }
 
@@ -217,9 +232,15 @@ public class TravelWebController {
 
         // Update itinerary if provided
         if (itinerary != null && !itinerary.isEmpty()) {
+            // Delete old file if exists
+            fileStorageService.deleteFile(existingTravel.getItineraryPath());
+            // Save new
+            String filePath = fileStorageService.storeFile(itinerary);
+            travel.setItineraryPath(filePath);
             travel.setItineraryUrl(itinerary.getOriginalFilename());
         } else {
-            // Keep existing itinerary
+            // Keep existing
+            travel.setItineraryPath(existingTravel.getItineraryPath());
             travel.setItineraryUrl(existingTravel.getItineraryUrl());
         }
         
@@ -377,4 +398,45 @@ public class TravelWebController {
         travel.setUserTravels(users);
     }  
 
-}
+/* 
+    // Download itinerary
+    @GetMapping("/travel/{id}/itinerary")
+    public String downloadItinerary(@PathVariable Long id, Principal principal, HttpServletResponse response) throws IOException {
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return "error/404";
+        }
+        Travel travel = travelOpt.get();
+        
+        // Verify access: only owner and collaborators can download the itinerary
+        boolean hasAccess = principal != null && (
+            travel.getOwnerName().equals(principal.getName()) ||
+            travel.getUserTravels().stream()
+                .anyMatch(u -> u.getUsername().equals(principal.getName()))
+        );
+        
+        if (!hasAccess) {
+            return "error/403";
+        }
+
+        String filePath = travel.getItineraryPath();
+        if (filePath == null || filePath.isEmpty()) {
+            return "error/404";
+        }
+
+        Path path = fileStorageService.getFilePath(filePath);
+        if (!Files.exists(path)) {
+            return "error/404";
+        }
+
+        // COnfigure headers for download 
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + travel.getItineraryUrl() + "\"");
+        response.setContentLengthLong(Files.size(path));
+
+        // Escribir archivo en la respuesta
+        try (InputStream inputStream = Files.newInputStream(path);
+            OutputStream outputStream = response.getOutputStream()) {
+            inputStream.transferTo(outputStream);
+        }*/
+    }

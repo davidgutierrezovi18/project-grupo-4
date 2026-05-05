@@ -2,9 +2,11 @@ package es.nextjourney.vs_nextjourney.security;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,16 +20,27 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
+import es.nextjourney.vs_nextjourney.security.jwt.JwtRequestFilter;
+import es.nextjourney.vs_nextjourney.security.jwt.JwtTokenProvider;
+import es.nextjourney.vs_nextjourney.security.jwt.UnauthorizedHandlerJwt;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityClass {
 
-
-
 	private final UserRepository userRepository;
+
+	@Autowired
+	private JwtTokenProvider jwtTokenProvider;
+
+	@Autowired
+	private RepositoryUserDetailsService userDetailService;
+
+	@Autowired
+	private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
 
     public SecurityClass(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -133,32 +146,49 @@ public class SecurityClass {
 
 
     @Bean
-	@Order(1)
-	public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        http.authenticationProvider(authenticationProvider());
 
-		http.authenticationProvider(authenticationProvider());
+        http
+            .securityMatcher("/api/**")
+            .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt))
+            .authorizeHttpRequests(authorize -> authorize
 
-		http.securityMatcher("/api/**");
-				
+                // API admin-only endpoints
+                .requestMatchers(HttpMethod.DELETE, "/destinations/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/destinations/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/places/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/places/**").hasRole("ADMIN")
+                
+                // API logged-users endpoints
+                .requestMatchers(HttpMethod.POST, "/destinations/**").authenticated()
+                .requestMatchers("/travels/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/reviews/places/{placeId}/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/reviews/**").authenticated()
+                .requestMatchers( "/users/profile/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/auth/logout/**").authenticated()
 
-		http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
 
-		// Disable Form login Authentication
-		http.formLogin(formLogin -> formLogin.disable());
+                // API public endpoints
+                .requestMatchers(HttpMethod.GET, "/api/v1/destinations/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/destinations/{id}/places/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/login/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/register/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/refresh/**").permitAll()
 
-		// Disable CSRF protection (it is difficult to implement in REST APIs)
-		http.csrf(csrf -> csrf.disable());
+            )
+            .formLogin(form -> form.disable())
+            .csrf(csrf -> csrf.disable())
+            .httpBasic(basic -> basic.disable())
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(new JwtRequestFilter(userDetailService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
-		// Disable Basic Authentication
-		http.httpBasic(httpBasic -> httpBasic.disable());
-
-		// Stateless session
-		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-		
-
-		return http.build();
-	}
+        return http.build();
+    }
+    
 
 }
 

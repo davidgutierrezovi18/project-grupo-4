@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Pageable;
 
 import es.nextjourney.vs_nextjourney.model.Destination;
 import es.nextjourney.vs_nextjourney.model.Image;
@@ -77,7 +78,8 @@ public class ReviewWebController {
 			return "redirect:/sign_in";
 		}
 
-		List<Review> userReviews = reviewRepository.findByUserReviewsUsernameOrderByCreatedAtDesc(principal.getName());
+
+		List<Review> userReviews = reviewRepository.findByUserReviewsUsernameOrderByCreatedAtDesc(principal.getName(), Pageable.unpaged()).getContent();
 		model.addAttribute("reviews", userReviews);
 		model.addAttribute("hasReviews", !userReviews.isEmpty());
 		return "my_reviews";
@@ -248,8 +250,7 @@ public class ReviewWebController {
 		}
 
 		Place place = placeOpt.get();
-		List<Review> reviews = reviewRepository.findByPlaceId(placeId);
-
+		List<Review> reviews = reviewRepository.findByPlaceId(placeId, Pageable.unpaged()).getContent();
 		model.addAttribute("place", place);
 		model.addAttribute("placeName", place.getName());
 		model.addAttribute("reviews", reviews);
@@ -278,7 +279,7 @@ public class ReviewWebController {
 
 		if (placeOpt.isPresent()) {
 			Place place = placeOpt.get();
-			List<Review> reviews = reviewRepository.findByPlaceId(place.getId());
+			List<Review> reviews = reviewRepository.findByPlaceId(place.getId(), Pageable.unpaged()).getContent();
 			model.addAttribute("place", place);
 			model.addAttribute("placeName", place.getName());
 			model.addAttribute("reviews", reviews);
@@ -327,7 +328,7 @@ public class ReviewWebController {
 			}
 
 			Place place = placeOpt.get();
-			List<Review> placeReviews = reviewRepository.findByPlaceId(place.getId());
+			List<Review> placeReviews = reviewRepository.findByPlaceId(place.getId(), Pageable.unpaged()).getContent();
 			int totalReviews = placeReviews.size();
 			double averageRating = totalReviews == 0
 					? 0.0

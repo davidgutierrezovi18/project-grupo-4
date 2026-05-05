@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.repository.TravelRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,16 +53,13 @@ public class TravelService {
         return travelRepository.findByUserTravels_Id(userId);
     }
 
+    public Page<Travel> findAllByUser(String username, Pageable pageable) {
+        return travelRepository.findByOwnerOrCollaborator(username, pageable);
+    }
+
     public List<Travel> findAllByUser(String username) {
-        List<Travel> owned = travelRepository.findByOwnerName(username);
-        List<Travel> collaborated = travelRepository.findByUserTravels_Username(username);
-
-        // Join without duplicates
-        Set<Travel> result = new HashSet<>();
-        result.addAll(owned);
-        result.addAll(collaborated);
-
-        return new ArrayList<>(result);
+        // Reutilizamos el método paginado pero pidiendo "todo"
+        return travelRepository.findByOwnerOrCollaborator(username, Pageable.unpaged()).getContent();
     }
 
     public void checkUserCanAccess(Travel travel, String username) {

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.repository.ImageRepository;
@@ -34,12 +36,12 @@ public class ImageRestController {
 	private ImageRepository imageRepository;
 
 	@GetMapping({"", "/"})
-	public ResponseEntity<List<Map<String, Object>>> getAllImages() {
-		List<Map<String, Object>> images = imageRepository.findAll().stream()
-				.map(this::toMetadata)
-				.toList();
-		return ResponseEntity.ok(images);
-	}
+    public ResponseEntity<Page<Map<String, Object>>> getAllImages(Pageable pageable) {
+        Page<Map<String, Object>> images = imageRepository.findAll(pageable)
+                .map(this::toMetadata);
+                
+        return ResponseEntity.ok(images);
+    }
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Map<String, Object>> getImageMetadata(@PathVariable long id) {

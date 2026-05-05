@@ -40,7 +40,7 @@
                         </a>
                         <form action="/travel/{{id}}/delete" method="post" style="display:inline;">
                             <!-- CSRF token-->
-                            <input type="hidden" name="_csrf" value="{{token}}"/>
+                            <input type="hidden" name="_csrf" value="{{token}}" />
                             <button class="btn btn-outline-danger"
                                 onclick="return confirm('¿Seguro que quieres eliminar este viaje?');">
                                 <i class="bi bi-trash"></i>
@@ -203,6 +203,37 @@
         </section>
         {{/hasCarouselImages}}
 
+        <!-- Itinerary -->
+        {{#itineraryUrl}}
+        <section class="py-4">
+            <div class="container px-5 my-3">
+
+                <div class="card shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h5 class="mb-1">
+                                <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                                Itinerario del viaje
+                            </h5>
+                            <small class="text-muted">
+                                {{itineraryUrl}}
+                            </small>
+                        </div>
+
+                        <a href="/travel/{{id}}/itinerary" class="btn btn-primary">
+                            <i class="bi bi-download me-1"></i>
+                            Descargar
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        {{/itineraryUrl}}
+
+
         <!-- Calification and trip comment -->
         <section class="py-5">
             <div class="container px-5">
@@ -233,12 +264,13 @@
                     <div class="col mb-4">
                         <div class="text-center">
                             {{#image}}
-                            <img class="rounded-circle mb-4"
-                                src="/images/{{image.id}}" alt="..." style="width: 150px; height: 150px; object-fit: cover;" />
+                            <img class="rounded-circle mb-4" src="/images/{{image.id}}" alt="..."
+                                style="width: 150px; height: 150px; object-fit: cover;" />
                             {{/image}}
                             {{^image}}
                             <img class="rounded-circle mb-4"
-                                src="https://dummyimage.com/150x150/ced4da/6c757d&text=Avatar" alt="..." style="width: 150px; height: 150px; object-fit: cover;"  />
+                                src="https://dummyimage.com/150x150/ced4da/6c757d&text=Avatar" alt="..."
+                                style="width: 150px; height: 150px; object-fit: cover;" />
                             {{/image}}
                             <h5 class="fw-bolder">{{username}}</h5>
                             <p class="lead text-dark">{{email}}</p>

@@ -1,22 +1,27 @@
 package es.nextjourney.vs_nextjourney.controller;
 
 import es.nextjourney.vs_nextjourney.dto.TravelMapper;
+import es.nextjourney.vs_nextjourney.dto.ImageDTO;
+import es.nextjourney.vs_nextjourney.dto.ImageMapper;
 import es.nextjourney.vs_nextjourney.dto.TravelDTO;
 
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
+import es.nextjourney.vs_nextjourney.service.FileStorageService;
+import es.nextjourney.vs_nextjourney.service.ImageService;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,6 +33,15 @@ public class TravelRestController {
 
     @Autowired
     private TravelMapper travelMapper;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ImageMapper imageMapper;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     // GET my travels
     @GetMapping({"", "/"})
@@ -111,7 +125,7 @@ public class TravelRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        // new informartion to update teh travel
+        // new informartion to update the travel
         // TODO: REVISAR
         Travel updatedTravel = travelMapper.toDomain(travelDTO);
         updatedTravel.setId(existingTravel.getId());
@@ -127,6 +141,7 @@ public class TravelRestController {
         return ResponseEntity.ok(travelMapper.toDTO(updatedTravel));
     }
 
+    // DELETE travel
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTravel(@PathVariable Long id, Principal principal) {
 
@@ -148,6 +163,247 @@ public class TravelRestController {
         }
 
         travelService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // POST add image to carouselImages in travel
+    @PostMapping("/{id}/images")
+    public ResponseEntity<ImageDTO> createTravelImage(@PathVariable long id, 
+            @RequestParam("imageFile") MultipartFile imageFile, 
+            Principal principal) throws IOException {
+
+        // check if user is logged in
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // check if travel exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Travel travel = travelOpt.get();
+        
+        // check if user is owner (only owner can add images)
+        if (!travel.getOwnerName().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        if (imageFile.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Image image = imageService.createImage(imageFile);
+        image.setTravelImage(travel);
+        imageService.save(image);
+        
+        travel.getCarouselImages().add(image);
+        travelService.save(travel);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageMapper.toDTO(image));
+    }
+
+    // POST add cover image to travel
+    @PostMapping("/{id}/coverImage")
+    public ResponseEntity<ImageDTO> createTravelCoverImage(@PathVariable long id,
+            @RequestParam("coverImageFile") MultipartFile imageFile,
+            Principal principal) throws IOException {
+
+        // check if user is logged in
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // check if travel exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Travel travel = travelOpt.get();
+
+        // check if user is owner (only owner can add images)
+        if (!travel.getOwnerName().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // check if file is empty
+        if (imageFile.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Image existingCover = travel.getCoverImage();
+        if (existingCover != null && existingCover.getId() != null) {
+            imageService.deleteImageById(existingCover.getId());
+        }
+
+        Image coverImage = imageService.createImage(imageFile);
+        travel.setCoverImage(coverImage);
+        travelService.save(travel);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageMapper.toDTO(coverImage));
+    }
+
+    // DELETE remove cover image from travel
+    @DeleteMapping("/{id}/coverImage")
+    public ResponseEntity<Void> deleteTravelCoverImage(@PathVariable long id,
+            Principal principal) {
+
+        // check if user is logged in
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // check if travel exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Travel travel = travelOpt.get();
+
+        // check if user is owner (only owner can delete images)
+        if (!travel.getOwnerName().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Image existingCover = travel.getCoverImage();
+        if (existingCover == null || existingCover.getId() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Long oldCoverId = existingCover.getId();
+        Image placeholder = new Image();
+        placeholder.setContentType("application/octet-stream");
+        travel.setCoverImage(placeholder);
+        travelService.save(travel);
+        imageService.deleteImageById(oldCoverId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // POST upload itinerary PDF for travel
+    @PostMapping("/{id}/itinerary")
+    public ResponseEntity<TravelDTO> uploadTravelItinerary(@PathVariable long id,
+            @RequestParam("itineraryFile") MultipartFile itineraryFile,
+            Principal principal) throws IOException {
+
+        // verify the user is authenticated
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // load the travel and verify it exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Travel travel = travelOpt.get();
+
+        // only the travel owner can upload the itinerary PDF
+        if (!travel.getOwnerName().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // reject empty file uploads
+        if (itineraryFile.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // delete existing itinerary file from disk if present
+        String existingPath = travel.getItineraryPath();
+        if (existingPath != null && !existingPath.isBlank()) {
+            fileStorageService.deleteFile(fileStorageService.getFilePath(existingPath).toString());
+        }
+
+        // store the new PDF on disk and save the new file name in travel
+        String storedFilename = fileStorageService.storeFile(itineraryFile);
+        travel.setItineraryPath(storedFilename);
+        travel.setItineraryUrl(itineraryFile.getOriginalFilename());
+        travelService.save(travel);
+
+        return ResponseEntity.created(URI.create("/api/v1/travels/" + id + "/itinerary"))
+                .body(travelMapper.toDTO(travel));
+    }
+
+    // DELETE remove itinerary PDF from travel
+    @DeleteMapping("/{id}/itinerary")
+    public ResponseEntity<Void> deleteTravelItinerary(@PathVariable long id,
+            Principal principal) {
+
+        // verify the user is authenticated
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // load the travel and verify it exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Travel travel = travelOpt.get();
+
+        // only the travel owner can remove the itinerary PDF
+        if (!travel.getOwnerName().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // if there is no stored itinerary, return 404
+        String existingPath = travel.getItineraryPath();
+        if (existingPath == null || existingPath.isBlank()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // delete the stored file and clear travel PDF metadata
+        fileStorageService.deleteFile(fileStorageService.getFilePath(existingPath).toString());
+        travel.setItineraryPath(null);
+        travel.setItineraryUrl(null);
+        travelService.save(travel);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // DELETE remove image from carouselImages in travel
+    @DeleteMapping("/{id}/images/{imageId}")
+    public ResponseEntity<Void> deleteTravelImage(@PathVariable long id, 
+            @PathVariable long imageId,
+            Principal principal) throws IOException {
+
+        // check if user is logged in
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        // check if travel exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Travel travel = travelOpt.get();
+        
+        // check if user is owner (only owner can delete images)
+        if (!travel.getOwnerName().equals(principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        // check if image exists and belongs to this travel
+        Optional<Image> imageOpt = travel.getCarouselImages().stream()
+                .filter(img -> img.getId() == imageId)
+                .findFirst();
+
+        if (imageOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Image image = imageOpt.get();
+        travel.getCarouselImages().remove(image);
+        travelService.save(travel);
+        imageService.deleteImageById(imageId);
+
         return ResponseEntity.noContent().build();
     }
 

@@ -68,4 +68,10 @@ public class ImageService {
 
         imageRepository.save(image);
     }
+
+    public Image deleteImageById(long id) {
+        Image image = imageRepository.findById(id).orElseThrow();
+        imageRepository.deleteById(id);
+        return image;
+    }
 }

@@ -1,6 +1,7 @@
 package es.nextjourney.vs_nextjourney.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 import javax.sql.rowset.serial.SerialBlob;
@@ -53,5 +54,18 @@ public class ImageService {
         } else {
             throw new RuntimeException("Image file not found");
         }
+    }
+
+    public void replaceImageFile(long id, InputStream inputStream) throws IOException {
+
+        Image image = imageRepository.findById(id).orElseThrow();
+
+        try {
+            image.setImageFile(new SerialBlob(inputStream.readAllBytes()));
+        } catch (Exception e) {
+            throw new IOException("Failed to create image", e);
+        }
+
+        imageRepository.save(image);
     }
 }

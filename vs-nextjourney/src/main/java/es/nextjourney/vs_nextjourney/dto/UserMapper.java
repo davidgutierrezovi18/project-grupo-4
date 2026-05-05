@@ -7,6 +7,7 @@ import java.util.List;
 import org.mapstruct.Mapping;
 
 
+
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
@@ -16,11 +17,7 @@ public interface UserMapper {
     @Mapping(target = "roles", source = "roles")
 
     UserDTO toDTO(User user);
-
     List<UserDTO> toDTOs(Collection<User> users);
-
-    
     User toDomain(UserDTO userDTO);
-
     
 }

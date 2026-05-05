@@ -52,7 +52,6 @@ public class UserRestController {
         this.userMapper = userMapper;
     }
 
-    // ✅ PROFILE
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> profile(Principal principal) {
         if (principal == null)
@@ -62,7 +61,6 @@ public class UserRestController {
         return ResponseEntity.ok(userMapper.toDTO(user));
     }
 
-    // ✅ EDIT PROFILE
     @PutMapping(value = "/profile", consumes = "multipart/form-data")
     public ResponseEntity<?> editProfile(
             @RequestPart("user") User user,
@@ -120,7 +118,7 @@ public class UserRestController {
         return ResponseEntity.ok(userMapper.toDTO(existing));
     }
 
-    // ✅ DELETE
+    
     @DeleteMapping("/profile")
     public ResponseEntity<?> deleteProfile(Principal principal, HttpServletRequest request)
             throws ServletException {

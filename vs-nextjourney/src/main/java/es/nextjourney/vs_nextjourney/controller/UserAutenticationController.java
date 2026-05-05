@@ -62,7 +62,6 @@ public class UserAutenticationController {
         this.userMapper = userMapper;
     }
 
-    // ✅ LOGIN
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @ModelAttribute User user,
@@ -96,7 +95,6 @@ public class UserAutenticationController {
         }
     }
 
-    // ✅ REGISTER
     @PostMapping(value = "/register", consumes = "multipart/form-data")
     public ResponseEntity<?> register(
             @ModelAttribute User user,
@@ -145,7 +143,6 @@ public class UserAutenticationController {
             .body(new AuthResponse(AuthResponse.Status.SUCCESS, "Registro exitoso"));
     }
 
-    // ✅ REFRESH
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(
             HttpServletResponse response,
@@ -153,7 +150,6 @@ public class UserAutenticationController {
         return userLoginService.refresh(response, refreshToken);
     }
 
-    // ✅ LOGOUT
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
         return ResponseEntity.ok(userLoginService.logout(response));

@@ -30,7 +30,7 @@ import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Travel;
 import es.nextjourney.vs_nextjourney.model.User;
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
-import es.nextjourney.vs_nextjourney.service.FileStorageImageService;
+import es.nextjourney.vs_nextjourney.service.FileStorageService;
 import es.nextjourney.vs_nextjourney.service.ImageService;
 import es.nextjourney.vs_nextjourney.service.TravelService;
 
@@ -46,7 +46,7 @@ public class TravelWebController {
     private UserRepository userRepository;
 
     @Autowired
-    private FileStorageImageService fileStorageService;
+    private FileStorageService fileStorageService;
 
     // All the travels of a specific user
     @GetMapping("/mytravels")
@@ -83,10 +83,10 @@ public class TravelWebController {
         travel.setOwnerName(owner.getUsername());
 
         // Make sure userTravels and owner travels lists are initialized
-        if (travel.getUserTravels() == null){
+        if (travel.getUserTravels() == null) {
             travel.setUserTravels(new ArrayList<>());
         }
-        if (owner.getTravels() == null){
+        if (owner.getTravels() == null) {
             owner.setTravels(new ArrayList<>());
         }
 
@@ -131,16 +131,22 @@ public class TravelWebController {
 
         // Itinerary PDF - save in disk
         if (!itinerary.isEmpty()) {
-            // Save file to disk and store path in DB
-            String filePath = fileStorageService.storeFile(itinerary);
-            travel.setItineraryPath(filePath);
-            // Mantein the original filename for display purposes
-            travel.setItineraryUrl(itinerary.getOriginalFilename());
+            try {
+                // Save file to disk and store path in DB
+                String filePath = fileStorageService.storeFile(itinerary);
+                travel.setItineraryPath(filePath);
+                // Mantein the original filename for display purposes
+                travel.setItineraryUrl(itinerary.getOriginalFilename());
+            } catch (RuntimeException e) {
+                model.addAttribute("error", e.getMessage());
+                return "create_new_travel";
+            }
         }
 
         // Collaborators
         addCollaborators(travel);
 
+        // Final save
         travelService.save(travel);
 
         return "redirect:/mytravels";
@@ -243,7 +249,7 @@ public class TravelWebController {
             travel.setItineraryPath(existingTravel.getItineraryPath());
             travel.setItineraryUrl(existingTravel.getItineraryUrl());
         }
-        
+
         // Collaborators
         syncUsers(travel, principal);
 
@@ -260,14 +266,14 @@ public class TravelWebController {
         }
         Travel travel = travelOpt.get();
         model.addAttribute("travel", travel);
-        
+
         boolean isOwner = principal != null && travel.getOwnerName().equals(principal.getName());
         model.addAttribute("isOwner", isOwner);
 
         // Countries, cities and places lists
         List<String> countriesList = travel.getCountries() != null && !travel.getCountries().isEmpty()
-            ? List.of(travel.getCountries().split(","))
-            : List.of();
+                ? List.of(travel.getCountries().split(","))
+                : List.of();
         List<String> citiesList = travel.getCities() != null && !travel.getCities().isEmpty()
                 ? List.of(travel.getCities().split(","))
                 : List.of();
@@ -367,7 +373,8 @@ public class TravelWebController {
     private void addCollaborators(Travel travel) {
         String emails = travel.getEmailsColaborators();
 
-        if (emails == null || emails.trim().isEmpty()) return;
+        if (emails == null || emails.trim().isEmpty())
+            return;
 
         for (String email : emails.split(",")) {
             userRepository.findByEmail(email.trim()).ifPresent(user -> {
@@ -396,47 +403,60 @@ public class TravelWebController {
         }
 
         travel.setUserTravels(users);
-    }  
+    }
 
-/* 
     // Download itinerary
     @GetMapping("/travel/{id}/itinerary")
-    public String downloadItinerary(@PathVariable Long id, Principal principal, HttpServletResponse response) throws IOException {
-        Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()) {
-            return "error/404";
-        }
-        Travel travel = travelOpt.get();
-        
-        // Verify access: only owner and collaborators can download the itinerary
-        boolean hasAccess = principal != null && (
-            travel.getOwnerName().equals(principal.getName()) ||
-            travel.getUserTravels().stream()
-                .anyMatch(u -> u.getUsername().equals(principal.getName()))
-        );
-        
-        if (!hasAccess) {
-            return "error/403";
+    public void downloadItinerary(@PathVariable Long id, Principal principal, HttpServletResponse response)
+            throws IOException {
+
+        // 1. verify if user is logged in
+        if (principal == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
         }
 
+        // 2. verify that the travel exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        Travel travel = travelOpt.get();
+
+        // 3. verify access: only owner and collaborators can download the itinerary
+        boolean hasAccess = principal != null && (travel.getOwnerName().equals(principal.getName()) ||
+                travel.getUserTravels().stream().anyMatch(u -> u.getUsername().equals(principal.getName())));
+
+        if (!hasAccess) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        // 4. verify if the travel has itinerary 
         String filePath = travel.getItineraryPath();
         if (filePath == null || filePath.isEmpty()) {
-            return "error/404";
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
 
         Path path = fileStorageService.getFilePath(filePath);
         if (!Files.exists(path)) {
-            return "error/404";
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
 
-        // COnfigure headers for download 
+        // 5. configure headers for download
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + travel.getItineraryUrl() + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" +
+                travel.getItineraryUrl() + "\"");
         response.setContentLengthLong(Files.size(path));
 
-        // Escribir archivo en la respuesta
+        // 6. write file to response
         try (InputStream inputStream = Files.newInputStream(path);
-            OutputStream outputStream = response.getOutputStream()) {
+                OutputStream outputStream = response.getOutputStream()) {
             inputStream.transferTo(outputStream);
-        }*/
+        }
     }
+
+}

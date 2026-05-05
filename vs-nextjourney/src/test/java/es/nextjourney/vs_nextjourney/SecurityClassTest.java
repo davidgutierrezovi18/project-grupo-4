@@ -1,7 +1,11 @@
 package es.nextjourney.vs_nextjourney;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +35,38 @@ class SecurityClassTest {
     @Test
     void anonymousUserCanAccessPublicPage() throws Exception {
         mockMvc.perform(get("/destinations"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void anonymousUserCanAccessPublicApiReadEndpoints() throws Exception {
+        mockMvc.perform(get("/api/v1/destinations"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void anonymousUserCannotAccessProtectedApiEndpoint() throws Exception {
+        mockMvc.perform(get("/api/v1/users/profile"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void authenticatedUserCannotUseAdminOnlyApiWriteEndpoint() throws Exception {
+        mockMvc.perform(put("/api/v1/destinations/1")
+                        .with(user("ana").roles("USER"))
+                        .with(csrf())
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"id\":1,\"name\":\"Destino\",\"country\":\"España\",\"description\":\"Desc\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void adminCanReachAdminOnlyApiWriteEndpoint() throws Exception {
+        mockMvc.perform(put("/api/v1/destinations/1")
+                        .with(user("root").roles("ADMIN"))
+                        .with(csrf())
+                        .contentType(APPLICATION_JSON)
+                        .content("{\"id\":1,\"name\":\"Destino\",\"country\":\"España\",\"description\":\"Desc\"}"))
                 .andExpect(status().isOk());
     }
 

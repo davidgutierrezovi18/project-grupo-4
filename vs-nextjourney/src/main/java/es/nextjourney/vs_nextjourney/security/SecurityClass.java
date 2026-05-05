@@ -155,29 +155,36 @@ public class SecurityClass {
             .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt))
             .authorizeHttpRequests(authorize -> authorize
 
-                // API admin-only endpoints
-                .requestMatchers(HttpMethod.DELETE, "/destinations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/destinations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/places/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/places/**").hasRole("ADMIN")
-                
-                // API logged-users endpoints
-                .requestMatchers(HttpMethod.POST, "/destinations/**").authenticated()
-                .requestMatchers("/travels/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/reviews/places/{placeId}/**").authenticated()
+                // Authentication endpoints
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh").permitAll()
+
+                // Public read endpoints used by the site
+                .requestMatchers(HttpMethod.GET, "/api/v1/destinations/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/places/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/reviews/place-metrics").permitAll()
+
+                // Authenticated API endpoints
+                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/reviews/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/reviews/**").authenticated()
-                .requestMatchers( "/users/profile/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/auth/logout/**").authenticated()
+                .requestMatchers("/api/v1/travels/**").authenticated()
+                .requestMatchers("/api/v1/users/profile").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout").authenticated()
 
+                // Admin-only API endpoints
+                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/destinations/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/destinations/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/*/places/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/destinations/*/places/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/destinations/*/places/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/v1/images/**").hasRole("ADMIN")
 
-                // API public endpoints
-                .requestMatchers(HttpMethod.GET, "/api/v1/destinations/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/destinations/{id}/places/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/login/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/register/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/refresh/**").permitAll()
+                .anyRequest().denyAll()
 
             )
             .formLogin(form -> form.disable())

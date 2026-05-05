@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import es.nextjourney.vs_nextjourney.dto.ReviewDTO;
 import es.nextjourney.vs_nextjourney.model.Place;
@@ -46,20 +48,18 @@ public class ReviewRestController {
 	private PlaceService placeService;
 
 	@GetMapping({"", "/"})
-	public ResponseEntity<List<ReviewDTO>> getMyReviews(Principal principal) {
-		Optional<User> userOpt = getAuthenticatedUser(principal);
-		if (userOpt.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
+    public ResponseEntity<Page<ReviewDTO>> getMyReviews(Principal principal, Pageable pageable) {
+        Optional<User> userOpt = getAuthenticatedUser(principal);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-		List<ReviewDTO> reviews = reviewRepository
-				.findByUserReviewsUsernameOrderByCreatedAtDesc(principal.getName())
-				.stream()
-				.map(this::toDto)
-				.toList();
+        Page<ReviewDTO> reviews = reviewRepository
+                .findByUserReviewsUsernameOrderByCreatedAtDesc(principal.getName(), pageable)
+                .map(this::toDto);
 
-		return ResponseEntity.ok(reviews);
-	}
+        return ResponseEntity.ok(reviews);
+    }
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ReviewDTO> getOneReview(@PathVariable Long id, Principal principal) {
@@ -72,18 +72,17 @@ public class ReviewRestController {
 	}
 
 	@GetMapping("/places/{placeId}")
-	public ResponseEntity<List<ReviewDTO>> getReviewsByPlace(@PathVariable Long placeId) {
-		Optional<Place> placeOpt = placeService.findById(placeId);
-		if (placeOpt.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
+    public ResponseEntity<Page<ReviewDTO>> getReviewsByPlace(@PathVariable Long placeId, Pageable pageable) {
+        Optional<Place> placeOpt = placeService.findById(placeId);
+        if (placeOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
-		List<ReviewDTO> reviews = reviewRepository.findByPlaceId(placeId).stream()
-				.map(this::toDto)
-				.toList();
+        Page<ReviewDTO> reviews = reviewRepository.findByPlaceId(placeId, pageable)
+                .map(this::toDto);
 
-		return ResponseEntity.ok(reviews);
-	}
+        return ResponseEntity.ok(reviews);
+    }
 
 	@PostMapping("/places/{placeId}")
 	public ResponseEntity<ReviewDTO> createReviewForPlace(

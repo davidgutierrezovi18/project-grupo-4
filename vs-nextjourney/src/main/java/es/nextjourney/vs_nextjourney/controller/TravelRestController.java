@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.security.Principal;
@@ -27,15 +29,17 @@ public class TravelRestController {
     private TravelMapper travelMapper;
 
     // GET my travels
-    @GetMapping("/")
-    public ResponseEntity<List<TravelDTO>> getMyTravels(Principal principal) {
-
-        // check if is logged in
+    @GetMapping({"", "/"})
+    public ResponseEntity<Page<TravelDTO>> getMyTravels(Principal principal, Pageable pageable) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        List<Travel> travels = travelService.findAllByUser(principal.getName());
-        return ResponseEntity.ok(travelMapper.toDTOs(travels));
+
+        // Llamamos a la versión paginada del service
+        Page<TravelDTO> travels = travelService.findAllByUser(principal.getName(), pageable)
+                .map(travelMapper::toDTO);
+        
+        return ResponseEntity.ok(travels);
     }
 
     // GET one travel

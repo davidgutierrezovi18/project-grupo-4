@@ -3,15 +3,17 @@ package es.nextjourney.vs_nextjourney.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import es.nextjourney.vs_nextjourney.model.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-	List<Review> findByPlaceId(Long placeId);
+	Page<Review> findByPlaceId(Long placeId, Pageable pageable);
 
-	List<Review> findByUserReviewsUsernameOrderByCreatedAtDesc(String username);
+	Page<Review> findByUserReviewsUsernameOrderByCreatedAtDesc(String username, Pageable pageable);
 
-	List<Review> findByUserReviewsIdOrderByCreatedAtDesc(Long userId);
+	Page<Review> findByUserReviewsIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 
 }

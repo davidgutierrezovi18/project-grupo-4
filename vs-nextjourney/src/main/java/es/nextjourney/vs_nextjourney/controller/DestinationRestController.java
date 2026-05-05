@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import es.nextjourney.vs_nextjourney.dto.DestinationDTO;
 import es.nextjourney.vs_nextjourney.model.Destination;
@@ -28,12 +30,12 @@ public class DestinationRestController {
 	private DestinationService destinationService;
 
 	@GetMapping({"", "/"})
-	public ResponseEntity<List<DestinationDTO>> getAllDestinations() {
-		List<DestinationDTO> destinations = destinationService.findAll().stream()
-				.map(this::toDto)
-				.toList();
-		return ResponseEntity.ok(destinations);
-	}
+		public ResponseEntity<Page<DestinationDTO>> getAllDestinations(Pageable pageable) {
+			Page<DestinationDTO> destinations = destinationService.findAll(pageable)
+					.map(this::toDto); 
+			
+			return ResponseEntity.ok(destinations);
+		}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<DestinationDTO> getDestination(@PathVariable Long id) {

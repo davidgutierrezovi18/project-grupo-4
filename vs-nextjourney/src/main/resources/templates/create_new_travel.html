@@ -35,40 +35,43 @@
                     {{/error}}
 
                     <!-- CSRF token-->
-                    <input type="hidden" name="_csrf" value="{{token}}"/>
-                    
+                    <input type="hidden" name="_csrf" value="{{token}}" />
+
                     <!-- Title-->
                     <div class="mb-3">
                         <label for="tripTitle2" class="form-label">Título del viaje</label>
                         <input type="text" class="form-control" name="title" placeholder="Ej: Aventura por Italia"
                             required>
                     </div>
-                    
+
                     <!-- Cover Image -->
                     <div class="mb-3">
                         <label class="form-label">Imagen de portada</label>
-                        <input type="file" class="form-control" name="coverImageFile" required accept="image/jpeg, image/png">
+                        <input type="file" class="form-control" name="coverImageFile" required
+                            accept="image/jpeg, image/png">
                     </div>
 
                     <!-- Dates -->
                     <div class="row mb-3">
                         <div class="col">
                             <label class="form-label">Fecha de inicio</label>
-                            <input type="date" class="form-control" name="startDate" min="1900-01-01" max="2050-12-31" required>
+                            <input type="date" class="form-control" name="startDate" min="1900-01-01" max="2050-12-31"
+                                required>
                             <div class="form-text">Formato: DD-MM-AAAA</div>
                         </div>
                         <div class="col">
                             <label class="form-label">Fecha de fin</label>
-                            <input type="date" class="form-control" name="endDate" min="1900-01-01" max="2050-12-31" required>
+                            <input type="date" class="form-control" name="endDate" min="1900-01-01" max="2050-12-31"
+                                required>
                             <div class="form-text">Formato: DD-MM-AAAA</div>
                         </div>
                     </div>
 
                     <!-- Description -->
                     <div class="mb-3">
-                        <label class="form-label">Descripción del viaje</label>
-                        <textarea class="form-control" name="description" rows="4"
-                            placeholder="Cuenta tu experiencia..." required></textarea>
+                        <label class="form-label">Descripción</label>
+                        <div id="quill-editor" style="height: 150px;"></div>
+                        <input type="hidden" name="description" id="travelDescription" required>
                     </div>
 
                     <!-- Countries visited-->
@@ -109,31 +112,34 @@
                     <!-- Comment -->
                     <div class="mb-3">
                         <label class="form-label">Comentario sobre el viaje</label>
-                        <textarea class="form-control" name="comment" rows="4" placeholder="Comenta tu experiencia..."></textarea>
+                        <div id="quill-editor-Comment" style="height: 150px;"></div>
+                        <input type="hidden" name="comment" id="travelComment" required>
                     </div>
-                    
+
                     <!-- Images carousel-->
                     <div class="mb-3">
                         <label class="form-label">Imágenes del viaje</label>
-                        <input type="file" class="form-control" name="carouselImageFiles" multiple accept="image/jpeg, image/png">
+                        <input type="file" class="form-control" name="carouselImageFiles" multiple
+                            accept="image/jpeg, image/png">
                         <div class="form-text">Puedes subir varias imágenes</div>
                     </div>
-                    
+
                     <!-- PDF-->
                     <div class="mb-3">
                         <label class="form-label">PDF con itinerario del viaje</label>
                         <input type="file" class="form-control" name="itineraryFile" accept="application/pdf">
                         <div class="form-text">Formato permitido: pdf</div>
                     </div>
-                    
+
                     <!-- Trip members-->
                     <div class="mb-3">
                         <label class="form-label">Miembros del viaje</label>
                         <input type="text" class="form-control" name="emailsColaborators"
                             placeholder="Ej: correo1@email.com, correo2@email.com">
-                        <div class="form-text">Correos separados por comas. Los correos introducidos deben ser de usuarios registrados</div>
+                        <div class="form-text">Correos separados por comas. Los correos introducidos deben ser de
+                            usuarios registrados</div>
                     </div>
-                    
+
                     <!-- Buttons -->
                     <div class="d-flex justify-content-center gap-3 mt-4">
                         <button type="submit" class="btn btn-primary px-5">Añadir</button>
@@ -148,8 +154,79 @@
     <!-- Footer-->
     {{> footer}}
 
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // quill description
+            const quillContainer = document.getElementById('quill-editor');
+
+            if (quillContainer) {
+                const quill = new Quill('#quill-editor', { theme: 'snow' });
+
+                const hiddenInput = document.getElementById('travelDescription');
+
+                if (hiddenInput && hiddenInput.value) {
+                    quill.root.innerHTML = hiddenInput.value;
+                }
+
+                quill.on('text-change', function () {
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+
+                document.querySelector('form').addEventListener('submit', function (e) {
+
+                    const textoPlano = quill.getText().trim();
+
+                    if (!textoPlano) {
+                        e.preventDefault();
+                        alert('La descripción es obligatoria');
+                        return;
+                    }
+
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+
+            } else {
+                console.error("No se encontró el contenedor de Quill (description)");
+            }
 
 
+            //quill comment
+            const quillContainerComment = document.getElementById('quill-editor-Comment');
+
+            if (quillContainerComment) {
+                const quillComment = new Quill('#quill-editor-Comment', { theme: 'snow' });
+
+                const hiddenInputComment = document.getElementById('travelComment');
+
+                if (hiddenInputComment && hiddenInputComment.value) {
+                    quillComment.root.innerHTML = hiddenInputComment.value;
+                }
+
+                quillComment.on('text-change', function () {
+                    hiddenInputComment.value = quillComment.root.innerHTML;
+                });
+
+                document.querySelector('form').addEventListener('submit', function (e) {
+
+                    const textoPlanoComment = quillComment.getText().trim();
+
+                    if (!textoPlanoComment) {
+                        e.preventDefault();
+                        alert('El comentario es obligatorio');
+                        return;
+                    }
+
+                    hiddenInputComment.value = quillComment.root.innerHTML;
+                });
+
+            } else {
+                console.error("No se encontró el contenedor de Quill (comment)");
+            }
+
+        });
+    </script>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->

@@ -37,7 +37,7 @@
                 <form action="/travel/{{id}}/edit" method="post" enctype="multipart/form-data">
 
                     <!-- CSRF token-->
-                    <input type="hidden" name="_csrf" value="{{token}}"/>
+                    <input type="hidden" name="_csrf" value="{{token}}" />
 
                     <!-- Title-->
                     <div class="mb-3">
@@ -64,8 +64,9 @@
 
                     <!-- Description -->
                     <div class="mb-3">
-                        <label class="form-label">Descripción del viaje</label>
-                        <textarea class="form-control" name="description" rows="4">{{description}}</textarea>
+                        <label class="form-label">Descripción</label>
+                        <div id="quill-editor" style="height: 150px;"></div>
+                        <input type="hidden" name="description" id="travelDescription" value="{{{description}}}" required>
                     </div>
 
                     <!-- Countries -->
@@ -104,13 +105,15 @@
                     <!-- Comment -->
                     <div class="mb-3">
                         <label class="form-label">Comentario sobre el viaje</label>
-                        <textarea class="form-control" name="comment" rows="4">{{comment}}</textarea>
+                        <div id="quill-editor-Comment" style="height: 150px;"></div>
+                        <input type="hidden" name="comment" id="travelComment" value="{{{comment}}}" required>
                     </div>
 
                     <!-- Images -->
                     <div class="mb-3">
                         <label class="form-label">Imágenes del viaje</label>
-                        <input type="file" class="form-control" name="carouselImageFiles" multiple accept="image/jpeg, image/png">
+                        <input type="file" class="form-control" name="carouselImageFiles" multiple
+                            accept="image/jpeg, image/png">
                         <div class="form-text">Puedes subir varias imágenes</div>
                     </div>
 
@@ -125,7 +128,8 @@
                     <div class="mb-3">
                         <label class="form-label">Miembros del viaje</label>
                         <input type="text" class="form-control" name="emailsColaborators" value="{{members}}">
-                        <div class="form-text">Correos separados por comas. Los correos introducidos deben ser de usuarios registrados</div>
+                        <div class="form-text">Correos separados por comas. Los correos introducidos deben ser de
+                            usuarios registrados</div>
                     </div>
 
                     <!-- Buttons -->
@@ -141,6 +145,80 @@
 
     <!-- Footer-->
     {{> footer}}
+    <!-- Quill-->
+    <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // quill description
+            const quillContainer = document.getElementById('quill-editor');
+
+            if (quillContainer) {
+                const quill = new Quill('#quill-editor', { theme: 'snow' });
+
+                const hiddenInput = document.getElementById('travelDescription');
+
+                if (hiddenInput && hiddenInput.value) {
+                    quill.root.innerHTML = hiddenInput.value;
+                }
+
+                quill.on('text-change', function () {
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+
+                document.querySelector('form').addEventListener('submit', function (e) {
+
+                    const textoPlano = quill.getText().trim();
+
+                    if (!textoPlano) {
+                        e.preventDefault();
+                        alert('La descripción es obligatoria');
+                        return;
+                    }
+
+                    hiddenInput.value = quill.root.innerHTML;
+                });
+
+            } else {
+                console.error("No se encontró el contenedor de Quill (description)");
+            }
+
+
+            //quill comment
+            const quillContainerComment = document.getElementById('quill-editor-Comment');
+
+            if (quillContainerComment) {
+                const quillComment = new Quill('#quill-editor-Comment', { theme: 'snow' });
+
+                const hiddenInputComment = document.getElementById('travelComment');
+
+                if (hiddenInputComment && hiddenInputComment.value) {
+                    quillComment.root.innerHTML = hiddenInputComment.value;
+                }
+
+                quillComment.on('text-change', function () {
+                    hiddenInputComment.value = quillComment.root.innerHTML;
+                });
+
+                document.querySelector('form').addEventListener('submit', function (e) {
+
+                    const textoPlanoComment = quillComment.getText().trim();
+
+                    if (!textoPlanoComment) {
+                        e.preventDefault();
+                        alert('El comentario es obligatorio');
+                        return;
+                    }
+
+                    hiddenInputComment.value = quillComment.root.innerHTML;
+                });
+
+            } else {
+                console.error("No se encontró el contenedor de Quill (comment)");
+            }
+
+        });
+    </script>
 
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

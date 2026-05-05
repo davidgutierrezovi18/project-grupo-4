@@ -76,13 +76,14 @@ public class Travel {
     @OneToMany(mappedBy="travelImage", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Image> carouselImages;
 
-    // Itinerary name
+    // Itinerary file name
     @Column(name = "itinerary_url")
     @Size(max = 255, message = "El nombre del itinerario no puede superar 255 caracteres")
     private String itineraryUrl;
 
+    // Path to save the itinerary file
     @Column(name = "itinerary_path")
-    private String itineraryPath;  // path to save the itinerary file
+    private String itineraryPath;  
 
     @Column(name = "emails_colaborators")
     @Size(max = 500, message = "El listado de colaboradores no puede superar 500 caracteres")

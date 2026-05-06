@@ -198,78 +198,72 @@ public class ReviewRestController {
 
 	// only the review owner and admin can upload the review image
 	@PostMapping("/{id}/image")
-    public ResponseEntity<Object> uploadReviewImage(
-            @PathVariable Long id, 
-            @RequestParam MultipartFile imageFile, 
-            Principal principal, Authentication authentication) throws IOException, SQLException {
-        if (principal == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
+	public ResponseEntity<Object> uploadReviewImage(
+			@PathVariable Long id, 
+			@RequestParam MultipartFile imageFile, 
+			Principal principal, 
+			Authentication authentication) throws IOException, SQLException {
 
-        Optional<Review> reviewOpt = getOwnedReview(id, principal);
-        if (reviewOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (imageFile.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
+		if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+		Optional<Review> reviewOpt = reviewRepository.findById(id);
+		if (reviewOpt.isEmpty()) return ResponseEntity.notFound().build();
 
 		Review review = reviewOpt.get();
-
 		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
-        
-		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        
-        Image image = new Image();
-        image.setImageFile(new SerialBlob(imageFile.getBytes()));
-        image.setContentType(imageFile.getContentType());
-        imageService.save(image);
-        
-        review.setImage(image);
-        reviewService.modifyReview(review);
-
-        URI location = fromCurrentContextPath()
-                .path("/api/v1/images/{imageId}/media")
-                .buildAndExpand(image.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).build();
-    }
-
-	// only the review owner and admin can delete the review image
-    @DeleteMapping("/{id}/image")
-    public ResponseEntity<Void> deleteReviewImage(@PathVariable Long id, Principal principal, Authentication authentication) {
-		if (principal == null) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+				.anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+		
+		if (!isAdmin && !review.getUser().getUsername().equals(principal.getName())) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 
-        Optional<Review> reviewOpt = reviewRepository.findById(id);
-        if (reviewOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+		if (imageFile.isEmpty()) return ResponseEntity.badRequest().build();
 
-		Review review = reviewOpt.get();
+		Image image = imageService.createImage(imageFile);
+		image.setReview(review); 
+		imageService.save(image); 
+
+		URI location = fromCurrentContextPath()
+				.path("/api/v1/images/{imageId}/media")
+				.buildAndExpand(image.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+
+	@DeleteMapping("/{id}/image/{imageId}")
+	public ResponseEntity<Void> deleteSpecificReviewImage(
+			@PathVariable Long id, 
+			@PathVariable Long imageId,
+			Principal principal, 
+			Authentication authentication) {
+
+		if (principal == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+		Image image;
+		try {
+			image = imageService.getImageById(imageId);
+		} catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Review review = image.getReview();
+
+		if (review == null || !review.getId().equals(id)) {
+			return ResponseEntity.badRequest().build();
+		}
 
 		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
-        
-		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+				.anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+		
+		if (!isAdmin && !review.getUser().getUsername().equals(principal.getName())) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
 
-        if (review.getImage() != null) {
-            review.setImage(null);
-            reviewService.modifyReview(review);
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.notFound().build();
-    }
+		imageService.deleteImageById(imageId);
+		
+		return ResponseEntity.noContent().build();
+	}
 	
 	// AUXILIARY METHODS
 	private ReviewDTO toDto(Review review) {

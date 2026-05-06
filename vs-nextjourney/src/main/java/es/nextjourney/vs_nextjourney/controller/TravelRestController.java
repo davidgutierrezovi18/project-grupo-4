@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,6 +24,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Optional;
+
+import javax.sql.rowset.serial.SerialBlob;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -243,7 +247,7 @@ public class TravelRestController {
         Image image = imageService.createImage(imageFile);
         image.setTravelImage(travel);
         imageService.save(image);
-        
+        image.setTravelImage(travel);
         travel.getCarouselImages().add(image);
         travelService.save(travel);
 
@@ -290,6 +294,7 @@ public class TravelRestController {
         }
 
         Image coverImage = imageService.createImage(imageFile);
+        coverImage.setTravelImage(travel);
         travel.setCoverImage(coverImage);
         travelService.save(travel);
 
@@ -463,7 +468,7 @@ public class TravelRestController {
 
         // check if image exists and belongs to this travel
         Optional<Image> imageOpt = travel.getCarouselImages().stream()
-                .filter(img -> img.getId() == imageId)
+                .filter(img -> img.getId() != null && img.getId().equals(imageId))
                 .findFirst();
 
         if (imageOpt.isEmpty()) {
@@ -472,8 +477,8 @@ public class TravelRestController {
 
         Image image = imageOpt.get();
         travel.getCarouselImages().remove(image);
-        travelService.save(travel);
         imageService.deleteImageById(imageId);
+        travelService.save(travel);
 
         return ResponseEntity.noContent().build();
     }

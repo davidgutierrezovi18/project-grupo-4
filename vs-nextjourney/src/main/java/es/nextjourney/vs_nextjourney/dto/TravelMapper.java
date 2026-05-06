@@ -11,13 +11,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = { ImageMapper.class })
 public interface TravelMapper {
 
     @Mapping(source = "countries", target = "countries", qualifiedByName = "stringToList")
     @Mapping(source = "cities", target = "cities", qualifiedByName = "stringToList")
     @Mapping(source = "places", target = "places", qualifiedByName = "stringToList")
     @Mapping(source = "emailsColaborators", target = "emailsColaborators", qualifiedByName = "stringToList")
+    @Mapping(source = "carouselImages", target = "carouselImageUrls")
+    @Mapping(source = "itineraryPath", target = "itineraryId")
     TravelDTO toDTO(Travel travel);
 
     List<TravelDTO> toDTOs(Collection<Travel> travels);
@@ -26,6 +28,8 @@ public interface TravelMapper {
     @Mapping(source = "cities", target = "cities", qualifiedByName = "listToString")
     @Mapping(source = "places", target = "places", qualifiedByName = "listToString")
     @Mapping(source = "emailsColaborators", target = "emailsColaborators", qualifiedByName = "listToString")
+    @Mapping(target = "coverImage", ignore = true)
+    @Mapping(target = "carouselImages", ignore = true)
     Travel toDomain(TravelDTO travelDTO);
 
     @Named("stringToList")

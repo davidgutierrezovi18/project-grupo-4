@@ -131,6 +131,7 @@ public class SecurityClass {
                                     .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
                                     .map(SimpleGrantedAuthority::new)
                                     .toList();
+                                    
 
                     return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
                             .password(user.getPassword())

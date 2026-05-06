@@ -78,9 +78,13 @@ public class TravelWebController {
             @RequestParam("itineraryFile") MultipartFile itinerary,
             Principal principal,
             Model model) throws IOException {
+        
         if (principal == null) {
             return "redirect:/sign_in";
         }
+        
+        
+
 
         User owner = userRepository.findByUsername(principal.getName()).orElseThrow();
         travel.setOwnerName(owner.getUsername());
@@ -95,6 +99,8 @@ public class TravelWebController {
 
         // Add travel owner
         travel.getUserTravels().add(owner);
+
+        
 
         // Validate form
         if (bindingResult.hasErrors()) {
@@ -497,6 +503,27 @@ public class TravelWebController {
         // collaborators can access the travel
         return travel.getUserTravels() != null && travel.getUserTravels().stream()
                 .anyMatch(user -> username.equals(user.getUsername()));
+    }
+
+    private void validateImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) return;
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new RuntimeException("El archivo " + file.getOriginalFilename() + " no es una imagen válida.");
+        }
+        String name = file.getOriginalFilename().toLowerCase();
+        if (!(name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png"))) {
+            throw new RuntimeException("Solo se admiten imágenes JPG o PNG.");
+        }
+    }
+
+    private void sanitizeTravelData(Travel travel) {
+        if (travel.getDescription() != null) {
+            travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
+        }
+        if (travel.getComment() != null) {
+            travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
+        }
     }
 
     

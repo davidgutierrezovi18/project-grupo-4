@@ -14,7 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +22,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "reviews")
 public class Review {
 
     // ID
@@ -58,9 +57,8 @@ public class Review {
     @ManyToOne()
     private Place place;
 
-    // REVIEW IMAGES
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Image> images;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Image image;
     
 
 
@@ -72,7 +70,6 @@ public class Review {
         setRating(rating);
         this.reviewText = reviewText;
         this.createdAt = createdAt;
-        this.images = new ArrayList<>();
         this.place = place;
         this.destination = destination;
     }
@@ -133,16 +130,9 @@ public class Review {
         this.destination = destination;
     }
 
-    public List<Image> getImages() {
-        if (images == null) {
-            images = new ArrayList<>();
-        }
-        return images;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images = images != null ? images : new ArrayList<>();
-    }
+    public Image getImage() { return image; }
+    
+    public void setImage(Image image) { this.image = image; }
 
     // TO STRING
     @Override
@@ -153,12 +143,12 @@ public class Review {
           .append(", reviewText=").append(reviewText)
           .append(", createdAt=").append(createdAt)
           .append(", username=").append(userReviews.getName());
-        if (destination != null) {
+          if (destination != null){
             sb.append(", destination=").append(destination);
-        }
-        if (place != null) {
+          }
+          if (place!=null){
             sb.append(", place=").append(place);
-        }
+          }
         sb.append("]");
         return sb.toString();
     }

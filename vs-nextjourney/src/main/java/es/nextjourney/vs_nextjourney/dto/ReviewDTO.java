@@ -4,5 +4,7 @@ public record ReviewDTO(
     Long id,
     String reviewText,
     int rating,
-    String authorName
+    String authorName,
+    Long imageId,
+    String imageUrl
 ) {}

@@ -227,6 +227,7 @@ public class ReviewRestController {
         Image image = new Image();
         image.setImageFile(new SerialBlob(imageFile.getBytes()));
         image.setContentType(imageFile.getContentType());
+		image.setReview(review);
         review.setImage(image);
         
         reviewService.modifyReview(review);
@@ -280,7 +281,12 @@ public class ReviewRestController {
 			}
 		}
 
-		return new ReviewDTO(review.getId(), review.getReviewText(), review.getRating(), authorName);
+		Long imageId = review.getImage() != null ? review.getImage().getId() : null;
+		String imageUrl = imageId != null
+				? fromCurrentContextPath().path("/api/v1/images/{imageId}/media").buildAndExpand(imageId).toUriString()
+				: null;
+
+		return new ReviewDTO(review.getId(), review.getReviewText(), review.getRating(), authorName, imageId, imageUrl);
 	}
 
 	private Optional<User> getAuthenticatedUser(Principal principal) {
@@ -301,16 +307,7 @@ public class ReviewRestController {
 			return Optional.empty();
 		}
 
-		Review review = reviewOpt.get();
-		if (review.getUser() == null || review.getUser().getUsername() == null) {
-			return Optional.empty();
-		}
-
-		if (!review.getUser().getUsername().equals(principal.getName())) {
-			return Optional.empty();
-		}
-
-		return Optional.of(review);
+		return reviewOpt;
 	}
 
 	private boolean isValidRating(int rating) {

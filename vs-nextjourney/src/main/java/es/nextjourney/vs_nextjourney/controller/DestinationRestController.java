@@ -1,8 +1,11 @@
 package es.nextjourney.vs_nextjourney.controller;
 
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.io.IOException;
+import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,6 +29,9 @@ import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Place;
 import es.nextjourney.vs_nextjourney.service.DestinationService;
 import es.nextjourney.vs_nextjourney.service.PlaceService;
+import es.nextjourney.vs_nextjourney.service.ImageService;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath;
 
 @RestController
 @RequestMapping("/api/v1/destinations")
@@ -35,6 +43,9 @@ public class DestinationRestController {
 	@Autowired
 	private PlaceService placeService;
 
+	@Autowired
+    private ImageService imageService;
+	
 	@GetMapping({"", "/"})
 		public ResponseEntity<Page<DestinationDTO>> getAllDestinations(Pageable pageable) {
 			Page<DestinationDTO> destinations = destinationService.findAll(pageable)
@@ -105,6 +116,53 @@ public class DestinationRestController {
 		destinationService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+
+	@PostMapping("/{id}/image")
+    public ResponseEntity<Object> uploadDestinationImage(
+            @PathVariable Long id, 
+            @RequestParam MultipartFile imageFile) throws IOException, SQLException {
+        
+        Optional<Destination> existingOpt = destinationService.findById(id);
+        if (existingOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        if (imageFile.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Destination destination = existingOpt.get();
+        
+        Image image = new Image();
+        image.setImageFile(new SerialBlob(imageFile.getBytes()));
+        image.setContentType(imageFile.getContentType());
+        destination.setCoverImage(image);
+        
+        destinationService.save(destination);
+
+        URI location = fromCurrentContextPath()
+                .path("/api/v1/images/{imageId}/media")
+                .buildAndExpand(image.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Void> deleteDestinationImage(@PathVariable Long id) {
+        Optional<Destination> existingOpt = destinationService.findById(id);
+        if (existingOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Destination destination = existingOpt.get();
+        if (destination.getCoverImage() != null) {
+            destination.setCoverImage(null);
+            destinationService.save(destination);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 
 
 	@GetMapping("/{id}/places")

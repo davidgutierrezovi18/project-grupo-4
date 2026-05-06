@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -59,6 +60,9 @@ public class Review {
     // Places relationship
     @ManyToOne()
     private Place place;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Image image;
     
 
 
@@ -141,6 +145,10 @@ public class Review {
     public void setDestination(Destination destination){
         this.destination = destination;
     }
+
+    public Image getImage() { return image; }
+    
+    public void setImage(Image image) { this.image = image; }
 
     // TO STRING
     @Override

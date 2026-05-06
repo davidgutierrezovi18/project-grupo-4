@@ -71,6 +71,7 @@ public class User {
     // PROFILE IMAGE
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
+    
 
     // TRAVELS
     @ManyToMany(mappedBy = "userTravels")

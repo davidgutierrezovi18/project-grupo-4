@@ -9,12 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 import es.nextjourney.vs_nextjourney.dto.UserDTO;
 import es.nextjourney.vs_nextjourney.dto.UserMapper;
 import es.nextjourney.vs_nextjourney.model.Image;
+import es.nextjourney.vs_nextjourney.service.ImageService;
 import es.nextjourney.vs_nextjourney.model.User;
 import es.nextjourney.vs_nextjourney.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.io.IOException;
+import java.net.URI;
 import java.security.Principal;
 import java.util.regex.Pattern;
 import java.sql.SQLException;
@@ -33,6 +35,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath;
  
 @RestController
 @RequestMapping("/api/v1/users")
@@ -43,6 +47,9 @@ public class UserRestController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+
+    @Autowired
+    private ImageService imageService;
 
     public UserRestController(UserService userService,
             PasswordEncoder passwordEncoder,
@@ -116,6 +123,49 @@ public class UserRestController {
         userService.modifyUser(existing);
 
         return ResponseEntity.ok(userMapper.toDTO(existing));
+    }
+
+    @PostMapping("/profile/image")
+    public ResponseEntity<Object> uploadProfileImage(@RequestParam MultipartFile imageFile, Principal principal) throws IOException, SQLException {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (imageFile.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User user = userService.findByUserName(principal.getName());
+        
+        Image image = new Image();
+        image.setImageFile(new SerialBlob(imageFile.getBytes()));
+        image.setContentType(imageFile.getContentType());
+        user.setImage(image);
+        
+        userService.modifyUser(user);
+
+        URI location = fromCurrentContextPath()
+                .path("/api/v1/images/{imageId}/media")
+                .buildAndExpand(image.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/profile/image")
+    public ResponseEntity<Object> deleteProfileImage(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        User user = userService.findByUserName(principal.getName());
+        
+        if (user.getImage() != null) {
+            user.setImage(null);
+            userService.modifyUser(user);
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.notFound().build();
     }
 
     

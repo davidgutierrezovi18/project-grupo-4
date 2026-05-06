@@ -1,6 +1,7 @@
 package es.nextjourney.vs_nextjourney.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Optional;
 
 import jakarta.servlet.http.HttpSession;
@@ -69,7 +70,7 @@ public class DestinationWebController {
     // Create destination - POST
     @PostMapping("/add_destination")
     public String newDestinationProcess(Model model, @Valid Destination destination, BindingResult bindingResult,
-            MultipartFile imageFile) throws IOException {
+            MultipartFile imageFile, Principal principal) throws IOException {
 
         if (bindingResult.hasErrors()) {
             return showErrorDestination(model, destination, false, firstValidationError(bindingResult), false);
@@ -80,6 +81,7 @@ public class DestinationWebController {
         }
 
         try {
+            destination.setOwnerName(principal.getName());
             Image image = imageService.createImage(imageFile);
             destination.setCoverImage(image);
             destinationService.save(destination);

@@ -8,7 +8,11 @@ import java.io.IOException;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import java.security.Principal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +33,7 @@ import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Place;
 import es.nextjourney.vs_nextjourney.service.DestinationService;
 import es.nextjourney.vs_nextjourney.service.PlaceService;
-import es.nextjourney.vs_nextjourney.service.ImageService;
+//import es.nextjourney.vs_nextjourney.service.ImageService;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath;
 
@@ -43,9 +47,10 @@ public class DestinationRestController {
 	@Autowired
 	private PlaceService placeService;
 
-	@Autowired
-    private ImageService imageService;
+	//@Autowired
+    //private ImageService imageService;
 	
+	// anyone can see the destinations, so no authentication required for this endpoint
 	@GetMapping({"", "/"})
 		public ResponseEntity<Page<DestinationDTO>> getAllDestinations(Pageable pageable) {
 			Page<DestinationDTO> destinations = destinationService.findAll(pageable)
@@ -54,6 +59,7 @@ public class DestinationRestController {
 			return ResponseEntity.ok(destinations);
 		}
 
+	// anyone can see the destinations, so no authentication required for this endpoint
 	@GetMapping("/{id}")
 	public ResponseEntity<DestinationDTO> getDestination(@PathVariable Long id) {
 		Optional<Destination> destinationOpt = destinationService.findById(id);
@@ -64,8 +70,13 @@ public class DestinationRestController {
 		return ResponseEntity.ok(toDto(destinationOpt.get()));
 	}
 
+	// only athenticated users and admin can create destinations
 	@PostMapping
-	public ResponseEntity<DestinationDTO> createDestination(@RequestBody DestinationDTO destinationDTO) {
+	public ResponseEntity<DestinationDTO> createDestination(@RequestBody DestinationDTO destinationDTO,
+			Principal principal, Authentication authentication) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 		if (!isValidDestination(destinationDTO)) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -74,6 +85,7 @@ public class DestinationRestController {
 		destination.setName(destinationDTO.name().trim());
 		destination.setCountry(destinationDTO.country().trim());
 		destination.setDescription(destinationDTO.description().trim());
+		destination.setOwnerName(principal.getName());
 
 		// Destination requires a cover image. For API creation without image upload,
 		// use a placeholder image entity and let web flow replace it when needed.
@@ -87,8 +99,21 @@ public class DestinationRestController {
 				.body(created);
 	}
 
+	// only admin can update destinations
 	@PutMapping("/{id}")
-	public ResponseEntity<DestinationDTO> updateDestination(@PathVariable Long id, @RequestBody DestinationDTO destinationDTO) {
+	public ResponseEntity<DestinationDTO> updateDestination(@PathVariable Long id, @RequestBody DestinationDTO destinationDTO,
+			Principal principal, Authentication authentication) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+		if (!isAdmin) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
 		if (!isValidDestination(destinationDTO)) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -107,8 +132,20 @@ public class DestinationRestController {
 		return ResponseEntity.ok(toDto(existing));
 	}
 
+	// only admin can delete destinations
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteDestination(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteDestination(@PathVariable Long id, Principal principal, Authentication authentication) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+		if (!isAdmin) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
 		if (!destinationService.exists(id)) {
 			return ResponseEntity.notFound().build();
 		}
@@ -117,10 +154,15 @@ public class DestinationRestController {
 		return ResponseEntity.noContent().build();
 	}
 
+	// only admin and destination owner can upload the cover image
 	@PostMapping("/{id}/image")
     public ResponseEntity<Object> uploadDestinationImage(
             @PathVariable Long id, 
-            @RequestParam MultipartFile imageFile) throws IOException, SQLException {
+            @RequestParam MultipartFile imageFile,
+            Principal principal, Authentication authentication) throws IOException, SQLException {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         
         Optional<Destination> existingOpt = destinationService.findById(id);
         if (existingOpt.isEmpty()) {
@@ -131,6 +173,13 @@ public class DestinationRestController {
         }
 
         Destination destination = existingOpt.get();
+
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+        if (!isAdmin && (destination.getOwnerName() == null || !destination.getOwnerName().equals(principal.getName()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         
         Image image = new Image();
         image.setImageFile(new SerialBlob(imageFile.getBytes()));
@@ -147,8 +196,20 @@ public class DestinationRestController {
         return ResponseEntity.created(location).build();
     }
 
+	// only admin can delete the cover image
     @DeleteMapping("/{id}/image")
-    public ResponseEntity<Void> deleteDestinationImage(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteDestinationImage(@PathVariable Long id, Principal principal, Authentication authentication) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+        if (!isAdmin) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Optional<Destination> existingOpt = destinationService.findById(id);
         if (existingOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -164,7 +225,7 @@ public class DestinationRestController {
         return ResponseEntity.notFound().build();
     }
 
-
+	// anyone can see the destinations, so no authentication required for this endpoint
 	@GetMapping("/{id}/places")
 	public ResponseEntity<List<PlaceDTO>> getPlacesByDestination(@PathVariable Long id) {
 		Optional<Destination> destinationOpt = destinationService.findById(id);
@@ -179,6 +240,7 @@ public class DestinationRestController {
 		return ResponseEntity.ok(places);
 	}
 
+	// anyone can see the destinations, so no authentication required for this endpoint
 	@GetMapping("/{id}/places/{placeId}")
 	public ResponseEntity<PlaceDTO> getPlace(@PathVariable Long id, @PathVariable Long placeId) {
 		Optional<Destination> destinationOpt = destinationService.findById(id);
@@ -200,8 +262,13 @@ public class DestinationRestController {
 		return ResponseEntity.ok(toPlaceDto(place));
 	}
 
+	// only admin and destination owner can upload the cover image
 	@PostMapping("/{id}/places")
-	public ResponseEntity<PlaceDTO> createPlace(@PathVariable Long id, @RequestBody PlaceDTO placeDTO) {
+	public ResponseEntity<PlaceDTO> createPlace(@PathVariable Long id, @RequestBody PlaceDTO placeDTO, Principal principal) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
 		Optional<Destination> destinationOpt = destinationService.findById(id);
 		if (destinationOpt.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -231,8 +298,21 @@ public class DestinationRestController {
 				.body(created);
 	}
 
+	// only admin can update the place
 	@PutMapping("/{id}/places/{placeId}")
-	public ResponseEntity<PlaceDTO> updatePlace(@PathVariable Long id, @PathVariable Long placeId, @RequestBody PlaceDTO placeDTO) {
+	public ResponseEntity<PlaceDTO> updatePlace(@PathVariable Long id, @PathVariable Long placeId, @RequestBody PlaceDTO placeDTO, Principal principal, Authentication authentication) {
+		
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+		if (!isAdmin) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
 		Optional<Destination> destinationOpt = destinationService.findById(id);
 		if (destinationOpt.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -266,8 +346,20 @@ public class DestinationRestController {
 		return ResponseEntity.ok(toPlaceDto(place));
 	}
 
+	// only admin can delete the place
 	@DeleteMapping("/{id}/places/{placeId}")
-	public ResponseEntity<Void> deletePlace(@PathVariable Long id, @PathVariable Long placeId) {
+	public ResponseEntity<Void> deletePlace(@PathVariable Long id, @PathVariable Long placeId, Principal principal, Authentication authentication) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+		if (!isAdmin) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		}
+
 		Optional<Destination> destinationOpt = destinationService.findById(id);
 		if (destinationOpt.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -288,6 +380,7 @@ public class DestinationRestController {
 		return ResponseEntity.noContent().build();
 	}
 
+	// AUXILIARY METHODS
 	private DestinationDTO toDto(Destination destination) {
 		return new DestinationDTO(
 				destination.getId(),

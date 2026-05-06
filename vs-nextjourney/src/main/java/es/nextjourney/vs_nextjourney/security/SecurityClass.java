@@ -180,6 +180,12 @@ public class SecurityClass {
                 .requestMatchers("/api/v1/travels/**").authenticated()
                 .requestMatchers("/api/v1/users/profile").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/destinations").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/*/image").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/*/places").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/v1/destinations/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/destinations/**").hasRole("ADMIN")
 
                 // Admin-only API endpoints
                 .requestMatchers(HttpMethod.POST, "/api/v1/destinations/**").hasRole("ADMIN")

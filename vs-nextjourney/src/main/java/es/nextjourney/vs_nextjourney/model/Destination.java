@@ -38,6 +38,10 @@ public class Destination {
     @Size(max = 80, message = "El país no puede superar 80 caracteres")
     private String country;
 
+    // Destination owner / creator
+    @Column(name = "owner_name")
+    private String ownerName;
+
     // COVER IMAGE
     @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
     private Image coverImage;
@@ -109,6 +113,14 @@ public class Destination {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     public Image getCoverImage() {

@@ -147,19 +147,18 @@ public class ReviewRestController {
 		if (principal == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-				Optional<Review> reviewOpt = getOwnedReview(id, principal);
+
+		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if (reviewOpt.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.notFound().build();
 		}
 
 		Review review = reviewOpt.get();
 
-		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
-        
-		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		boolean isAdmin = isAdmin(authentication);
+		if (!isAdmin && (review.getUser() == null || review.getUser().getUsername() == null
+				|| !review.getUser().getUsername().equals(principal.getName()))) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
 		if (!isValidRating(reviewDTO.rating()) || !isValidReviewText(reviewDTO.reviewText())) {
@@ -210,9 +209,9 @@ public class ReviewRestController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-        Optional<Review> reviewOpt = getOwnedReview(id, principal);
-        if (reviewOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	        Optional<Review> reviewOpt = reviewRepository.findById(id);
+	        if (reviewOpt.isEmpty()) {
+	            return ResponseEntity.notFound().build();
         }
         if (imageFile.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -220,12 +219,10 @@ public class ReviewRestController {
 
 		Review review = reviewOpt.get();
 
-		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
-        
-		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		boolean isAdmin = isAdmin(authentication);
+		if (!isAdmin && (review.getUser() == null || review.getUser().getUsername() == null
+				|| !review.getUser().getUsername().equals(principal.getName()))) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         
         Image image = new Image();
@@ -257,17 +254,15 @@ public class ReviewRestController {
 
 		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if (reviewOpt.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.notFound().build();
 		}
 
 		Review review = reviewOpt.get();
 
-		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
-        
-		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		boolean isAdmin = isAdmin(authentication);
+		if (!isAdmin && (review.getUser() == null || review.getUser().getUsername() == null
+				|| !review.getUser().getUsername().equals(principal.getName()))) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
 		Image imageToDelete = review.getImages().stream()
@@ -344,6 +339,12 @@ public class ReviewRestController {
 		}
 
 		return Optional.of(review);
+	}
+
+	private boolean isAdmin(Authentication authentication) {
+		return authentication != null && authentication.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.anyMatch(auth -> "ROLE_ADMIN".equals(auth));
 	}
 
 	private boolean isValidRating(int rating) {

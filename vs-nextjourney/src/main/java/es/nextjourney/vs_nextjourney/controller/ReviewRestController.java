@@ -5,6 +5,9 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.sql.SQLException;
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,11 +19,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.nextjourney.vs_nextjourney.dto.ReviewDTO;
+import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Place;
 import es.nextjourney.vs_nextjourney.model.Review;
 import es.nextjourney.vs_nextjourney.model.User;
@@ -28,6 +34,9 @@ import es.nextjourney.vs_nextjourney.repository.ReviewRepository;
 import es.nextjourney.vs_nextjourney.repository.UserRepository;
 import es.nextjourney.vs_nextjourney.service.PlaceService;
 import es.nextjourney.vs_nextjourney.service.ReviewService;
+import es.nextjourney.vs_nextjourney.service.ImageService;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentContextPath;
 
 @RestController
 @RequestMapping("/api/v1/reviews")
@@ -46,6 +55,9 @@ public class ReviewRestController {
 
 	@Autowired
 	private PlaceService placeService;
+
+	@Autowired
+    private ImageService imageService;
 
 	@GetMapping({"", "/"})
     public ResponseEntity<Page<ReviewDTO>> getMyReviews(Principal principal, Pageable pageable) {
@@ -148,6 +160,54 @@ public class ReviewRestController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@PostMapping("/{id}/image")
+    public ResponseEntity<Object> uploadReviewImage(
+            @PathVariable Long id, 
+            @RequestParam MultipartFile imageFile, 
+            Principal principal) throws IOException, SQLException {
+        
+        Optional<Review> reviewOpt = getOwnedReview(id, principal);
+        if (reviewOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (imageFile.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Review review = reviewOpt.get();
+        
+        Image image = new Image();
+        image.setImageFile(new SerialBlob(imageFile.getBytes()));
+        image.setContentType(imageFile.getContentType());
+        review.setImage(image);
+        
+        reviewService.modifyReview(review);
+
+        URI location = fromCurrentContextPath()
+                .path("/api/v1/images/{imageId}/media")
+                .buildAndExpand(image.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Void> deleteReviewImage(@PathVariable Long id, Principal principal) {
+        Optional<Review> reviewOpt = getOwnedReview(id, principal);
+        if (reviewOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Review review = reviewOpt.get();
+        if (review.getImage() != null) {
+            review.setImage(null);
+            reviewService.modifyReview(review);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+	
 	private ReviewDTO toDto(Review review) {
 		String authorName = "";
 		if (review.getUser() != null) {

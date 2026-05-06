@@ -39,7 +39,7 @@ public class Destination {
     private String country;
 
     // COVER IMAGE
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL, optional = false, orphanRemoval = true)
     private Image coverImage;
 
     // PLACES

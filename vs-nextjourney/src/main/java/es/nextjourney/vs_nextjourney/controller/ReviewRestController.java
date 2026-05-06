@@ -227,7 +227,6 @@ public class ReviewRestController {
         Image image = new Image();
         image.setImageFile(new SerialBlob(imageFile.getBytes()));
         image.setContentType(imageFile.getContentType());
-        image.setReview(review);
         imageService.save(image);
         
         review.setImage(image);

@@ -6,5 +6,7 @@ public record UserDTO(
     Long id,
     String username,
     String email,
+    String password,
+    ImageDTO image,
     List<String> roles
 ) {}

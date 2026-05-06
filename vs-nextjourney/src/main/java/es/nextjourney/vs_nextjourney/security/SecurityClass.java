@@ -10,7 +10,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,7 +28,6 @@ import es.nextjourney.vs_nextjourney.security.jwt.JwtTokenProvider;
 import es.nextjourney.vs_nextjourney.security.jwt.UnauthorizedHandlerJwt;
 
 @Configuration
-@EnableMethodSecurity
 @EnableWebSecurity
 public class SecurityClass {
 
@@ -134,7 +132,6 @@ public class SecurityClass {
                                     .map(SimpleGrantedAuthority::new)
                                     .toList();
 
-<<<<<<< HEAD
                     return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
                             .password(user.getPassword())
                             .authorities(authorities)
@@ -142,123 +139,6 @@ public class SecurityClass {
                             .build();
                 })
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
-=======
-
-    @Bean
-    @Order(1)
-    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-        http.authenticationProvider(authenticationProvider());
-
-        http
-            .securityMatcher("/api/**")
-            .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt))
-            .authorizeHttpRequests(authorize -> authorize
-
-                // Authentication endpoints
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh").permitAll()
-
-                // Public read endpoints used by the site
-                .requestMatchers(HttpMethod.GET, "/api/v1/destinations/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/places/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/reviews/place-metrics").permitAll()
-
-                // Authenticated API endpoints
-                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/reviews/**").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/api/v1/reviews/**").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/reviews/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/users/profile/image").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/users/profile/image").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/*/image").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/reviews/*/images").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/destinations/*/image").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/reviews/*/images/*").authenticated()
-                .requestMatchers("/api/v1/travels/**").authenticated()
-                .requestMatchers("/api/v1/users/profile").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/destinations").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/*/image").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/*/places").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/**").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/api/v1/destinations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/destinations/**").hasRole("ADMIN")
-
-                // Admin-only API endpoints
-                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/destinations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/destinations/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/v1/destinations/*/places/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/destinations/*/places/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/destinations/*/places/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/v1/images/**").hasRole("ADMIN")
-
-                .anyRequest().denyAll()
-
-            )
-            .formLogin(form -> form.disable())
-            .csrf(csrf -> csrf.disable())
-            .httpBasic(basic -> basic.disable())
-            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(new JwtRequestFilter(userDetailService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
-    
-
-}
-
-/* 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import es.nextjourney.vs_nextjourney.security.jwt.JwtRequestFilter;
-import es.nextjourney.vs_nextjourney.security.jwt.JwtTokenProvider;
-import es.nextjourney.vs_nextjourney.security.jwt.UnauthorizedHandlerJwt;
-
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    public RepositoryUserDetailsService userDetailService;
-
-    @Autowired
-    private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
->>>>>>> ba0b545 (Pleas)
     }
 
     @Bean

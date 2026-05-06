@@ -131,7 +131,7 @@ public class UserRestController {
         userService.deleteById(user.getId());
 
         request.logout();
-
+ 
         return ResponseEntity.ok("Cuenta eliminada");
     }
 

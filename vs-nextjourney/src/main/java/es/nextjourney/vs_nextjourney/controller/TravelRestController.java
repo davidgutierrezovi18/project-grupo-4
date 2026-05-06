@@ -101,20 +101,25 @@ public class TravelRestController {
         return ResponseEntity.ok(travelMapper.toDTO(travel));
     }
 
-
-    //TODO: seguir revisando para hacer lo del admin
-
     // POST create travel
     @PostMapping
-    public ResponseEntity<TravelDTO> createTravel(@RequestBody TravelDTO travelDTO, Principal principal) {
+    public ResponseEntity<TravelDTO> createTravel(@RequestBody TravelDTO travelDTO, Principal principal, Authentication authentication) {
         
         // check if is logged in
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
         Travel travel = travelMapper.toDomain(travelDTO);
-        travel.setOwnerName(principal.getName());
+
+        if (!(isAdmin && travel.getOwnerName() != null)) {
+            travel.setOwnerName(principal.getName());
+        }
 
         if (travel.getCoverImage() == null) {
             Image coverImage = new Image();
@@ -130,7 +135,7 @@ public class TravelRestController {
 
     // PUT update travel
     @PutMapping("/{id}")
-    public ResponseEntity<TravelDTO> updateTravel(@PathVariable Long id, @RequestBody TravelDTO travelDTO, Principal principal) {
+    public ResponseEntity<TravelDTO> updateTravel(@PathVariable Long id, @RequestBody TravelDTO travelDTO, Principal principal, Authentication authentication) {
 
         // check if is logged in
         if (principal == null) {
@@ -142,10 +147,16 @@ public class TravelRestController {
         if (travelOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
- 
-        // check if the user is the owner (collaborator can not update)
+
         Travel existingTravel = travelOpt.get();
-        if (!existingTravel.getOwnerName().equals(principal.getName())) {
+
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // check if the user is the owner or admin (collaborator can not update)
+        if (!isAdmin && !existingTravel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -167,7 +178,7 @@ public class TravelRestController {
 
     // DELETE travel
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTravel(@PathVariable Long id, Principal principal) {
+    public ResponseEntity<Void> deleteTravel(@PathVariable Long id, Principal principal, Authentication authentication) {
 
         // check if is logged in
         if (principal == null) {
@@ -180,9 +191,15 @@ public class TravelRestController {
             return ResponseEntity.notFound().build();
         }
 
-        // check if the user is the owner (collaborator can not delete)
         Travel travel = travelOpt.get();
-        if (!travel.getOwnerName().equals(principal.getName())) {
+
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // check if the user is the owner or admin (collaborator can not delete)
+        if (!isAdmin && !travel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -194,7 +211,7 @@ public class TravelRestController {
     @PostMapping("/{id}/images")
     public ResponseEntity<ImageDTO> createTravelImage(@PathVariable long id, 
             @RequestParam("imageFile") MultipartFile imageFile, 
-            Principal principal) throws IOException {
+            Principal principal, Authentication authentication) throws IOException {
 
         // check if user is logged in
         if (principal == null) {
@@ -209,8 +226,13 @@ public class TravelRestController {
 
         Travel travel = travelOpt.get();
         
-        // check if user is owner (only owner can add images)
-        if (!travel.getOwnerName().equals(principal.getName())) {
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // check if user is owner or admin (only owner/admin can add images)
+        if (!isAdmin && !travel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -232,7 +254,7 @@ public class TravelRestController {
     @PostMapping("/{id}/coverImage")
     public ResponseEntity<ImageDTO> createTravelCoverImage(@PathVariable long id,
             @RequestParam("coverImageFile") MultipartFile imageFile,
-            Principal principal) throws IOException {
+            Principal principal, Authentication authentication) throws IOException {
 
         // check if user is logged in
         if (principal == null) {
@@ -247,8 +269,13 @@ public class TravelRestController {
 
         Travel travel = travelOpt.get();
 
-        // check if user is owner (only owner can add images)
-        if (!travel.getOwnerName().equals(principal.getName())) {
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // check if user is owner or admin (only owner/admin can add images)
+        if (!isAdmin && !travel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -272,7 +299,7 @@ public class TravelRestController {
     // DELETE remove cover image from travel
     @DeleteMapping("/{id}/coverImage")
     public ResponseEntity<Void> deleteTravelCoverImage(@PathVariable long id,
-            Principal principal) {
+            Principal principal, Authentication authentication) {
 
         // check if user is logged in
         if (principal == null) {
@@ -287,8 +314,13 @@ public class TravelRestController {
 
         Travel travel = travelOpt.get();
 
-        // check if user is owner (only owner can delete images)
-        if (!travel.getOwnerName().equals(principal.getName())) {
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // check if user is owner or admin (only owner/admin can delete images)
+        if (!isAdmin && !travel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -311,7 +343,7 @@ public class TravelRestController {
     @PostMapping("/{id}/itinerary")
     public ResponseEntity<TravelDTO> uploadTravelItinerary(@PathVariable long id,
             @RequestParam("itineraryFile") MultipartFile itineraryFile,
-            Principal principal) throws IOException {
+            Principal principal, Authentication authentication) throws IOException {
 
         // verify the user is authenticated
         if (principal == null) {
@@ -326,8 +358,13 @@ public class TravelRestController {
 
         Travel travel = travelOpt.get();
 
-        // only the travel owner can upload the itinerary PDF
-        if (!travel.getOwnerName().equals(principal.getName())) {
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // only the travel owner or admin can upload the itinerary PDF
+        if (!isAdmin && !travel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -355,7 +392,7 @@ public class TravelRestController {
     // DELETE remove itinerary PDF from travel
     @DeleteMapping("/{id}/itinerary")
     public ResponseEntity<Void> deleteTravelItinerary(@PathVariable long id,
-            Principal principal) {
+            Principal principal, Authentication authentication) {
 
         // verify the user is authenticated
         if (principal == null) {
@@ -370,8 +407,13 @@ public class TravelRestController {
 
         Travel travel = travelOpt.get();
 
-        // only the travel owner can remove the itinerary PDF
-        if (!travel.getOwnerName().equals(principal.getName())) {
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // only the travel owner or admin can remove the itinerary PDF
+        if (!isAdmin && !travel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -394,7 +436,7 @@ public class TravelRestController {
     @DeleteMapping("/{id}/images/{imageId}")
     public ResponseEntity<Void> deleteTravelImage(@PathVariable long id, 
             @PathVariable long imageId,
-            Principal principal) throws IOException {
+            Principal principal, Authentication authentication) throws IOException {
 
         // check if user is logged in
         if (principal == null) {
@@ -409,8 +451,13 @@ public class TravelRestController {
 
         Travel travel = travelOpt.get();
         
-        // check if user is owner (only owner can delete images)
-        if (!travel.getOwnerName().equals(principal.getName())) {
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        // check if user is owner or admin (only owner/admin can delete images)
+        if (!isAdmin && !travel.getOwnerName().equals(principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 

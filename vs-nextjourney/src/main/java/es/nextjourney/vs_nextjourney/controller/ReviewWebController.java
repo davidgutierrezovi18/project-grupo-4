@@ -148,6 +148,7 @@ public class ReviewWebController {
 					Image image = imageService.createImage(photo);
 					image.setReview(savedReview);
 					imageService.save(image);
+					savedReview.getImages().add(image);
 				}
 			}
 		}
@@ -232,6 +233,7 @@ public class ReviewWebController {
 					Image image = imageService.createImage(photo);
 					image.setReview(savedReview);
 					imageService.save(image);
+					savedReview.getImages().add(image);
 				}
 			}
 		}

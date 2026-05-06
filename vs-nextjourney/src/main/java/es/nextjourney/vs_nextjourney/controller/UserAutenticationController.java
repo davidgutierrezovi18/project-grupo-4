@@ -1,5 +1,6 @@
 package es.nextjourney.vs_nextjourney.controller;
 
+import es.nextjourney.vs_nextjourney.dto.UserDTO;
 import es.nextjourney.vs_nextjourney.dto.UserMapper;
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.User;
@@ -65,21 +66,21 @@ public class UserAutenticationController {
     // anyone can acces the login endpoint
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
-            @ModelAttribute User user,
+            @ModelAttribute UserDTO user,
             HttpServletResponse response) {
 
-        if (!isSafeInput(user.getUsername())) {
+        if (!isSafeInput(user.username())) {
             return ResponseEntity.badRequest()
                 .body(new AuthResponse(AuthResponse.Status.FAILURE, "Username inválido"));
         }
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+                new UsernamePasswordAuthenticationToken(user.username(), user.password())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.username());
 
             String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
             String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
@@ -99,47 +100,48 @@ public class UserAutenticationController {
     // anyone can access the register endpoint
     @PostMapping(value = "/register", consumes = "multipart/form-data")
     public ResponseEntity<?> register(
-            @ModelAttribute User user,
+            @ModelAttribute UserDTO user,
             @RequestPart(value = "imageFile", required = false) MultipartFile file)
             throws IOException, SQLException {
 
-        if (!isSafeInput(user.getUsername())) {
+        if (!isSafeInput(user.username())) {
             return ResponseEntity.badRequest()
                 .body(new AuthResponse(AuthResponse.Status.FAILURE, "Username inválido"));
         }
 
-        if (!isSafeInput(user.getEmail())) {
+        if (!isSafeInput(user.email())) {
             return ResponseEntity.badRequest()
                 .body(new AuthResponse(AuthResponse.Status.FAILURE, "Email inválido"));
         }
 
-        if (!isPasswordPolicyValid(user.getPassword())) {
+        if (!isPasswordPolicyValid(user.password())) {
             return ResponseEntity.badRequest()
                 .body(new AuthResponse(AuthResponse.Status.FAILURE,
                     "La contraseña debe contener letras, números y un carácter especial"));
         }
 
-        if (userService.usernameExists(user.getUsername())) {
+        if (userService.usernameExists(user.username())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new AuthResponse(AuthResponse.Status.FAILURE, "Username ya existe"));
         }
 
-        if (userService.emailExists(user.getEmail())) {
+        if (userService.emailExists(user.email())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new AuthResponse(AuthResponse.Status.FAILURE, "Email ya existe"));
         }
+        User user2 = userMapper.toDomain(user);
 
-        user.setRoles(List.of("USER"));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user2.setRoles(List.of("USER"));
+        user2.setPassword(passwordEncoder.encode(user2.getPassword()));
 
         if (file != null && !file.isEmpty()) {
             Image image = new Image();
             image.setImageFile(new SerialBlob(file.getBytes()));
             image.setContentType(file.getContentType());
-            user.setImage(image);
+            user2.setImage(image);
         }
 
-        userService.saveUser(user);
+        userService.saveUser(user2);
 
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(new AuthResponse(AuthResponse.Status.SUCCESS, "Registro exitoso"));

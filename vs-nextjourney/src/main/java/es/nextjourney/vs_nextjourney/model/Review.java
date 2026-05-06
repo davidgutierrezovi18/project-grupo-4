@@ -14,7 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +22,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
+@Table(name = "reviews")
 public class Review {
 
     // ID
@@ -41,10 +42,6 @@ public class Review {
     @Size(max = 3000, message = "La reseña no puede superar 3000 caracteres")
     private String reviewText;
 
-    // REVIEW IMAGES
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Image> images;
-
     @Column(name = "created_at", nullable = false)
     @NotNull(message = "La fecha de creación es obligatoria")
     private LocalDate createdAt;
@@ -61,23 +58,21 @@ public class Review {
     @ManyToOne()
     private Place place;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Image image;
+    // REVIEW IMAGES
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Image> images;
     
 
 
     //CONSTRUCTORS
     public Review() {}
     
-    public Review(User user, int rating, String reviewText, LocalDate createdAt, List<Image> images, Place place, Destination destination) {
+    public Review(User user, int rating, String reviewText, LocalDate createdAt, Place place, Destination destination) {
         this.userReviews = user;
         setRating(rating);
         this.reviewText = reviewText;
         this.createdAt = createdAt;
         this.images = new ArrayList<>();
-        if (images != null){
-            this.images = images;
-        }
         this.place = place;
         this.destination = destination;
     }
@@ -122,14 +117,6 @@ public class Review {
         this.userReviews = user;
     }
 
-    public List<Image> getImages() {
-        return images;
-    }
-
-    public void setImages(List<Image> images) {
-        this.images = images;
-    }
-
     public Place getPlace(){
         return place;
     }
@@ -146,9 +133,16 @@ public class Review {
         this.destination = destination;
     }
 
-    public Image getImage() { return image; }
-    
-    public void setImage(Image image) { this.image = image; }
+    public List<Image> getImages() {
+        if (images == null) {
+            images = new ArrayList<>();
+        }
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images != null ? images : new ArrayList<>();
+    }
 
     // TO STRING
     @Override
@@ -159,12 +153,12 @@ public class Review {
           .append(", reviewText=").append(reviewText)
           .append(", createdAt=").append(createdAt)
           .append(", username=").append(userReviews.getName());
-          if (destination != null){
+        if (destination != null) {
             sb.append(", destination=").append(destination);
-          }
-          if (place!=null){
+        }
+        if (place != null) {
             sb.append(", place=").append(place);
-          }
+        }
         sb.append("]");
         return sb.toString();
     }

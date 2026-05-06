@@ -262,7 +262,7 @@ public class DestinationRestController {
 		return ResponseEntity.ok(toPlaceDto(place));
 	}
 
-	// only admin and destination owner can upload the cover image
+	// only logged users or admin can create places
 	@PostMapping("/{id}/places")
 	public ResponseEntity<PlaceDTO> createPlace(@PathVariable Long id, @RequestBody PlaceDTO placeDTO, Principal principal) {
 		if (principal == null) {

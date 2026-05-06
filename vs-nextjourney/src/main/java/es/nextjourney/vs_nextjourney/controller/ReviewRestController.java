@@ -12,6 +12,8 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +61,7 @@ public class ReviewRestController {
 	@Autowired
     private ImageService imageService;
 
+	// anyone can see the reviews
 	@GetMapping({"", "/"})
     public ResponseEntity<Page<ReviewDTO>> getMyReviews(Principal principal, Pageable pageable) {
         Optional<User> userOpt = getAuthenticatedUser(principal);
@@ -73,6 +76,7 @@ public class ReviewRestController {
         return ResponseEntity.ok(reviews);
     }
 
+	// anyone can see the reviews
 	@GetMapping("/{id}")
 	public ResponseEntity<ReviewDTO> getOneReview(@PathVariable Long id, Principal principal) {
 		Optional<Review> reviewOpt = getOwnedReview(id, principal);
@@ -83,6 +87,7 @@ public class ReviewRestController {
 		return ResponseEntity.ok(toDto(reviewOpt.get()));
 	}
 
+	// anyone can see the reviews
 	@GetMapping("/places/{placeId}")
     public ResponseEntity<Page<ReviewDTO>> getReviewsByPlace(@PathVariable Long placeId, Pageable pageable) {
         Optional<Place> placeOpt = placeService.findById(placeId);
@@ -96,6 +101,7 @@ public class ReviewRestController {
         return ResponseEntity.ok(reviews);
     }
 
+	// only authenticated users and admin can create reviews
 	@PostMapping("/places/{placeId}")
 	public ResponseEntity<ReviewDTO> createReviewForPlace(
 			@PathVariable Long placeId,
@@ -127,21 +133,35 @@ public class ReviewRestController {
 				.body(toDto(savedReview));
 	}
 
+	// only the review owner and admin can update reviews
 	@PutMapping("/{id}")
 	public ResponseEntity<ReviewDTO> updateReview(
 			@PathVariable Long id,
 			@RequestBody ReviewDTO reviewDTO,
-			Principal principal) {
-		Optional<Review> reviewOpt = getOwnedReview(id, principal);
+			Principal principal, Authentication authentication) {
+		
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+				Optional<Review> reviewOpt = getOwnedReview(id, principal);
 		if (reviewOpt.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
+
+		Review review = reviewOpt.get();
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+        
+		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
 		if (!isValidRating(reviewDTO.rating()) || !isValidReviewText(reviewDTO.reviewText())) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		Review review = reviewOpt.get();
 		review.setRating(reviewDTO.rating());
 		review.setReviewText(reviewDTO.reviewText().trim());
 
@@ -149,23 +169,43 @@ public class ReviewRestController {
 		return ResponseEntity.ok(toDto(savedReview));
 	}
 
+	// only the review owner and admin can update reviews
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteReview(@PathVariable Long id, Principal principal) {
+	public ResponseEntity<Void> deleteReview(@PathVariable Long id, Principal principal, Authentication authentication) {
+
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
 		Optional<Review> reviewOpt = getOwnedReview(id, principal);
 		if (reviewOpt.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
+		Review review = reviewOpt.get();
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+        
+		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
 		reviewService.deleteReview(id);
 		return ResponseEntity.noContent().build();
 	}
 
+	// only the review owner and admin can upload the review image
 	@PostMapping("/{id}/image")
     public ResponseEntity<Object> uploadReviewImage(
             @PathVariable Long id, 
             @RequestParam MultipartFile imageFile, 
-            Principal principal) throws IOException, SQLException {
-        
+            Principal principal, Authentication authentication) throws IOException, SQLException {
+        if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
         Optional<Review> reviewOpt = getOwnedReview(id, principal);
         if (reviewOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -174,7 +214,15 @@ public class ReviewRestController {
             return ResponseEntity.badRequest().build();
         }
 
-        Review review = reviewOpt.get();
+		Review review = reviewOpt.get();
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+        
+		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         
         Image image = new Image();
         image.setImageFile(new SerialBlob(imageFile.getBytes()));
@@ -191,14 +239,28 @@ public class ReviewRestController {
         return ResponseEntity.created(location).build();
     }
 
+	// only the review owner and admin can delete the review image
     @DeleteMapping("/{id}/image")
-    public ResponseEntity<Void> deleteReviewImage(@PathVariable Long id, Principal principal) {
+    public ResponseEntity<Void> deleteReviewImage(@PathVariable Long id, Principal principal, Authentication authentication) {
+		if (principal == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
         Optional<Review> reviewOpt = getOwnedReview(id, principal);
         if (reviewOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Review review = reviewOpt.get();
+		Review review = reviewOpt.get();
+
+		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+        
+		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         if (review.getImage() != null) {
             review.setImage(null);
             reviewService.modifyReview(review);
@@ -208,6 +270,7 @@ public class ReviewRestController {
         return ResponseEntity.notFound().build();
     }
 	
+	// AUXILIARY METHODS
 	private ReviewDTO toDto(Review review) {
 		String authorName = "";
 		if (review.getUser() != null) {

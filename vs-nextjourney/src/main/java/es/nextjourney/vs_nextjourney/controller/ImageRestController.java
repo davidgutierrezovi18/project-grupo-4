@@ -43,6 +43,21 @@ public class ImageRestController {
 	public ImageDTO getImage(@PathVariable long id) {
 		return imageMapper.toDTO(imageService.getImageById(id));
 	}
+/* 
+	@GetMapping("/{id}/media")
+	public ResponseEntity<Resource> getImageFile(@PathVariable long id)
+			throws IOException, SQLException {
+
+		Resource imageFile = imageService.getImageFile(id);
+
+		MediaType mediaType = MediaTypeFactory
+				.getMediaType(imageFile.getFilename())
+				.orElse(MediaType.APPLICATION_OCTET_STREAM);
+
+		return ResponseEntity.ok()
+				.contentType(mediaType)
+				.body(imageFile);
+	}*/
 
 	@GetMapping("/{id}/media")
 	public ResponseEntity<Object> getImageFile(@PathVariable long id)

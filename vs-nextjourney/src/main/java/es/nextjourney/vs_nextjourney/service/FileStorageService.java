@@ -87,17 +87,26 @@ public class FileStorageService {
 
     // return the path of a file
     public Path getFilePath(String fileName) {
-        return this.fileStorageLocation.resolve(fileName).normalize();
+        Path targetPath = this.fileStorageLocation.resolve(fileName).normalize();
+        
+        // check the file is alredy in the allowed folder
+        if (!targetPath.startsWith(this.fileStorageLocation)) {
+            throw new RuntimeException("Acceso a ruta no permitido");
+        }
+        return targetPath;
+        //return this.fileStorageLocation.resolve(fileName).normalize();
 }
 
     // deletes a file from disk
     public void deleteFile(String filePath) {
         if (filePath != null) {
             try {
-                Files.deleteIfExists(Paths.get(filePath));
+                Path path = getFilePath(filePath);
+                Files.deleteIfExists(path);
             } catch (IOException e) {
                  throw new RuntimeException("No se pudo eliminar el archivo", e);
             }
         }
     }
+
 }

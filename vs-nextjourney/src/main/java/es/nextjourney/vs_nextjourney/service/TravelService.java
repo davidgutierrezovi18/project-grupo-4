@@ -7,6 +7,7 @@ import es.nextjourney.vs_nextjourney.repository.TravelRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -76,6 +77,33 @@ public class TravelService {
         if (!isOwner && !isCollaborator) {
             throw new RuntimeException("No tienes permisos para acceder a este viaje");
         }
+    }
+
+    public boolean canAccessTravel(Long travelId, Principal principal) {
+        if (principal == null) return false;
+
+        Travel travel = findById(travelId).orElse(null);
+        if (travel == null) return false;
+
+        String username = principal.getName();
+
+        // the owner can access the travel
+        if (travel.getOwnerName().equals(username)) {
+            return true;
+        }
+
+        // collaborators can access the travel
+        return travel.getUserTravels() != null &&
+                travel.getUserTravels().stream()
+                        .anyMatch(u -> username.equals(u.getUsername()));
+    }
+
+    public boolean isOwner(Long travelId, Principal principal) {
+        if (principal == null) return false;
+
+        return findById(travelId)
+                .map(t -> t.getOwnerName().equals(principal.getName()))
+                .orElse(false);
     }
 
 }

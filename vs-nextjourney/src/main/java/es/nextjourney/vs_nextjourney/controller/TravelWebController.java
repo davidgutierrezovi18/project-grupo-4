@@ -15,7 +15,10 @@ import java.nio.file.Path;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -116,6 +119,11 @@ public class TravelWebController {
             travel.setCoverImage(cover);
         }
 
+
+        // XSS protection 
+        travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
+        travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
+
         travelService.save(travel);
 
         // Carrousel images
@@ -146,6 +154,7 @@ public class TravelWebController {
         // Collaborators
         addCollaborators(travel);
 
+
         // Final save
         travelService.save(travel);
 
@@ -154,12 +163,17 @@ public class TravelWebController {
 
     // Edit travel - GET
     @GetMapping("/travel/{id}/edit")
-    public String editTravel(@PathVariable Long id, Model model) {
+    public String editTravel(@PathVariable Long id, Model model, Principal principal) {
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
             return "redirect:/mytravels";
         }
         Travel travel = travelOpt.get();
+
+        if (!travel.getOwnerName().equals(principal.getName())) {
+            return "error/403"; // Verificación de propiedad
+        }
+
         populateEditTravelModel(model, travel);
 
         return "edit_travel";
@@ -207,6 +221,14 @@ public class TravelWebController {
             model.addAttribute("error", "La fecha de fin no puede ser anterior a la fecha de inicio");
             populateEditTravelModel(model, travel);
             return "edit_travel";
+        }
+
+        // XSS protection
+        if (travel.getDescription() != null) {
+            travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
+        }
+        if (travel.getComment() != null) {
+            travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
         }
 
         // Update cover image if provided
@@ -264,10 +286,18 @@ public class TravelWebController {
         if (travelOpt.isEmpty()) {
             return "error/404";
         }
+
         Travel travel = travelOpt.get();
+        String username = principal != null ? principal.getName() : null;
+
+        boolean hasAccess = isAuthorizedForTravel(travel, username);
+        boolean isOwner = principal != null && travel.getOwnerName().equals(principal.getName());
+
+        if (!hasAccess) {
+            return "error/403"; // acceso prohibido
+        }
         model.addAttribute("travel", travel);
 
-        boolean isOwner = principal != null && travel.getOwnerName().equals(principal.getName());
         model.addAttribute("isOwner", isOwner);
 
         // Countries, cities and places lists
@@ -348,6 +378,60 @@ public class TravelWebController {
         return "redirect:/mytravels";
     }
 
+    // Download itinerary
+    @GetMapping("/travel/{id}/itinerary")
+    public void downloadItinerary(@PathVariable Long id, Principal principal, HttpServletResponse response)
+            throws IOException {
+
+        // 1. verify if user is logged in
+        if (principal == null) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        // 2. verify that the travel exists
+        Optional<Travel> travelOpt = travelService.findById(id);
+        if (travelOpt.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        Travel travel = travelOpt.get();
+
+        // 3. verify access: only owner and collaborators can download the itinerary
+        boolean hasAccess = principal != null && (travel.getOwnerName().equals(principal.getName()) ||
+                travel.getUserTravels().stream().anyMatch(u -> u.getUsername().equals(principal.getName())));
+
+        if (!hasAccess) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
+        // 4. verify if the travel has itinerary 
+        String filePath = travel.getItineraryPath();
+        if (filePath == null || filePath.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        Path path = fileStorageService.getFilePath(filePath);
+        if (!Files.exists(path)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        // 5. configure headers for download
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" +
+                travel.getItineraryUrl() + "\"");
+        response.setContentLengthLong(Files.size(path));
+
+        // 6. write file to response
+        try (InputStream inputStream = Files.newInputStream(path);
+                OutputStream outputStream = response.getOutputStream()) {
+            inputStream.transferTo(outputStream);
+        }
+    }
+
     // AUXILIARY METHODS
     private void populateEditTravelModel(Model model, Travel travel) {
         model.addAttribute("travel", travel);
@@ -405,58 +489,16 @@ public class TravelWebController {
         travel.setUserTravels(users);
     }
 
-    // Download itinerary
-    @GetMapping("/travel/{id}/itinerary")
-    public void downloadItinerary(@PathVariable Long id, Principal principal, HttpServletResponse response)
-            throws IOException {
-
-        // 1. verify if user is logged in
-        if (principal == null) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
+    private boolean isAuthorizedForTravel(Travel travel, String username) {
+        // the owner can access the travel
+        if (travel.getOwnerName().equals(username)) {
+            return true;
         }
-
-        // 2. verify that the travel exists
-        Optional<Travel> travelOpt = travelService.findById(id);
-        if (travelOpt.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        Travel travel = travelOpt.get();
-
-        // 3. verify access: only owner and collaborators can download the itinerary
-        boolean hasAccess = principal != null && (travel.getOwnerName().equals(principal.getName()) ||
-                travel.getUserTravels().stream().anyMatch(u -> u.getUsername().equals(principal.getName())));
-
-        if (!hasAccess) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-
-        // 4. verify if the travel has itinerary 
-        String filePath = travel.getItineraryPath();
-        if (filePath == null || filePath.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        Path path = fileStorageService.getFilePath(filePath);
-        if (!Files.exists(path)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        // 5. configure headers for download
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" +
-                travel.getItineraryUrl() + "\"");
-        response.setContentLengthLong(Files.size(path));
-
-        // 6. write file to response
-        try (InputStream inputStream = Files.newInputStream(path);
-                OutputStream outputStream = response.getOutputStream()) {
-            inputStream.transferTo(outputStream);
-        }
+        // collaborators can access the travel
+        return travel.getUserTravels() != null && travel.getUserTravels().stream()
+                .anyMatch(user -> username.equals(user.getUsername()));
     }
+
+    
 
 }

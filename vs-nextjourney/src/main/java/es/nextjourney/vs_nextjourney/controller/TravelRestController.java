@@ -485,9 +485,11 @@ public class TravelRestController {
 
     // AUXILIARY METHODS
     private boolean isAuthorizedForTravel(Travel travel, String username) {
+        // the owner can access the travel
         if (travel.getOwnerName().equals(username)) {
             return true;
         }
+        // collaborators can access the travel
         return travel.getUserTravels() != null && travel.getUserTravels().stream()
                 .anyMatch(user -> username.equals(user.getUsername()));
     }

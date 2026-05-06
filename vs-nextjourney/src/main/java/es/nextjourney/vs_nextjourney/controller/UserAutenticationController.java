@@ -62,6 +62,7 @@ public class UserAutenticationController {
         this.userMapper = userMapper;
     }
 
+    // anyone can acces the login endpoint
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @ModelAttribute User user,
@@ -95,6 +96,7 @@ public class UserAutenticationController {
         }
     }
 
+    // anyone can access the register endpoint
     @PostMapping(value = "/register", consumes = "multipart/form-data")
     public ResponseEntity<?> register(
             @ModelAttribute User user,

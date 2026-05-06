@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -59,8 +60,9 @@ public class UserRestController {
         this.userMapper = userMapper;
     }
 
+    // only the user himself and admin can access the profile endpoint
     @GetMapping("/profile")
-    public ResponseEntity<UserDTO> profile(Principal principal) {
+    public ResponseEntity<UserDTO> profile(Principal principal, Authentication authentication) {
         if (principal == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -185,6 +187,7 @@ public class UserRestController {
         return ResponseEntity.ok("Cuenta eliminada");
     }
 
+    // AUXILIARY METHODS
     private boolean isPasswordPolicyValid(String password) {
         return password != null && PASSWORD_POLICY.matcher(password).matches();
     }

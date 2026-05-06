@@ -189,7 +189,7 @@ public class ReviewRestController {
 
 		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+                .anyMatch(auth -> "ADMIN".equals(auth));
 
 		if (!isAdmin && (review.getUser() == null || !currentUsername.equals(review.getUser().getUsername()))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -344,7 +344,7 @@ public class ReviewRestController {
 	private boolean isAdmin(Authentication authentication) {
 		return authentication != null && authentication.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
-				.anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+				.anyMatch(auth -> "ADMIN".equals(auth));
 	}
 
 	private boolean isValidRating(int rating) {

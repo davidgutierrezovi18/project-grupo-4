@@ -227,9 +227,10 @@ public class ReviewRestController {
         Image image = new Image();
         image.setImageFile(new SerialBlob(imageFile.getBytes()));
         image.setContentType(imageFile.getContentType());
-		image.setReview(review);
-        review.setImage(image);
+        image.setReview(review);
+        imageService.save(image);
         
+        review.setImage(image);
         reviewService.modifyReview(review);
 
         URI location = fromCurrentContextPath()
@@ -247,7 +248,7 @@ public class ReviewRestController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-        Optional<Review> reviewOpt = getOwnedReview(id, principal);
+        Optional<Review> reviewOpt = reviewRepository.findById(id);
         if (reviewOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -307,7 +308,16 @@ public class ReviewRestController {
 			return Optional.empty();
 		}
 
-		return reviewOpt;
+		Review review = reviewOpt.get();
+		if (review.getUser() == null || review.getUser().getUsername() == null) {
+			return Optional.empty();
+		}
+
+		if (!review.getUser().getUsername().equals(principal.getName())) {
+			return Optional.empty();
+		}
+
+		return Optional.of(review);
 	}
 
 	private boolean isValidRating(int rating) {

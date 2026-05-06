@@ -176,14 +176,14 @@ public class ReviewRestController {
 	// only the review owner and admin can update reviews
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteReview(@PathVariable Long id, Principal principal, Authentication authentication) {
-
-		if (principal == null) {
+		String currentUsername = resolveUsername(principal, authentication);
+		if (currentUsername == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-		Optional<Review> reviewOpt = getOwnedReview(id, principal);
+		Optional<Review> reviewOpt = reviewRepository.findById(id);
 		if (reviewOpt.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.notFound().build();
 		}
 
 		Review review = reviewOpt.get();
@@ -191,8 +191,8 @@ public class ReviewRestController {
 		boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
-        
-		if (!isAdmin && (review.getUser() == null || !review.getUser().getUsername().equals(principal.getName()))) {
+
+		if (!isAdmin && (review.getUser() == null || !currentUsername.equals(review.getUser().getUsername()))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
@@ -310,6 +310,18 @@ public class ReviewRestController {
 		}
 
 		return userRepository.findByUsername(principal.getName());
+	}
+
+	private String resolveUsername(Principal principal, Authentication authentication) {
+		if (principal != null && principal.getName() != null && !principal.getName().isBlank()) {
+			return principal.getName();
+		}
+
+		if (authentication != null && authentication.getName() != null && !authentication.getName().isBlank()) {
+			return authentication.getName();
+		}
+
+		return null;
 	}
 
 	private Optional<Review> getOwnedReview(Long reviewId, Principal principal) {

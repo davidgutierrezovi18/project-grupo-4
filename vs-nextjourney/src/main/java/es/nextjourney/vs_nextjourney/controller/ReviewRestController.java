@@ -3,7 +3,6 @@ package es.nextjourney.vs_nextjourney.controller;
 import java.net.URI;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.sql.SQLException;
 import javax.sql.rowset.serial.SerialBlob;
@@ -28,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.nextjourney.vs_nextjourney.dto.ReviewDTO;
+import es.nextjourney.vs_nextjourney.dto.ImageDTO;
+import es.nextjourney.vs_nextjourney.dto.ImageMapper;
 import es.nextjourney.vs_nextjourney.model.Image;
 import es.nextjourney.vs_nextjourney.model.Place;
 import es.nextjourney.vs_nextjourney.model.Review;
@@ -60,6 +61,9 @@ public class ReviewRestController {
 
 	@Autowired
     private ImageService imageService;
+
+	@Autowired
+	private ImageMapper imageMapper;
 
 	// anyone can see the reviews
 	@GetMapping({"", "/"})
@@ -196,9 +200,9 @@ public class ReviewRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	// only the review owner and admin can upload the review image
-	@PostMapping("/{id}/image")
-    public ResponseEntity<Object> uploadReviewImage(
+	// only the review owner and admin can upload review images
+	@PostMapping("/{id}/images")
+	public ResponseEntity<ImageDTO> uploadReviewImage(
             @PathVariable Long id, 
             @RequestParam MultipartFile imageFile, 
             Principal principal, Authentication authentication) throws IOException, SQLException {
@@ -227,9 +231,10 @@ public class ReviewRestController {
         Image image = new Image();
         image.setImageFile(new SerialBlob(imageFile.getBytes()));
         image.setContentType(imageFile.getContentType());
-        imageService.save(image);
         
-        review.setImage(image);
+		review.getImages().add(image);
+		image.setReview(review);
+		imageService.save(image);
         reviewService.modifyReview(review);
 
         URI location = fromCurrentContextPath()
@@ -237,20 +242,23 @@ public class ReviewRestController {
                 .buildAndExpand(image.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(imageMapper.toDTO(image));
     }
 
-	// only the review owner and admin can delete the review image
-    @DeleteMapping("/{id}/image")
-    public ResponseEntity<Void> deleteReviewImage(@PathVariable Long id, Principal principal, Authentication authentication) {
+	@DeleteMapping("/{id}/images/{imageId}")
+    public ResponseEntity<Void> deleteReviewImageById(
+			@PathVariable Long id,
+			@PathVariable Long imageId,
+			Principal principal,
+			Authentication authentication) {
 		if (principal == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-        Optional<Review> reviewOpt = reviewRepository.findById(id);
-        if (reviewOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+		Optional<Review> reviewOpt = reviewRepository.findById(id);
+		if (reviewOpt.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 
 		Review review = reviewOpt.get();
 
@@ -262,13 +270,19 @@ public class ReviewRestController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        if (review.getImage() != null) {
-            review.setImage(null);
-            reviewService.modifyReview(review);
-            return ResponseEntity.noContent().build();
-        }
+		Image imageToDelete = review.getImages().stream()
+				.filter(image -> image.getId() != null && image.getId().equals(imageId))
+				.findFirst()
+				.orElse(null);
 
-        return ResponseEntity.notFound().build();
+		if (imageToDelete == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		review.getImages().remove(imageToDelete);
+		reviewService.modifyReview(review);
+		imageService.deleteImageById(imageId);
+		return ResponseEntity.noContent().build();
     }
 	
 	// AUXILIARY METHODS
@@ -281,12 +295,13 @@ public class ReviewRestController {
 			}
 		}
 
-		Long imageId = review.getImage() != null ? review.getImage().getId() : null;
-		String imageUrl = imageId != null
-				? fromCurrentContextPath().path("/api/v1/images/{imageId}/media").buildAndExpand(imageId).toUriString()
-				: null;
+		var imageDTOs = review.getImages() != null ? 
+			review.getImages().stream()
+				.map(imageMapper::toDTO)
+				.toList() : 
+			java.util.Collections.<ImageDTO>emptyList();
 
-		return new ReviewDTO(review.getId(), review.getReviewText(), review.getRating(), authorName, imageId, imageUrl);
+		return new ReviewDTO(review.getId(), review.getReviewText(), review.getRating(), authorName, imageDTOs);
 	}
 
 	private Optional<User> getAuthenticatedUser(Principal principal) {

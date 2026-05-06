@@ -33,6 +33,10 @@ public class TravelService {
         return travelRepository.findAll();
     }
 
+    public Page<Travel> findAllPaginated(Pageable pageable) {
+        return travelRepository.findAll(pageable);
+    }
+
     public Optional<Travel> findById(long id) {
         return travelRepository.findById(id);
     }

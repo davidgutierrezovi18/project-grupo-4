@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 import java.util.Optional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 @RestController
 @RequestMapping("/api/v1/travels")
@@ -43,42 +45,64 @@ public class TravelRestController {
     @Autowired
     private FileStorageService fileStorageService;
 
-    // GET my travels
+    // GET all travels - admin sees all, regular users see only their own
     @GetMapping({"", "/"})
-    public ResponseEntity<Page<TravelDTO>> getMyTravels(Principal principal, Pageable pageable) {
+    public ResponseEntity<Page<TravelDTO>> getMyTravels(Principal principal, Pageable pageable, Authentication authentication) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // Llamamos a la versión paginada del service
-        Page<TravelDTO> travels = travelService.findAllByUser(principal.getName(), pageable)
-                .map(travelMapper::toDTO);
+        Page<TravelDTO> travels;
+
+        // check if the user has ADMIN role
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        if (isAdmin) {
+            // admin users see all travels in the database
+            travels = travelService.findAllPaginated(pageable)
+                    .map(travelMapper::toDTO);
+        } else {
+            // logged users see only their own travels (owned or as collaborator)
+            travels = travelService.findAllByUser(principal.getName(), pageable)
+                    .map(travelMapper::toDTO);
+        }
         
         return ResponseEntity.ok(travels);
     }
 
-    // GET one travel
+    // GET one travel - admin can see any travel, regular users see only their own
     @GetMapping("/{id}")
-    public ResponseEntity<TravelDTO> getOneTravel(@PathVariable Long id, Principal principal) {
+    public ResponseEntity<TravelDTO> getOneTravel(@PathVariable Long id, Principal principal, Authentication authentication) {
 
         // check if is logged in
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // check if the travel is empty or exists
+        // check if the travel exists
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         Travel travel = travelOpt.get();
-        if (!isAuthorizedForTravel(travel, principal.getName())) {
+
+        // check if the user is admin - admins can see any travel
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth));
+
+        if (!isAdmin && !isAuthorizedForTravel(travel, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         return ResponseEntity.ok(travelMapper.toDTO(travel));
     }
+
+
+    //TODO: seguir revisando para hacer lo del admin
 
     // POST create travel
     @PostMapping

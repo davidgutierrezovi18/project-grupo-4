@@ -162,6 +162,7 @@ public class SecurityClass {
                         .requestMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/place-metrics").permitAll()
 
+                        
                         // Authenticated API endpoints
                         .requestMatchers(HttpMethod.GET, "/api/v1/reviews/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/reviews/**").authenticated()

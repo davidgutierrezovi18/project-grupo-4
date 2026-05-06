@@ -227,8 +227,9 @@ public class ReviewRestController {
         Image image = new Image();
         image.setImageFile(new SerialBlob(imageFile.getBytes()));
         image.setContentType(imageFile.getContentType());
-        review.setImage(image);
+        imageService.save(image);
         
+        review.setImage(image);
         reviewService.modifyReview(review);
 
         URI location = fromCurrentContextPath()
@@ -246,7 +247,7 @@ public class ReviewRestController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-        Optional<Review> reviewOpt = getOwnedReview(id, principal);
+        Optional<Review> reviewOpt = reviewRepository.findById(id);
         if (reviewOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -280,7 +281,12 @@ public class ReviewRestController {
 			}
 		}
 
-		return new ReviewDTO(review.getId(), review.getReviewText(), review.getRating(), authorName);
+		Long imageId = review.getImage() != null ? review.getImage().getId() : null;
+		String imageUrl = imageId != null
+				? fromCurrentContextPath().path("/api/v1/images/{imageId}/media").buildAndExpand(imageId).toUriString()
+				: null;
+
+		return new ReviewDTO(review.getId(), review.getReviewText(), review.getRating(), authorName, imageId, imageUrl);
 	}
 
 	private Optional<User> getAuthenticatedUser(Principal principal) {

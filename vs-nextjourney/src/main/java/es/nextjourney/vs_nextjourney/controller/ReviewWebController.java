@@ -107,8 +107,7 @@ public class ReviewWebController {
 		model.addAttribute("rating4", review.getRating() == 4);
 		model.addAttribute("rating5", review.getRating() == 5);
 		model.addAttribute("isEditing", true);
-		model.addAttribute("existingImages", review.getImages() != null ? review.getImages() : List.of());
-		model.addAttribute("hasExistingImages", review.getImages() != null && !review.getImages().isEmpty());
+		model.addAttribute("hasExistingImage", review.getImage() != null);
 		model.addAttribute("submitLabel", "Guardar cambios");
 		model.addAttribute("cancelUrl", "/my_reviews");
 		return "add-review";
@@ -136,8 +135,8 @@ public class ReviewWebController {
 		review.setRating(rating);
 		review.setReviewText(reviewText.trim());
 
-		if (deleteImageIds != null && review.getImages() != null) {
-			review.getImages().removeIf(image -> image.getId() != null && deleteImageIds.contains(image.getId()));
+		if (deleteImageIds != null && deleteImageIds.contains(review.getImage() != null ? review.getImage().getId() : null)) {
+			review.setImage(null);
 		}
 
 		Review savedReview = reviewService.modifyReview(review);

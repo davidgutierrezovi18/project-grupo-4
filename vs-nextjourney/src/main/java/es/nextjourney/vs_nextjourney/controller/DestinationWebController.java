@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.Authentication;
 
 import es.nextjourney.vs_nextjourney.model.Destination;
 import es.nextjourney.vs_nextjourney.model.Image;
@@ -92,13 +93,25 @@ public class DestinationWebController {
         }
     }
 
-    // Edit destination - GET
+// Edit destination - GET
     @GetMapping("/destinations/{id}/edit")
-    public String editDestination(Model model, @PathVariable long id) {
-        Optional<Destination> destination = destinationService.findById(id);
-        if (destination.isPresent()) {
-            model.addAttribute("destination", destination.get());
-            model.addAttribute("isEditing", true); // Esto sirve para cambiar el título en el HTML
+    public String editDestination(Model model, @PathVariable long id, Principal principal, Authentication authentication) {
+        Optional<Destination> destinationOpt = destinationService.findById(id);
+        
+        if (destinationOpt.isPresent()) {
+            Destination destination = destinationOpt.get();
+            
+            
+            boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                    .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+            
+            if (!isAdmin && (destination.getOwnerName() == null || !destination.getOwnerName().equals(principal.getName()))) {
+                return "error/403"; 
+            }
+            
+
+            model.addAttribute("destination", destination);
+            model.addAttribute("isEditing", true);
             return "add_destination";
         }
         return "redirect:/destinations";
@@ -107,11 +120,20 @@ public class DestinationWebController {
     // Edit destination - POST
     @PostMapping("/destinations/{id}/edit")
     public String editDestinationProcess(Model model, @Valid Destination destination, BindingResult bindingResult,
-            MultipartFile imageFile, @PathVariable long id) throws IOException {
+            MultipartFile imageFile, @PathVariable long id, Principal principal, Authentication authentication) throws IOException {
         Optional<Destination> oldDestOpt = destinationService.findById(id);
         
         if (oldDestOpt.isPresent()) {
             Destination oldDest = oldDestOpt.get();
+
+            
+            boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                    .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+            
+            if (!isAdmin && (oldDest.getOwnerName() == null || !oldDest.getOwnerName().equals(principal.getName()))) {
+                return "error/403"; 
+            }
+            
 
             if (bindingResult.hasErrors()) {
                 destination.setId(id);
@@ -121,12 +143,11 @@ public class DestinationWebController {
                 return showErrorDestination(model, destination, true, firstValidationError(bindingResult), false);
             }
             
-            // Mantenemos la identidad y las listas
             destination.setId(id);
             destination.setPlaces(oldDest.getPlaces());
             destination.setReviews(oldDest.getReviews());
+            destination.setOwnerName(oldDest.getOwnerName());
 
-            // Lógica de imagen: si no hay nueva, mantenemos la vieja
             if (imageFile == null || imageFile.isEmpty()) {
                 destination.setCoverImage(oldDest.getCoverImage());
             } else {
@@ -151,9 +172,13 @@ public class DestinationWebController {
         return "add_destination";
     }
 
-    // Delete destination 
+    // Delete destination  
     @PostMapping("/destinations/{id}/delete")
-    public String deleteDestination(@PathVariable long id) {
+    public String deleteDestination(@PathVariable long id, Authentication authentication) {
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+        if (!isAdmin) return "error/403";
+
         destinationService.delete(id);
         return "redirect:/destinations";
     }
@@ -191,46 +216,68 @@ public class DestinationWebController {
         return "redirect:/destinations";
     }
 
-    // Edit a place of a destination - GET
+ // Edit a place of a destination - GET
     @GetMapping("/destinations/{destId}/places/{placeId}/edit")
-    public String editPlaceForm(Model model, @PathVariable long destId, @PathVariable long placeId) {
+    public String editPlaceForm(Model model, @PathVariable long destId, @PathVariable long placeId, Authentication authentication) {
+        
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+        if (!isAdmin) return "error/403";
+
         Optional<Destination> destination = destinationService.findById(destId);
         Optional<Place> place = placeService.findById(placeId);
 
         if (destination.isPresent() && place.isPresent()) {
             model.addAttribute("destination", destination.get());
-            model.addAttribute("place", place.get()); // Pasamos el lugar existente
+            model.addAttribute("place", place.get());
             model.addAttribute("isEditing", true);
             return "add_place";
         }
         return "redirect:/destinations/" + destId;
     }
 
-    // Edit a place of a destination - POST
+// Edit a place of a destination - POST
     @PostMapping("/destinations/{destId}/places/{placeId}/edit")
     public String editPlaceProcess(Model model, @PathVariable long destId, @PathVariable long placeId,
-            @Valid Place place, BindingResult bindingResult) {
-        Optional<Destination> destination = destinationService.findById(destId);
+            @Valid Place place, BindingResult bindingResult, Authentication authentication) {
+        
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+        
+        if (!isAdmin) {
+            return "error/403"; 
+        }
+
+        Optional<Destination> destinationOpt = destinationService.findById(destId);
         Optional<Place> oldPlaceOpt = placeService.findById(placeId);
 
-        if (destination.isPresent() && oldPlaceOpt.isPresent()) {
-            // Mantenemos la identidad (ID) y vinculamos al destino padre
+        if (destinationOpt.isPresent() && oldPlaceOpt.isPresent()) {
             place.setId(placeId);
-            place.setDestination(destination.get());
+            place.setDestination(destinationOpt.get());
 
             if (bindingResult.hasErrors()) {
-                return showErrorPlace(model, destination.get(), place, true, firstValidationError(bindingResult));
+                return showErrorPlace(model, destinationOpt.get(), place, true, firstValidationError(bindingResult));
             }
 
             placeService.save(place);
             return "redirect:/destinations/" + destId;
         }
+
         return "redirect:/destinations";
     }
+            
 
     // Delete place of a destination
     @PostMapping("/destinations/{destId}/places/{placeId}/delete")
-    public String deletePlace(@PathVariable long destId, @PathVariable long placeId) {
+    public String deletePlace(@PathVariable long destId, @PathVariable long placeId, Authentication authentication) {
+        
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> "ROLE_ADMIN".equals(auth.getAuthority()));
+        
+        if (!isAdmin) {
+            return "error/403"; 
+        }
+
         placeService.delete(placeId);
         return "redirect:/destinations/" + destId; 
     }

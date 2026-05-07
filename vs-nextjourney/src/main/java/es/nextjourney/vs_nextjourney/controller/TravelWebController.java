@@ -83,9 +83,19 @@ public class TravelWebController {
             return "redirect:/sign_in";
         }
         
+        // security validations
+        try {
+            validateImage(coverImage); // validates the cover is an image
+            for (MultipartFile f : carouselImages) validateImage(f); // validates the carousel images
+
+            // cleans the HTML of description and comment (XSS)
+            travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
+            travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "create_new_travel";
+        }
         
-
-
         User owner = userRepository.findByUsername(principal.getName()).orElseThrow();
         travel.setOwnerName(owner.getUsername());
 
@@ -125,10 +135,6 @@ public class TravelWebController {
             travel.setCoverImage(cover);
         }
 
-
-        // XSS protection 
-        travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
-        travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
 
         travelService.save(travel);
 
@@ -177,7 +183,7 @@ public class TravelWebController {
         Travel travel = travelOpt.get();
 
         if (!travel.getOwnerName().equals(principal.getName())) {
-            return "error/403"; // Verificación de propiedad
+            return "error/403"; // property verification
         }
 
         populateEditTravelModel(model, travel);
@@ -194,6 +200,7 @@ public class TravelWebController {
             @RequestParam(value = "itineraryFile", required = false) MultipartFile itinerary,
             Principal principal,
             Model model) throws IOException {
+        
         if (principal == null) {
             return "redirect:/sign_in";
         }
@@ -206,6 +213,25 @@ public class TravelWebController {
         if (!existingTravel.getOwnerName().equals(principal.getName())) {
             return "error/403";
         }
+
+        // security validations
+        try {
+            validateImage(coverImage);
+            for (MultipartFile f : carouselImages) validateImage(f);
+            // XSS protection
+            if (travel.getDescription() != null) {
+                travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
+            }
+            if (travel.getComment() != null) {
+                travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
+            }
+
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            populateEditTravelModel(model, existingTravel);
+            return "edit_travel";
+        }
+
         travel.setId(existingTravel.getId());
         travel.setOwnerName(existingTravel.getOwnerName());
 
@@ -227,14 +253,6 @@ public class TravelWebController {
             model.addAttribute("error", "La fecha de fin no puede ser anterior a la fecha de inicio");
             populateEditTravelModel(model, travel);
             return "edit_travel";
-        }
-
-        // XSS protection
-        if (travel.getDescription() != null) {
-            travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
-        }
-        if (travel.getComment() != null) {
-            travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
         }
 
         // Update cover image if provided

@@ -197,6 +197,11 @@ public class TravelRestController {
 
         Travel travel = travelOpt.get();
 
+        // security check: only the owner or admin can delete the travel (collaborator can not delete)
+        if (!isAuthorizedForTravel(travel, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         // check if the user has ADMIN role
         boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

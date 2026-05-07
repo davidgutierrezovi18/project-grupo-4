@@ -55,6 +55,7 @@ public class TravelWebController {
     @GetMapping("/mytravels")
     public String myTravels(Model model, Principal principal) {
         String username = principal.getName();
+        // the method cheks that the user can only see their own travels, so we can use the username to filter the travels
         List<Travel> travels = travelService.findAllByUser(username);
         model.addAttribute("travels", travels);
         return "mytravels";
@@ -63,6 +64,7 @@ public class TravelWebController {
     // Create travel - GET
     @GetMapping("/travel/new")
     public String newTravelGet(Model model, Principal principal) {
+        // verify the user is logged
         if (principal == null) {
             return "redirect:/sign_in";
         }
@@ -79,6 +81,7 @@ public class TravelWebController {
             Principal principal,
             Model model) throws IOException {
         
+        // verify the user is logged
         if (principal == null) {
             return "redirect:/sign_in";
         }
@@ -111,7 +114,6 @@ public class TravelWebController {
         travel.getUserTravels().add(owner);
 
         
-
         // Validate form
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", firstValidationError(bindingResult));
@@ -176,14 +178,24 @@ public class TravelWebController {
     // Edit travel - GET
     @GetMapping("/travel/{id}/edit")
     public String editTravel(@PathVariable Long id, Model model, Principal principal) {
+        
+        // verify the user is logged
+        if (principal == null) {
+            return "redirect:/sign_in";
+        }
+
         Optional<Travel> travelOpt = travelService.findById(id);
+        
+        // verify the travel exists
         if (travelOpt.isEmpty()) {
             return "redirect:/mytravels";
         }
         Travel travel = travelOpt.get();
 
-        if (!travel.getOwnerName().equals(principal.getName())) {
-            return "error/403"; // property verification
+        // verify the user is the owner of the travel
+        boolean isOwner = isOwnerOfTravel(travel, principal.getName());
+        if (!isOwner) {
+            return "error/403"; 
         }
 
         populateEditTravelModel(model, travel);
@@ -201,16 +213,21 @@ public class TravelWebController {
             Principal principal,
             Model model) throws IOException {
         
+        // verify the user is logged
         if (principal == null) {
             return "redirect:/sign_in";
         }
 
         Optional<Travel> travelOpt = travelService.findById(id);
+
+        // verify the travel exists
         if (travelOpt.isEmpty()) {
             return "error/404";
         }
         Travel existingTravel = travelOpt.get();
-        if (!existingTravel.getOwnerName().equals(principal.getName())) {
+        
+        // verify the user is the owner of the travel
+        if (!isOwnerOfTravel(existingTravel, principal.getName())) {
             return "error/403";
         }
 
@@ -306,6 +323,13 @@ public class TravelWebController {
     // One travel
     @GetMapping("/travel/{id}")
     public String oneTravel(@PathVariable Long id, Model model, Principal principal) {
+        
+        // verify the user is logged
+        if (principal == null) {
+            return "redirect:/sign_in";
+        }
+
+        // verify the travel exists
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
             return "error/404";
@@ -314,11 +338,12 @@ public class TravelWebController {
         Travel travel = travelOpt.get();
         String username = principal != null ? principal.getName() : null;
 
+        // verify the user is the owner or collaborator of the travel
         boolean hasAccess = isAuthorizedForTravel(travel, username);
         boolean isOwner = principal != null && travel.getOwnerName().equals(principal.getName());
 
         if (!hasAccess) {
-            return "error/403"; // acceso prohibido
+            return "error/403"; 
         }
         model.addAttribute("travel", travel);
 
@@ -390,11 +415,21 @@ public class TravelWebController {
     // Delete travel
     @PostMapping("/travel/{id}/delete")
     public String deleteTravel(@PathVariable Long id, Principal principal) {
+        
+        // verify the user is logged
+        if (principal == null) {
+            return "redirect:/sign_in";
+        }
+
+        // verify the travel exists
         Optional<Travel> travelOpt = travelService.findById(id);
         if (travelOpt.isEmpty()) {
             return "error/404";
         }
+
         Travel travel = travelOpt.get();
+
+        // verify the user is the owner of the travel
         if (!travel.getOwnerName().equals(principal.getName())) {
             return "error/403";
         }
@@ -438,6 +473,7 @@ public class TravelWebController {
         }
 
         Path path = fileStorageService.getFilePath(filePath);
+
         if (!Files.exists(path)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -513,6 +549,10 @@ public class TravelWebController {
         travel.setUserTravels(users);
     }
 
+    private boolean isOwnerOfTravel(Travel travel, String username) {
+        return travel.getOwnerName().equals(username);
+    }
+
     private boolean isAuthorizedForTravel(Travel travel, String username) {
         // the owner can access the travel
         if (travel.getOwnerName().equals(username)) {
@@ -535,6 +575,7 @@ public class TravelWebController {
         }
     }
 
+    /* 
     private void sanitizeTravelData(Travel travel) {
         if (travel.getDescription() != null) {
             travel.setDescription(Jsoup.clean(travel.getDescription(), Safelist.basic()));
@@ -542,7 +583,7 @@ public class TravelWebController {
         if (travel.getComment() != null) {
             travel.setComment(Jsoup.clean(travel.getComment(), Safelist.basic()));
         }
-    }
+    }*/
 
     
 

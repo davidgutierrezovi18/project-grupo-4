@@ -260,6 +260,10 @@ public class ReviewRestController {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 
+		review.getImages().remove(image);
+		
+		reviewService.modifyReview(review);
+		
 		imageService.deleteImageById(imageId);
 		
 		return ResponseEntity.noContent().build();

@@ -15,8 +15,7 @@ import java.util.List;
 
 public interface TravelRepository extends JpaRepository<Travel, Long> {
 
-@Query("SELECT DISTINCT t FROM Travel t LEFT JOIN t.userTravels u " +
-           "WHERE t.ownerName = :username OR u.username = :username")
+@Query("SELECT DISTINCT t FROM Travel t LEFT JOIN t.userTravels u WHERE t.ownerName = :username OR u.username = :username")
     Page<Travel> findByOwnerOrCollaborator(@Param("username") String username, Pageable pageable);
 
     List<Travel> findByOwnerName(String ownerName);
